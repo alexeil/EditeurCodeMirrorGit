@@ -2,6 +2,7 @@ package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +13,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface RepositoryToolsServicesAsync {
 
-    void createRepository(String login, String password, String nameRepository, AsyncCallback<Boolean> callback);
+    void createRepository(String login, String password, String nameRepository, AsyncCallback<Void> callback);
 
     void createFileAndAddToClonedRepository(String url,  String nomRepo, AsyncCallback<Void> callback);
 
@@ -27,4 +28,6 @@ public interface RepositoryToolsServicesAsync {
     void pushRepository( String login, String password, AsyncCallback<Boolean> callback);
 
     void getFilePattern(AsyncCallback<String> callback);
+
+    void initRepository(String login, String password, String url, AsyncCallback<AbstractItem> callback);
 }

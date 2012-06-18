@@ -49,7 +49,8 @@ public class RepositoryToolsComponent extends AbstractPage {
             }
         };
         super.startPage();
-        servletRepository.registerServlet("/ihmcodemirror/htmleditor",new RepositoryToolsServicesImpl(this.getDictionary().get("directoryPath").toString()));
+        servletRepository.registerServlet("/ihmcodemirror/systemFileServices",new StructureServiceImpl());
+        servletRepository.registerServlet("/ihmcodemirror/repositoryToolsServices",new RepositoryToolsServicesImpl());
     }
 
     @Override

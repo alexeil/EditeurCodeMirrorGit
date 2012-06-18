@@ -1,11 +1,11 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
-import java.util.Set;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 
-@RemoteServiceRelativePath("structure")
+@RemoteServiceRelativePath(value = "systemFileServices")
 public interface StructureService extends RemoteService {
-	Set<String> getStructure(String url);
+    AbstractItem getArborescence(AbstractItem folder);
 }

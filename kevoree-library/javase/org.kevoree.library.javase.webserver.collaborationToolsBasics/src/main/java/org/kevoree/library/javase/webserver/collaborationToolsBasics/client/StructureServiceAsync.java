@@ -1,12 +1,11 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
-import java.util.Set;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 
 
 public interface StructureServiceAsync {
 
-	void getStructure(String url, AsyncCallback<Set<String>> callback);
+    void getArborescence(AbstractItem folder, AsyncCallback<AbstractItem> callback);
 
 }

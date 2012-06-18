@@ -87,31 +87,31 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.4.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <configuration>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>gwt-maven-plugin</artifactId>
+                    <version>2.4.0</version>
+                    <executions>
+                        <execution>
+                            <phase>generate-resources</phase>
+                            <configuration>
 
 
-                            <localWorkers>4</localWorkers>
-                            <!-- use style OBF for prod -->
-                            <style>OBFUSCATED</style>
-                            <extraJvmArgs>-Xmx2048m -Xss1024k</extraJvmArgs>
-                            <gwtVersion>${version.gwt}</gwtVersion>
-                            <runTarget>TarificateurDirectM.html</runTarget>
-                            <hostedWebapp>${webappDirectory}</hostedWebapp>
-                            <i18nMessagesBundle>fr.directm.tarificateur.client.Messages</i18nMessagesBundle>
-                        </configuration>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+                                <localWorkers>4</localWorkers>
+                                <!-- use style OBF for prod -->
+                                <style>OBFUSCATED</style>
+                                <extraJvmArgs>-Xmx2048m -Xss1024k</extraJvmArgs>
+                                <gwtVersion>${version.gwt}</gwtVersion>
+                                <runTarget>TarificateurDirectM.html</runTarget>
+                                <hostedWebapp>${webappDirectory}</hostedWebapp>
+                                <i18nMessagesBundle>fr.directm.tarificateur.client.Messages</i18nMessagesBundle>
+                            </configuration>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             <!-- Java compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

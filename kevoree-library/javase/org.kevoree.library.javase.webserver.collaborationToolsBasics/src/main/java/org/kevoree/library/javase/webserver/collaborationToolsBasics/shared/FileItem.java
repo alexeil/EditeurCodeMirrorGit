@@ -7,5 +7,21 @@ package org.kevoree.library.javase.webserver.collaborationToolsBasics.shared;
  * Time: 3:59 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FileItem {
+
+import com.google.gwt.user.client.rpc.IsSerializable;
+
+public class FileItem extends AbstractItem implements IsSerializable{
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
+    public FileItem(){}
+
+    public FileItem(String name){
+        this.name = name;
+    }
+
+
 }

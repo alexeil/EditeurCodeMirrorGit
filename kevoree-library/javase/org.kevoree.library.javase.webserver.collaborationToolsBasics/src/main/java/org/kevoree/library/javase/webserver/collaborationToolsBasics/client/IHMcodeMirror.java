@@ -2,25 +2,29 @@ package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
-
-
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeItem;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class IHMcodeMirror implements EntryPoint {
 
-    private TextArea textAreaInsert, textAreaShow;
-    private TextBox textBoxLogin, textBoxPassword, textBoxNameRepository;
-    private Button btnPush;
-    private String login, password, nomRepository;
-    private PopupPanel popupForm;
+    TreeItem root;
+
+    /**
+     * Create a remote service proxy to talk to the server-side Greeting
+     * service.
+     */
+    private final StructureServiceAsync systemFileService = GWT
+            .create(StructureService.class);
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
@@ -29,137 +33,69 @@ public class IHMcodeMirror implements EntryPoint {
      * This is the entry point method.
      */
     public void onModuleLoad() {
-        // Add the nameField and sendButton to the RootPanel
-        // Use RootPanel.get() to get the entire body element
-        RootPanel rootPanel = RootPanel.get();
+        String login = "AccountTest";
+        String password = "AccountTest1";
+        String url = "https://github.com/AccountTest/tusaisbienceque.git";
 
-        Grid grid = new Grid(2, 2);
-        rootPanel.add(grid, 0, 0);
-        grid.setSize("600px", "600px");
-
-        popupForm = new PopupPanel(true);
-
-        Grid gridFields = new Grid(4,2);
-
-        Label lblLogin = new Label("Login :");
-
-        gridFields.setWidget(0, 0, lblLogin);
-        lblLogin.setHeight("25px");
-
-        textBoxLogin = new TextBox();
-        gridFields.setWidget(0, 1, textBoxLogin);
-
-        Label lblPassword = new Label("Password :");
-        gridFields.setWidget(1, 0, lblPassword);
-
-        textBoxPassword = new TextBox();
-        gridFields.setWidget(1, 1, textBoxPassword);
-
-        Label lblNomDuRepository = new Label("Nom du repository :");
-        gridFields.setWidget(2, 0, lblNomDuRepository);
-
-        textBoxNameRepository = new TextBox();
-        gridFields.setWidget(2, 1, textBoxNameRepository);
-
-        btnPush = new Button("push");
-        btnPush.addClickHandler(new ClickHandler() {
+        repositoryToolsServices.initRepository(login, password, url, new AsyncCallback<AbstractItem>() {
             @Override
-            public void onClick(ClickEvent clickEvent) {
-                repositoryToolsServices.pushRepository(login, password,new AsyncCallback<Boolean>(){
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                    @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                });
+            public void onFailure(Throwable throwable) {
             }
-        });
 
-
-
-        Button btnNouveau = new Button("Nouveau");
-        btnNouveau.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                popupForm.show();
-            }
-        });
-
-
-
-
-        Button btnCreateRepo = new Button("Create repository");
-        btnCreateRepo.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-
-                login = textBoxLogin.getText();
-                password = textBoxPassword.getText();
-                nomRepository = textBoxNameRepository.getText();
-
-                repositoryToolsServices.createRepository(login,password,nomRepository, new AsyncCallback<Boolean>(){
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-
-                    @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        btnPush.setEnabled(true);
-                        textAreaInsert.setEnabled(true);
-                        popupForm.hide();
-
-                    }
-
-                });
-                btnPush.setEnabled(true);
-                textAreaInsert.setEnabled(true);
-                popupForm.hide();
-            }
-        });
-
-        gridFields.setWidget(3, 0, btnCreateRepo);
-
-        grid.setWidget(0, 0, btnNouveau);
-        grid.setWidget(0, 1, btnPush);
-        btnPush.setWidth("125px");
-        btnPush.setEnabled(false);
-
-        textAreaShow = new TextArea();
-        textAreaShow.setEnabled(false);
-        grid.setWidget(1, 1, textAreaShow);
-        textAreaShow.setSize("203px", "176px");
-
-        textAreaInsert = new TextArea();
-        textAreaInsert.addKeyUpHandler(new KeyUpHandler() {
             @Override
-            public void onKeyUp(KeyUpEvent event) {
-                repositoryToolsServices.updateContentFileAndCommit(textAreaInsert.getText().getBytes(), login, new AsyncCallback<Boolean>() {
+            public void onSuccess(AbstractItem folder) {
+                systemFileService.getArborescence(folder, new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) {
-                        //To change body of implemented methods use File | Settings | File Templates.
                     }
 
                     @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        textAreaShow.setText(textAreaInsert.getText());
+                    public void onSuccess(AbstractItem result) {
+
+                        Tree tree = new Tree();
+                        root = new TreeItem(result.getName());
+                        tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
+
+                            @Override
+                            public void onSelection(SelectionEvent<TreeItem> event) {
+                                TreeItem item = event.getSelectedItem();
+                                RootPanel.get().add(new HTML(getItemPath(item)));
+                            }
+                        });
+                        createGwtTree(result,root);
+                        tree.addItem(root);
+                        RootPanel.get().add(tree);
                     }
-
                 });
-                textAreaShow.setText(textAreaInsert.getText());
-
             }
         });
-
-        grid.setWidget(1, 0, textAreaInsert);
-        textAreaInsert.setSize("203px", "176px");
-        textAreaInsert.setEnabled(false);
-
-        popupForm.setWidget(gridFields);
-
-
     }
+
+
+
+
+    public String getItemPath(TreeItem item){
+        String pathItem = item.getText();
+        String path = "";
+        while(item.getParentItem() != null){
+            path = item.getParentItem().getText()+"/" + path;
+            item = item.getParentItem();
+        }
+        path = path + pathItem;
+        return path;
+    }
+
+    public void createGwtTree(AbstractItem item, TreeItem root){
+        for(int i = 0 ; i < ((FolderItem) item).getChilds().size() ; i++){
+            if(((FolderItem) item).getChilds().get(i).getClass() == FolderItem.class){
+                TreeItem folder = new TreeItem(((FolderItem) item).getChilds().get(i).getName());
+                root.addItem(folder);
+                createGwtTree(((FolderItem) item).getChilds().get(i),folder);
+            }else{
+                root.addItem(((FolderItem) item).getChilds().get(i).getName());
+            }
+        }
+    }
+
+
 }
