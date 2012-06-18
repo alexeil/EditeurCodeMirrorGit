@@ -11,6 +11,7 @@ import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.kevoree.library.javase.fileSystemGit.GitFileSystem;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.RepositoryToolsServices;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
 import org.slf4j.Logger;
@@ -19,9 +20,8 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.util.Scanner;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,29 +34,67 @@ import java.io.IOException;
 
 
 
-public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements org.kevoree.library.javase.webserver.collaborationToolsBasics.client.RepositoryToolsServices {
+public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements RepositoryToolsServices {
 
     private Logger logger = LoggerFactory.getLogger(GitFileSystem.class);
+    AbstractItem baseFolder;
     private Git git;
     private File file, baseDir;
-    AbstractItem baseFolder;
 
+    public RepositoryToolsServicesImpl(String directoryPath){
+        baseFolder = new FolderItem(directoryPath) ;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         super.doGet(req, resp);
+        /*PrintWriter writer = resp.getWriter();
+        writer.write("bla");
+         */
+
     }
 
-    @Override
-    public void createRepository(String login, String password, String url) {
-        String nameRepository = getNameRepositoryFromUrl(url);
+    public AbstractItem importRepository(String login, String password, String url) {
+        String nameRepository =  getNameRepositoryFromUrl(url);
+        if(isRepoExist(login,password, nameRepository)){
+            cloneRepository(url, nameRepository);
+            return baseFolder;
+        }else{
+            return null;
+        }
+    }
+
+    public AbstractItem initRepository(String login, String password, String nameRepository){
+
+        createRepository(login,password,nameRepository);
+        cloneRepository("https://" + login + "@github.com/" + login + "/" + nameRepository + ".git", nameRepository);
+        createFileAndAddToClonedRepository("https://" + login+ "@github.com/" + login + "/" + nameRepository + ".git", nameRepository);
+        commitRepository("commit init", login, "Email@login.org");
+        pushRepository(login, password);
+        baseFolder.setName(baseFolder.getName()+nameRepository);
+        return baseFolder;
+    }
+
+    public boolean isRepoExist(String login, String password, String nameRepository ){
         RepositoryService service = new RepositoryService();
         service.getClient().setCredentials(login, password);
         try {
             service.getRepository(login, nameRepository);
             logger.debug("Error the repository exists ");
         } catch (IOException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void createRepository(String login, String password, String nameRepository) {
+        RepositoryService service = new RepositoryService();
+        service.getClient().setCredentials(login, password);
+
+        if(!isRepoExist(login,password,nameRepository)){
             Repository repo = new Repository();
             repo.setName(nameRepository);
             try {
@@ -65,22 +103,19 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
                 logger.debug("Could not create repository: ", e2);
             }
         }
-
-        this.cloneRepository(url, nameRepository);
-        this.createFileAndAddToClonedRepository(url, nameRepository);
-
-
     }
+
 
     @Override
     public void createFileAndAddToClonedRepository(String url, String nomRepo) {
-        file = new File(baseFolder+nomRepo+"/monFichier.txt");
+        file = new File(baseFolder.getName()+nomRepo+"/monFichier.txt");
         try {
             file.createNewFile();
             System.err.print(file.getAbsolutePath());
         } catch (IOException e) {
             logger.debug("Cannot create the file "+e);
         }
+
     }
 
     @Override
@@ -103,10 +138,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     public void cloneRepository(String url, String nameRepository) {
         CloneCommand clone = new CloneCommand();
         clone.setURI(url);
-        baseFolder.setName(baseFolder.getName()+nameRepository);
-        File fileClonedRepository = new File(baseFolder.getName());
-        fileClonedRepository.mkdir();
-        clone.setDirectory(fileClonedRepository);
+        clone.setDirectory(new File(baseFolder.getName()+nameRepository));
         clone.setBare(false);
         git = clone.call();
     }
@@ -152,14 +184,6 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         return result;
     }
 
-    public String getNameRepositoryFromUrl(String url){
-        String nameRepository = "";
-        String[] urlAsArray = url.split("/");
-        nameRepository = urlAsArray[urlAsArray.length-1];
-        nameRepository = nameRepository.substring(0,(nameRepository.length())-(".git".length()));
-        return nameRepository;
-    }
-
     @Override
     public String getFilePattern() {
         String baseDirStr = baseDir.getAbsolutePath();
@@ -173,12 +197,27 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     }
 
     @Override
-    public AbstractItem initRepository(String login, String password, String url) {
-        baseFolder = new FolderItem("/tmp/");
-        createRepository(login,password,url);
-        commitRepository("commit init", login, login);
-        pushRepository(login, password);
-        System.out.println(baseFolder);
-        return baseFolder;
+    public String getFileContent(String filePath)  throws IOException {
+        StringBuilder text = new StringBuilder();
+        String NL = System.getProperty("line.separator");
+        Scanner scanner = new Scanner(new FileInputStream(filePath), "UTF-8");
+        try {
+            while (scanner.hasNextLine()){
+                text.append(scanner.nextLine() + NL);
+            }
+        }
+        finally{
+            scanner.close();
+        }
+        return text.toString();
     }
+
+    public String getNameRepositoryFromUrl(String url){
+        String nameRepository = "";
+        String[] urlAsArray = url.split("/");
+        nameRepository = urlAsArray[urlAsArray.length-1];
+        nameRepository = nameRepository.substring(0,(nameRepository.length())-(".git".length()));
+        return nameRepository;
+    }
+
 }

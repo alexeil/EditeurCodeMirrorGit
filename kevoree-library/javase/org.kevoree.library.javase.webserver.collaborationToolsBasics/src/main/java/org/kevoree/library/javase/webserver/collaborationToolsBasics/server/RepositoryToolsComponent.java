@@ -49,8 +49,9 @@ public class RepositoryToolsComponent extends AbstractPage {
             }
         };
         super.startPage();
+        servletRepository.registerServlet("/ihmcodemirror/htmleditor", new RepositoryToolsServicesImpl(this.getDictionary().get("directoryPath").toString()));
         servletRepository.registerServlet("/ihmcodemirror/systemFileServices",new StructureServiceImpl());
-        servletRepository.registerServlet("/ihmcodemirror/repositoryToolsServices",new RepositoryToolsServicesImpl());
+
     }
 
     @Override
@@ -58,9 +59,12 @@ public class RepositoryToolsComponent extends AbstractPage {
         ClassLoader l = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(RepositoryToolsComponent.class.getClassLoader() );
         System.err.println("URL " + request.getUrl() + "\n" + request + "\n" );
+
         boolean res = servletRepository.tryURL(request.getUrl(),request,response);
+
         Thread.currentThread().setContextClassLoader(l);
         if ( res ){
+
             return response;
 
         }
@@ -70,6 +74,7 @@ public class RepositoryToolsComponent extends AbstractPage {
             return response;
         }
         if (FileServiceHelper.checkStaticFile("IHMcodeMirror.html", this, request, response)) {
+
             return response;
         }
         response.setContent("Bad request1");

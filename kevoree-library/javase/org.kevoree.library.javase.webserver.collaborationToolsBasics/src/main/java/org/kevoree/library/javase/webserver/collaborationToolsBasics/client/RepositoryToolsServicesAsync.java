@@ -13,7 +13,7 @@ import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.Abst
  */
 public interface RepositoryToolsServicesAsync {
 
-    void createRepository(String login, String password, String nameRepository, AsyncCallback<Void> callback);
+    void createRepository(String login, String password, String nameRepository, AsyncCallback<Boolean> callback);
 
     void createFileAndAddToClonedRepository(String url,  String nomRepo, AsyncCallback<Void> callback);
 
@@ -29,5 +29,9 @@ public interface RepositoryToolsServicesAsync {
 
     void getFilePattern(AsyncCallback<String> callback);
 
-    void initRepository(String login, String password, String url, AsyncCallback<AbstractItem> callback);
+    void getFileContent(String filePath, AsyncCallback<String> callback);
+
+    void  initRepository(String login, String password, String nameRepository,AsyncCallback<AbstractItem> callback) ;
+
+    void  importRepository(String login, String password, String url,AsyncCallback<AbstractItem> callback);
 }

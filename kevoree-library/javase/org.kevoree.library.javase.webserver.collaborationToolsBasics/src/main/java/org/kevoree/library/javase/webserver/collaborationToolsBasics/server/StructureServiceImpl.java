@@ -39,7 +39,6 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
         }
     }
 
-
     // Deletes all files and subdirectories under dir
     public static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
@@ -67,12 +66,5 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
                 indexCurrentChar++;
             }
         }
-    }
-
-
-    private String getAccountName(String url) {
-        String[] tableGit = url.split("/");
-        String accountName = tableGit[3];
-        return accountName;
     }
 }
