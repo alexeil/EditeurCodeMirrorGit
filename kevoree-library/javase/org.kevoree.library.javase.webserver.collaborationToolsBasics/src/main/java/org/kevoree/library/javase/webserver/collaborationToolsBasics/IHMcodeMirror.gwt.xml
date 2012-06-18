@@ -11,9 +11,8 @@
     <!-- Specify the app entry point class.                   -->
     <entry-point class='org.kevoree.library.javase.webserver.collaborationToolsBasics.client.IHMcodeMirror'/>
 
+    <source path='client'/>
+    <source path='shared'/>
 
-    <!-- Specify the app servlets.                   -->
-    <!-- <servlet path='/latexEditorService'
-             class='org.kevoree.library.javase.webserver.latexEditor.server.latexEditorServiceImpl'/>
-             -->
+
 </module>
