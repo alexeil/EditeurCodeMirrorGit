@@ -34,4 +34,6 @@ public interface RepositoryToolsServicesAsync {
     void  initRepository(String login, String password, String nameRepository,AsyncCallback<AbstractItem> callback) ;
 
     void  importRepository(String login, String password, String url,AsyncCallback<AbstractItem> callback);
+
+    void createFileIntoLocalRepository(AbstractItem item, AsyncCallback<Void> callback);
 }

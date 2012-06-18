@@ -38,11 +38,13 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
     private Logger logger = LoggerFactory.getLogger(GitFileSystem.class);
     AbstractItem baseFolder;
+    private String directoryPath;
     private Git git;
     private File file, baseDir;
 
     public RepositoryToolsServicesImpl(String directoryPath){
-        baseFolder = new FolderItem(directoryPath) ;
+        baseFolder = new FolderItem(directoryPath);
+        this.directoryPath = directoryPath;
     }
 
     @Override
@@ -52,27 +54,43 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         /*PrintWriter writer = resp.getWriter();
         writer.write("bla");
          */
-
     }
 
     public AbstractItem importRepository(String login, String password, String url) {
         String nameRepository =  getNameRepositoryFromUrl(url);
         if(isRepoExist(login,password, nameRepository)){
+            deleteDir(new File(directoryPath+nameRepository));
             cloneRepository(url, nameRepository);
+            baseFolder.setName(directoryPath+nameRepository);
             return baseFolder;
         }else{
             return null;
         }
     }
 
-    public AbstractItem initRepository(String login, String password, String nameRepository){
+    // Deletes all files and subdirectories under dir
+    public static boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
 
+        // The directory is now empty so delete it
+        return dir.delete();
+    }
+
+    public AbstractItem initRepository(String login, String password, String nameRepository){
         createRepository(login,password,nameRepository);
         cloneRepository("https://" + login + "@github.com/" + login + "/" + nameRepository + ".git", nameRepository);
         createFileAndAddToClonedRepository("https://" + login+ "@github.com/" + login + "/" + nameRepository + ".git", nameRepository);
         commitRepository("commit init", login, "Email@login.org");
         pushRepository(login, password);
-        baseFolder.setName(baseFolder.getName()+nameRepository);
+        baseFolder.setName(directoryPath+nameRepository);
         return baseFolder;
     }
 
@@ -108,7 +126,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
     @Override
     public void createFileAndAddToClonedRepository(String url, String nomRepo) {
-        file = new File(baseFolder.getName()+nomRepo+"/monFichier.txt");
+        file = new File(directoryPath+nomRepo+"/monFichier.txt");
         try {
             file.createNewFile();
             System.err.print(file.getAbsolutePath());
@@ -138,7 +156,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     public void cloneRepository(String url, String nameRepository) {
         CloneCommand clone = new CloneCommand();
         clone.setURI(url);
-        clone.setDirectory(new File(baseFolder.getName()+nameRepository));
+        clone.setDirectory(new File(directoryPath+nameRepository));
         clone.setBare(false);
         git = clone.call();
     }
@@ -200,7 +218,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     public String getFileContent(String filePath)  throws IOException {
         StringBuilder text = new StringBuilder();
         String NL = System.getProperty("line.separator");
-        Scanner scanner = new Scanner(new FileInputStream(filePath), "UTF-8");
+        Scanner scanner = new Scanner(new FileInputStream(directoryPath+filePath), "UTF-8");
         try {
             while (scanner.hasNextLine()){
                 text.append(scanner.nextLine() + NL);
@@ -209,6 +227,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         finally{
             scanner.close();
         }
+        file = new File(directoryPath+filePath);
         return text.toString();
     }
 
@@ -218,6 +237,15 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         nameRepository = urlAsArray[urlAsArray.length-1];
         nameRepository = nameRepository.substring(0,(nameRepository.length())-(".git".length()));
         return nameRepository;
+    }
+
+    public void createFileIntoLocalRepository(AbstractItem item){
+        File fichier = new File(directoryPath+item.getName());
+        try {
+            fichier.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
     }
 
 }

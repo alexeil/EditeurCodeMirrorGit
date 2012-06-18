@@ -8,7 +8,10 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -24,18 +27,15 @@ import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.Fold
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
-    private TextBox textBoxLogin, textBoxPassword, textBoxNameRepository,
-            textBoxURLRepository, textBoxLogin2, textBoxPassword2;
+    private TextBox textBoxLoginNew, textBoxPasswordNew, textBoxNameRepositoryNew,
+            textBoxURLRepositoryImport, textBoxLoginImport, textBoxPasswordImport;
     private HTML textAreaCodeShow;
     private TextArea codeMirror;
-    private String login, password, nomRepository;
+    private String login, password, nomRepository, urlRepository;
     private PopupPanel popupFormNew, popupFormOpen;
-    private Button btnOpen, btnSave;
+    private Button btnOpen, btnSave, btnCreateFile;
     private NativeEvent ne;
-    private int index = 1;
     private TreeItem root;
-    private int currentNumber;
-    private int nextNumber;
     private RootPanel buttonBar,editor,systemFile;
 
     private final StructureServiceAsync structureService = GWT
@@ -135,13 +135,28 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             }
         });
 
+        btnCreateFile = new Button("Create new file");
+        grid.setWidget(1,1,btnCreateFile);
+        btnOpen.setWidth("125px");
+
+
+        btnOpen.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+              //  repositoryToolsServices.createFileAndAddToClonedRepository();
+            }
+        });
+
         Button btnImport = new Button("Import");
         btnImport.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
                 popupFormOpen.hide();
                 btnSave.setEnabled(true);
-
-                repositoryToolsServices.importRepository(login, password, textBoxURLRepository.getText(), new AsyncCallback<AbstractItem>() {
+                login = textBoxLoginImport.getText();
+                password = textBoxPasswordImport.getText();
+                urlRepository = textBoxURLRepositoryImport.getText();
+                if(!login.isEmpty() && !password.isEmpty() && !urlRepository.isEmpty())
+                repositoryToolsServices.importRepository(login, password, urlRepository, new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     RootPanel.get().add(new HTML(" FAIL at import repo " ));
@@ -149,6 +164,8 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
                     @Override
                     public void onSuccess(AbstractItem abstractItem) {
+                        textAreaCodeShow.setHTML("");
+                        codeMirror.setText("");
                         loadFileSystem(abstractItem);
                     }
                 });
@@ -170,50 +187,54 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         gridFieldsNew.setWidget(0, 0, lblLogin);
         lblLogin.setHeight("25px");
 
-        textBoxLogin = new TextBox();
-        gridFieldsNew.setWidget(0, 1, textBoxLogin);
+        textBoxLoginNew = new TextBox();
+        gridFieldsNew.setWidget(0, 1, textBoxLoginNew);
 
         Label lblPassword = new Label("Password :");
         gridFieldsNew.setWidget(1, 0, lblPassword);
 
-        textBoxPassword = new TextBox();
-        gridFieldsNew.setWidget(1, 1, textBoxPassword);
+        textBoxPasswordNew = new TextBox();
+        gridFieldsNew.setWidget(1, 1, textBoxPasswordNew);
 
         Label lblNomDuRepository = new Label("Nom du repository :");
         gridFieldsNew.setWidget(2, 0, lblNomDuRepository);
 
-        textBoxNameRepository = new TextBox();
-        gridFieldsNew.setWidget(2, 1, textBoxNameRepository);
+        textBoxNameRepositoryNew = new TextBox();
+        gridFieldsNew.setWidget(2, 1, textBoxNameRepositoryNew);
 
         // component for form Open
         Label lblLogin2 = new Label("Login :");
         lblLogin2.setHeight("25px");
-        textBoxLogin2 = new TextBox();
+        textBoxLoginImport = new TextBox();
         Label lblPassword2 = new Label("Password :");
-        textBoxPassword2 = new TextBox();
+        textBoxPasswordImport = new TextBox();
 
-        textBoxURLRepository = new TextBox();
+        textBoxURLRepositoryImport = new TextBox();
         gridFieldsOpen.setWidget(0, 0, lblLogin2);
-        gridFieldsOpen.setWidget(0, 1, textBoxLogin2);
+        gridFieldsOpen.setWidget(0, 1, textBoxLoginImport);
         gridFieldsOpen.setWidget(1, 0, lblPassword2);
-        gridFieldsOpen.setWidget(1, 1, textBoxPassword2);
+        gridFieldsOpen.setWidget(1, 1, textBoxPasswordImport);
         gridFieldsOpen.setWidget(2, 0, lblURLRepository);
-        gridFieldsOpen.setWidget(2, 1, textBoxURLRepository);
+        gridFieldsOpen.setWidget(2, 1, textBoxURLRepositoryImport);
         gridFieldsOpen.setWidget(3, 0, btnImport);
 
         Button btnCreateRepo = new Button("Create repository");
         btnCreateRepo.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                login = textBoxLogin.getText();
-                password = textBoxPassword.getText();
-                nomRepository = textBoxNameRepository.getText();
-
+                login = textBoxLoginNew.getText();
+                password = textBoxPasswordNew.getText();
+                nomRepository = textBoxNameRepositoryNew.getText();
+                if(!login.isEmpty() && !password.isEmpty() && !nomRepository.isEmpty())
                 repositoryToolsServices.initRepository(login,password,nomRepository,new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) { }
 
+
+
                     @Override
                     public void onSuccess(AbstractItem abstractItem) {
+                        textAreaCodeShow.setHTML("");
+                        codeMirror.setText("");
                         loadFileSystem(abstractItem);
                         popupFormNew.hide();
                         btnSave.setEnabled(true);
@@ -222,7 +243,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                 });
             }
         });
-    }
+
 
 
         gridFieldsNew.setWidget(3, 0, btnCreateRepo);
@@ -244,8 +265,6 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                         public void execute() {
                             if (popupFormNew.isShowing()) {
                                 popupFormNew.hide();
-                            }
-                        }
                             } else {
                                 popupFormNew.show();
                             }
@@ -347,6 +366,8 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             public void onSuccess(AbstractItem result) {
                 Tree tree = new Tree();
                 root = new TreeItem(result.getName());
+
+
                 tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
 
                     @Override
@@ -364,13 +385,14 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                                 // CodeMirrorEditorWrapper.setText(s);
                                 //TODO
                                 codeMirror.setText(s);
+                                textAreaCodeShow.setHTML(s);
                             }
                         });
-
                     }
                 });
                 createGwtTree(result, root);
-                tree.addItem(root);
+                tree.addItem(root.getChild(0));
+                systemFile.clear();
                 systemFile.add(tree);
             }
         });

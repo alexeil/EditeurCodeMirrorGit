@@ -22,7 +22,7 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
     }
 
     public void Process(File file, FolderItem item) {
-        if(!file.getName().contains(".git"))
+        if(!file.getName().contains(".git") && !file.getName().endsWith("~"))
         {
             if(file.isFile()){
                 item.add(new FileItem(file.getName()));
@@ -39,21 +39,7 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
         }
     }
 
-    // Deletes all files and subdirectories under dir
-    public static boolean deleteDir(File dir) {
-        if (dir.isDirectory()) {
-            String[] children = dir.list();
-            for (int i=0; i<children.length; i++) {
-                boolean success = deleteDir(new File(dir, children[i]));
-                if (!success) {
-                    return false;
-                }
-            }
-        }
 
-        // The directory is now empty so delete it
-        return dir.delete();
-    }
 
     private void trierListe(List<AbstractItem> listeTest) {
         int indexCurrentChar = 0;
