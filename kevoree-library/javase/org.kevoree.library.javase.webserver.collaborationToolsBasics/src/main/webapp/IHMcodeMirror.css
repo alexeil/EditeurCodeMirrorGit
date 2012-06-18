@@ -1,18 +1,30 @@
  #buttonBar {
-        width: 600px;
+        width: 800px;
         height: 100px;
         background-color: green;
         }
 
         #fileSystem {
         float: left;
-        width: 100px;
+        width: 300px;
         height: 800px;
         background-color: pink;
         }
 
         #editor {
-        width: 600px;
+        float:left;
+        width: 500;
         height: 700px;
         background-color: blue;
+        }
+
+        .popup
+        {
+            background-color       :    #ffc;
+            border                 :    3px solid #009;
+        }
+
+        .textAreaCodeShow
+        {
+           border                 :    3px solid #009;
         }

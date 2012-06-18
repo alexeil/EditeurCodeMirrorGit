@@ -36,7 +36,8 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     private Button btnOpen, btnSave, btnCreateFile;
     private NativeEvent ne;
     private TreeItem root;
-    private RootPanel buttonBar,editor,systemFile;
+    private RootPanel buttonBar,editor,systemFileRoot;
+    private ScrollPanel systemFile ;
 
     private final StructureServiceAsync structureService = GWT
             .create(StructureService.class);
@@ -56,7 +57,11 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         // get Divs
         buttonBar = RootPanel.get("buttonBar");
         editor = RootPanel.get("editor");
-        systemFile = RootPanel.get("fileSystem");
+        systemFileRoot = RootPanel.get("fileSystem");
+
+        systemFile = new ScrollPanel();
+        systemFile.setAlwaysShowScrollBars(true);
+        systemFileRoot.add(systemFile);
 
         // add editor's content
         Grid gridEditor = new Grid(2,2);
@@ -67,6 +72,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
         // textArea Display codeMirror's stuff
         textAreaCodeShow = new HTML();
+        textAreaCodeShow.setStyleName("textAreaCodeShow");
         codeMirror = new TextArea();
         gridEditor.setWidget(0,0,codeMirror);
         gridEditor.setWidget(0,1,textAreaCodeShow);
@@ -99,11 +105,12 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
         // general Layout
         Grid grid = new Grid(2, 2);
-        buttonBar.add(grid, 10, 10);
+        buttonBar.add(grid,10,10);
         grid.setSize("", "");
 
         // Form open existing project
         popupFormOpen = new PopupPanel(true);
+        popupFormOpen.setStyleName("popup");
         Grid gridFieldsOpen = new Grid(4, 2);
         Label lblURLRepository = new Label("HTTPS du repository :");
 
@@ -143,7 +150,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         btnOpen.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-              //  repositoryToolsServices.createFileAndAddToClonedRepository();
+                //  repositoryToolsServices.createFileAndAddToClonedRepository();
             }
         });
 
@@ -156,19 +163,19 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                 password = textBoxPasswordImport.getText();
                 urlRepository = textBoxURLRepositoryImport.getText();
                 if(!login.isEmpty() && !password.isEmpty() && !urlRepository.isEmpty())
-                repositoryToolsServices.importRepository(login, password, urlRepository, new AsyncCallback<AbstractItem>() {
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                    RootPanel.get().add(new HTML(" FAIL at import repo " ));
-                    }
+                    repositoryToolsServices.importRepository(login, password, urlRepository, new AsyncCallback<AbstractItem>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            RootPanel.get().add(new HTML(" FAIL at import repo " ));
+                        }
 
-                    @Override
-                    public void onSuccess(AbstractItem abstractItem) {
-                        textAreaCodeShow.setHTML("");
-                        codeMirror.setText("");
-                        loadFileSystem(abstractItem);
-                    }
-                });
+                        @Override
+                        public void onSuccess(AbstractItem abstractItem) {
+                            textAreaCodeShow.setHTML("");
+                            codeMirror.setText("");
+                            loadFileSystem(abstractItem);
+                        }
+                    });
             }
         });
 
@@ -180,6 +187,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
         // Form New project
         popupFormNew = new PopupPanel(true);
+        popupFormNew.setStyleName("popup");
         Grid gridFieldsNew = new Grid(4, 2);
 
         // component for form new
@@ -225,22 +233,22 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                 password = textBoxPasswordNew.getText();
                 nomRepository = textBoxNameRepositoryNew.getText();
                 if(!login.isEmpty() && !password.isEmpty() && !nomRepository.isEmpty())
-                repositoryToolsServices.initRepository(login,password,nomRepository,new AsyncCallback<AbstractItem>() {
-                    @Override
-                    public void onFailure(Throwable throwable) { }
+                    repositoryToolsServices.initRepository(login,password,nomRepository,new AsyncCallback<AbstractItem>() {
+                        @Override
+                        public void onFailure(Throwable throwable) { }
 
 
 
-                    @Override
-                    public void onSuccess(AbstractItem abstractItem) {
-                        textAreaCodeShow.setHTML("");
-                        codeMirror.setText("");
-                        loadFileSystem(abstractItem);
-                        popupFormNew.hide();
-                        btnSave.setEnabled(true);
+                        @Override
+                        public void onSuccess(AbstractItem abstractItem) {
+                            textAreaCodeShow.setHTML("");
+                            codeMirror.setText("");
+                            loadFileSystem(abstractItem);
+                            popupFormNew.hide();
+                            btnSave.setEnabled(true);
 
-                    }
-                });
+                        }
+                    });
             }
         });
 
