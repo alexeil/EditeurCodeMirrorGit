@@ -21,7 +21,6 @@ import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
 
 /**
@@ -62,10 +61,12 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
         systemFile = new ScrollPanel();
         systemFile.setAlwaysShowScrollBars(true);
+        systemFile.setStyleName("systemFileScrollPanel");
         systemFileRoot.add(systemFile);
 
         // add editor's content
         Grid gridEditor = new Grid(2,2);
+
 
         // textArea codeMirror
         //TODO
@@ -75,6 +76,9 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         textAreaCodeShow = new HTML();
         textAreaCodeShow.setStyleName("textAreaCodeShow");
         codeMirror = new TextArea();
+        codeMirror.setHeight("800px");
+        codeMirror.setWidth("300px");
+
         gridEditor.setWidget(0,0,codeMirror);
         gridEditor.setWidget(0,1,textAreaCodeShow);
 
@@ -106,8 +110,8 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
         // general Layout
         Grid grid = new Grid(2, 2);
-        buttonBar.add(grid,10,10);
-        grid.setSize("", "");
+        buttonBar.add(grid);
+        buttonBar.setStyleName("buttonBarGrid");
 
         // Form open existing project
         popupFormOpen = new PopupPanel(true);
@@ -118,7 +122,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         Button btnNouveau = new Button("New");
         btnNouveau.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                popupFormNew.show();
+                popupFormNew.center();
             }
         });
 
@@ -139,29 +143,19 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
         btnOpen.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                popupFormOpen.show();
+                popupFormOpen.center();
             }
         });
 
         btnCreateFile = new Button("Create new file");
         grid.setWidget(1,1,btnCreateFile);
-        btnCreateFile.setWidth("125px");
+        btnOpen.setWidth("125px");
 
 
-        btnCreateFile.addClickHandler(new ClickHandler() {
+        btnOpen.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-              repositoryToolsServices.createFileIntoLocalRepository(new FileItem("test"+System.currentTimeMillis()+".txt"), new AsyncCallback<AbstractItem>() {
-                  @Override
-                  public void onFailure(Throwable throwable) {
-                      //To change body of implemented methods use File | Settings | File Templates.
-                  }
-
-                  @Override
-                  public void onSuccess(AbstractItem item) {
-                    loadFileSystem(item);
-                  }
-              });
+                //  repositoryToolsServices.createFileAndAddToClonedRepository();
             }
         });
 
@@ -285,7 +279,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                             if (popupFormNew.isShowing()) {
                                 popupFormNew.hide();
                             } else {
-                                popupFormNew.show();
+                                popupFormNew.center();
                             }
                         }
                     });
@@ -299,7 +293,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                             if (popupFormOpen.isShowing()) {
                                 popupFormOpen.hide();
                             } else {
-                                popupFormOpen.show();
+                                popupFormOpen.center();
                             }
                         }
                     });

@@ -20,10 +20,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 /**
@@ -43,7 +40,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     AbstractItem baseFolder;
     private String directoryPath;
     private Git git;
-    private File file;
+    private File file, baseDir;
 
     public RepositoryToolsServicesImpl(String directoryPath){
         baseFolder = new FolderItem(directoryPath);
@@ -71,19 +68,6 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         }
     }
 
-    @Override
-    public AbstractItem createFileIntoLocalRepository(AbstractItem item){
-        File fichier = new File(baseFolder.getName()+"/"+item.getName());
-        try {
-            fichier.createNewFile();
-            addFileToRepository(fichier);
-        } catch (IOException e) {
-            logger.debug("cannot create or add the file to the repository");
-        }
-        commitRepository("yeye","","");
-        return baseFolder;
-    }
-
     // Deletes all files and subdirectories under dir
     public static boolean deleteDir(File dir) {
         if (dir.isDirectory()) {
@@ -95,6 +79,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
                 }
             }
         }
+
         // The directory is now empty so delete it
         return dir.delete();
     }
@@ -102,7 +87,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     public AbstractItem initRepository(String login, String password, String nameRepository){
         createRepository(login,password,nameRepository);
         cloneRepository("https://" + login + "@github.com/" + login + "/" + nameRepository + ".git", nameRepository);
-        createFileToInitRepository("https:  //" + login + "@github.com/" + login + "/" + nameRepository + ".git", nameRepository);
+        createFileAndAddToClonedRepository("https://" + login+ "@github.com/" + login + "/" + nameRepository + ".git", nameRepository);
         commitRepository("commit init", login, "Email@login.org");
         pushRepository(login, password);
         baseFolder.setName(directoryPath+nameRepository);
@@ -126,6 +111,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     public void createRepository(String login, String password, String nameRepository) {
         RepositoryService service = new RepositoryService();
         service.getClient().setCredentials(login, password);
+
         if(!isRepoExist(login,password,nameRepository)){
             Repository repo = new Repository();
             repo.setName(nameRepository);
@@ -137,19 +123,18 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         }
     }
 
+
     @Override
-    public void createFileToInitRepository(String url, String nomRepo) {
+    public void createFileAndAddToClonedRepository(String url, String nomRepo) {
         file = new File(directoryPath+nomRepo+"/monFichier.txt");
         try {
             file.createNewFile();
-            System.err.print("FICHIER : "+file.getName());
-            addFileToRepository(file);
-            commitRepository("add files","","");
+            System.err.print(file.getAbsolutePath());
         } catch (IOException e) {
             logger.debug("Cannot create the file "+e);
         }
-    }
 
+    }
 
     @Override
     public boolean updateContentFileAndCommit(byte[] editorText, String login) {
@@ -158,7 +143,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(editorText);
             fos.close();
-            addFileToRepository(file);
+            addFileToRepository();
             commitRepository("update" + System.currentTimeMillis(), login, "");
             result = true;
         } catch (IOException e) {
@@ -191,27 +176,17 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         return result;
     }
 
-    public boolean addFileToRepository(File fileToAdd) {
+    @Override
+    public boolean addFileToRepository() {
         Boolean result = false;
-        File workingDir = git.getRepository().getWorkTree();
         try {
-            git.add().addFilepattern(fileToAdd.getName()).call();
+            baseDir =  git.getRepository().getWorkTree();
+            git.add().addFilepattern(getFilePattern()).call();
             result = true;
         } catch (NoFilepatternException e) {
             logger.debug("Cannot add file to repository " + e);
         }
         return result;
-    }
-
-    private String getFilePattern(File baseDir, File file) {
-        String baseDirStr = baseDir.getAbsolutePath();
-        String fileStr = file.getAbsolutePath();
-        if (fileStr.startsWith(baseDirStr + File.separatorChar)) {
-            return fileStr.substring(baseDirStr.length() + 1);
-        } else {
-            throw new RuntimeException("Impossible to make pattern from file '" + fileStr + "' based on '"
-                    + baseDirStr + "'");
-        }
     }
 
     @Override
@@ -225,6 +200,18 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
             logger.debug("Cannot push repository "+e);
         }
         return result;
+    }
+
+    @Override
+    public String getFilePattern() {
+        String baseDirStr = baseDir.getAbsolutePath();
+        String fileStr = file.getAbsolutePath();
+        if (fileStr.startsWith(baseDirStr + File.separatorChar)) {
+            return fileStr.substring(baseDirStr.length() + 1);
+        } else {
+            throw new RuntimeException("Impossible to make pattern from file '" + fileStr + "' based on '"
+                    + baseDirStr + "'");
+        }
     }
 
     @Override
@@ -252,6 +239,13 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         return nameRepository;
     }
 
-
+    public void createFileIntoLocalRepository(AbstractItem item){
+        File fichier = new File(directoryPath+item.getName());
+        try {
+            fichier.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
 
 }
