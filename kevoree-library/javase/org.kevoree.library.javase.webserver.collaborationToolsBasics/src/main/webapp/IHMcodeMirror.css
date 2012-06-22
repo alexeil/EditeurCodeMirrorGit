@@ -48,3 +48,7 @@ body{
     min-height:800px;
 }
 
+.gwt-Tree .gwt-TreeItem-selected {
+         text-decoration:underline;
+}
+

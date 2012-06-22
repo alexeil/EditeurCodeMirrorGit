@@ -32,6 +32,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             textBoxURLRepositoryImport, textBoxLoginImport, textBoxPasswordImport;
     private HTML textAreaCodeShow;
     private TextArea codeMirror;
+    private Label fileName;
     private String login, password, nomRepository, urlRepository;
     private PopupPanel popupFormNew, popupFormOpen;
     private Button btnOpen, btnSave, btnCreateFile;
@@ -394,9 +395,10 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
                 tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
 
+
                     @Override
                     public void onSelection(SelectionEvent<TreeItem> event) {
-                        TreeItem item = event.getSelectedItem();
+                       TreeItem item = event.getSelectedItem();
                         //RootPanel.get().add(new HTML(getItemPath(item)));
                         repositoryToolsServices.getFileContent(getItemPath(item), new AsyncCallback<String>() {
                             @Override
