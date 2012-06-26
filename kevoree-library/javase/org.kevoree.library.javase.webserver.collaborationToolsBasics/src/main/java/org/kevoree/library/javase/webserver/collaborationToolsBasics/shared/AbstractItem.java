@@ -14,13 +14,9 @@ import com.google.gwt.user.client.rpc.IsSerializable;
 public abstract class AbstractItem implements IsSerializable
 
 {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-
-
     protected String name;
+    protected String path;
+    protected AbstractItem parent = null;
 
     public AbstractItem(){}
 
@@ -29,6 +25,22 @@ public abstract class AbstractItem implements IsSerializable
     }
 
     public void setName(String name){
-        this.name=name;
+        this.name = name;
+    }
+
+    public String getPath(){
+        return this.path;
+    }
+
+    public void setPath(String path){
+        this.path = path;
+    }
+
+    public AbstractItem getParent() {
+        return parent;
+    }
+
+    public void setParent(AbstractItem parent) {
+        this.parent = parent;
     }
 }

@@ -6,10 +6,7 @@
 
     <!-- Inherit the core Web Toolkit stuff.                  -->
     <inherits name='com.google.gwt.user.User'/>
-    <source path='shared'/>
-    <source path='client'/>
-
-
+    <inherits name="com.smartgwt.SmartGwt"/>
 
     <!-- Specify the app entry point class.                   -->
     <entry-point class='org.kevoree.library.javase.webserver.collaborationToolsBasics.client.IHMcodeMirror'/>

@@ -25,10 +25,15 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
         if(!file.getName().contains(".git") && !file.getName().endsWith("~"))
         {
             if(file.isFile()){
-                item.add(new FileItem(file.getName()));
+                FileItem itemToAdd = new FileItem(file.getName());
+                itemToAdd.setParent(item);
+                itemToAdd.setPath(getItemPath(itemToAdd));
+                item.add(itemToAdd);
             }
             else if (file.isDirectory()) {
                 FolderItem folder = new FolderItem(file.getName());
+                folder.setParent(item);
+                folder.setPath(getItemPath(folder));
                 item.add(folder);
                 File[] listOfFiles = file.listFiles();
                 if(listOfFiles!=null) {
@@ -37,6 +42,17 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
                 }
             }
         }
+    }
+
+    private String getItemPath(AbstractItem item) {
+        String pathItem = item.getName();
+        String path = "";
+        while(item.getParent() != null){
+            path = item.getParent().getName()+"/" + path;
+            item = item.getParent();
+        }
+        path = path + pathItem;
+        return path;
     }
 
 

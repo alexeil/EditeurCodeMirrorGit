@@ -25,6 +25,7 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.eclipse.mylyn.github</groupId>
             <artifactId>org.eclipse.egit.github.core</artifactId>
@@ -55,6 +56,27 @@
             <artifactId>gwt-servlet</artifactId>
             <version>${gwtVersion}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartgwt</groupId>
+            <artifactId>smartgwt</artifactId>
+            <version>2.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -87,31 +109,31 @@
                     </execution>
                 </executions>
             </plugin>
-                <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>gwt-maven-plugin</artifactId>
-                    <version>2.4.0</version>
-                    <executions>
-                        <execution>
-                            <phase>generate-resources</phase>
-                            <configuration>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <version>2.4.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <configuration>
 
 
-                                <localWorkers>4</localWorkers>
-                                <!-- use style OBF for prod -->
-                                <style>OBFUSCATED</style>
-                                <extraJvmArgs>-Xmx2048m -Xss1024k</extraJvmArgs>
-                                <gwtVersion>${version.gwt}</gwtVersion>
-                                <runTarget>TarificateurDirectM.html</runTarget>
-                                <hostedWebapp>${webappDirectory}</hostedWebapp>
-                                <i18nMessagesBundle>fr.directm.tarificateur.client.Messages</i18nMessagesBundle>
-                            </configuration>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+                            <localWorkers>4</localWorkers>
+                            <!-- use style OBF for prod -->
+                            <style>OBFUSCATED</style>
+                            <extraJvmArgs>-Xmx2048m -Xss1024k</extraJvmArgs>
+                            <gwtVersion>${version.gwt}</gwtVersion>
+                            <runTarget>TarificateurDirectM.html</runTarget>
+                            <hostedWebapp>${webappDirectory}</hostedWebapp>
+                            <i18nMessagesBundle>fr.directm.tarificateur.client.Messages</i18nMessagesBundle>
+                        </configuration>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- Java compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

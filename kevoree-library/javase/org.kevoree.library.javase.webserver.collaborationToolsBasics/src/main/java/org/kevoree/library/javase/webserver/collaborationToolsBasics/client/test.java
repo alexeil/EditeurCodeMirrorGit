@@ -20,7 +20,7 @@ public class test {
 
        // System.out.print("1bonjour".substring(0,1));
 
-         List<String> ffs = new ArrayList<String>();
+        List<String> ffs = new ArrayList<String>();
         String nam = "/tmp/AccountTest";
         File aFile = new File(nam);
         Process(aFile,ffs);

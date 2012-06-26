@@ -6,6 +6,7 @@ import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.Abst
 
 import java.io.IOException;
 
+
 @RemoteServiceRelativePath(value = "htmleditor")
 public interface RepositoryToolsServices extends RemoteService {
     void createRepository(String login, String password, String nameRepository);
