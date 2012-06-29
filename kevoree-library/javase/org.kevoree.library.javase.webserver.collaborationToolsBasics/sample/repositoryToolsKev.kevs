@@ -1,0 +1,45 @@
+ {
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.fileSystem/1.7.5'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.socketChannels/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.webserver.api/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/{kevoree.version}'
+merge 'mvn:org.kevoree.library.javase/org.kevoree.library.javase.fileSystemGitRepository/1.7.5'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.grapher/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.swingUI/{kevoree.version}'
+merge 'mvn:org.kevoree.library.javase/org.kevoree.library.javase.webserver.collaborationToolsBasics/1.7.5'
+merge 'mvn:org.kevoree.corelibrary.sky/org.kevoree.library.sky.provider/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.fakeDomo/{kevoree.version}'
+merge 'mvn:org.kevoree.library.javase/org.kevoree.library.javase.webserver.servlet/1.7.5'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.nanohttpAutoDiscovery/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.nioChannels/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.camel.atom/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.webserver.tjws/{kevoree.version}'
+merge 'mvn:org.kevoree.library.javase/org.kevoree.library.javase.fileSystemGit/1.7.5'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.nanohttp/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.authentication/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.sky/org.kevoree.library.sky.api/{kevoree.version}'
+merge 'mvn:org.kevoree.library.javase/org.kevoree.library.javase.webserver/1.7.5'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.camel/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.sky/org.kevoree.library.sky.jails/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.sky/org.kevoree.library.sky.minicloud/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.gossiperNetty/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.serialCT/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.webserver.api/1.7.5'
+addNode editor_node:MiniCloudNode
+ {
+  addComponent WebServer49@editor_node : WebServer {port='8080',timeout='5000'}
+  addComponent Repositor232@editor_node : RepositoryToolsComponent {directoryPath='/tmp/',urlpattern='/**'}
+addChannel SerialCT230 : SerialCT {}
+addChannel defMSG48 : defMSG {}
+bind WebServer49.handler@editor_node => SerialCT230
+bind Repositor232.request@editor_node => SerialCT230
+bind Repositor232.content@editor_node => defMSG48
+bind WebServer49.response@editor_node => defMSG48
+updateDictionary SerialCT230 
+updateDictionary defMSG48 
+updateDictionary WebServer49@editor_node 
+updateDictionary Repositor232@editor_node 
+}
+
+}
