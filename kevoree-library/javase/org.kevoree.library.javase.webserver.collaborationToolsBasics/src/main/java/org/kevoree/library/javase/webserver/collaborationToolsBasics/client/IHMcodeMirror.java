@@ -69,7 +69,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     public void onModuleLoad() {
         // Listener CodeMirror
         //TODO
-        // CodeMirrorEditorWrapper.addOnChangeHandler(this);
+        CodeMirrorEditorWrapper.addOnChangeHandler(this);
 
         // get Divs
         buttonBar = RootPanel.get("buttonBar");
@@ -87,7 +87,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
         // textArea codeMirror
         //TODO
-        //codeMirror = new HTML("<form><textarea id=\"code\" name=\"code\"> </textarea></form>");
+        codeMirror = new HTML("<form><textarea id=\"code\" name=\"code\"> </textarea></form>");
 
         // textArea Display codeMirror's stuff
         textAreaCodeShow = new HTML();

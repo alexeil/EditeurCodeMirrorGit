@@ -19,17 +19,12 @@
     </properties>
 
     <modules>
-        <module>../org.kevoree.library.javase.fileSystemSVN</module>
-        <module>../org.kevoree.library.javase.fileSystemGit</module>
         <module>../org.kevoree.library.javase.fileSystemGitRepository</module>
         <module>../org.kevoree.library.javase.webserver</module>
-        <module>../org.kevoree.library.javase.webserver.aceEditor</module>
-        <module>../org.kevoree.library.javase.webserver.reasoner</module>
-        <module>../org.kevoree.library.javase.webserver.gitblit</module>
         <module>../org.kevoree.library.javase.webserver.collaborationToolsBasics</module>
         <!--<module>../org.kevoree.library.javase.webserver.pebble</module>-->
         <module>../org.kevoree.library.javase.webserver.codemirrorEditor</module>
-        <module>../org.kevoree.library.javase.latex</module>
+
     </modules>
 
 
