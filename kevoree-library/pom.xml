@@ -6,18 +6,16 @@
     <artifactId>org.kevoree.library</artifactId>
     <packaging>pom</packaging>
     <name>Kevoree :: Library</name>
-    <version>1.7.5</version>
+    <version>1.8.1</version>
 
     <properties>
-        <kevoree.version>1.7.5</kevoree.version>
+        <kevoree.version>1.8.1</kevoree.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.version>2.9.2</scala.version>
     </properties>
 
     <modules>
         <module>./javase/org.kevoree.library.javase.root</module>
-        <module>./android/org.kevoree.library.android.root</module>
-        <module>./model/org.kevoree.library.model.root</module>
     </modules>
 
     <distributionManagement>
