@@ -13,6 +13,7 @@ import scala.collection.immutable.List;
 
 import javax.servlet.ServletContextListener;
 
+
 /**
  * Created with IntelliJ IDEA.
  * User: pdespagn
@@ -31,8 +32,23 @@ public class RepositoryToolsComponent extends ParentAbstractPage {
 
 
 	public void startPage () {
+        servletRepository = new LocalServletRegistry(){
+            @Override
+            public String getCDefaultPath(){
+                return "/ihmcodemirror";
+            }
 
-		servletRepository = new LocalServletRegistry() {
+            @Override
+            public List<ServletContextListener> listeners() {
+                return null;  //To change body of implemented methods use File | Settings | File Templates.
+            }
+
+            @Override
+            public void listeners_$eq(List<ServletContextListener> listeners) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+        };
+		/*servletRepository = new LocalServletRegistry() {
 			@Override
 			public String getCDefaultPath () {
 				return "/ihmcodemirror";
@@ -43,14 +59,15 @@ public class RepositoryToolsComponent extends ParentAbstractPage {
 				return null;
 			}
 
-			@Override
-			public void listeners_$eq (List<ServletContextListener> listeners) {
-			}
-		};
+            @Override
+            public void listeners_$eq(List<ServletContextListener> listeners) {
+                //To change body of implemented methods use File | Settings | File Templates.
+            }
+        }; */
 		super.startPage();
 		servletRepository.registerServlet("/ihmcodemirror/htmleditor", new RepositoryToolsServicesImpl(this.getDictionary().get("directoryPath").toString()));
 		servletRepository.registerServlet("/ihmcodemirror/systemFileServices", new StructureServiceImpl());
-		servletRepository.registerServlet("/ihmcodemirror/upload", new UploadFileServer());
+		//servletRepository.registerServlet("/ihmcodemirror/upload", new UploadFileServer());
 	}
 
 	@Override

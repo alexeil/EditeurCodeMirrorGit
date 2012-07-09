@@ -10,30 +10,26 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeNode;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
-import com.smartgwt.client.widgets.menu.MenuItem;
-import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 
 
@@ -44,17 +40,17 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     private TextBox textBoxLoginNew, textBoxPasswordNew, textBoxNameRepositoryNew,
             textBoxURLRepositoryImport, textBoxLoginImport, textBoxPasswordImport;
     private HTML textAreaCodeShow;
-    private TextArea codeMirror;
     private String login, password, nomRepository, urlRepository;
     private PopupPanel popupFormNew, popupFormOpen, popupUploadFile;
     private Button btnOpen, btnSave, btnCreateFile;
     private NativeEvent ne;
 
     private RootPanel buttonBar,editor,systemFileRoot;
-    private ScrollPanel systemFile ;
     private Tree tree;
     private TreeGrid treeGrid;
     private TreeNode currentSelectedNode;
+
+    private HTML codeMirror;
 
     private final StructureServiceAsync structureService = GWT
             .create(StructureService.class);
@@ -76,31 +72,26 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         editor = RootPanel.get("editor");
         systemFileRoot = RootPanel.get("fileSystem");
 
-       /* systemFile = new ScrollPanel();
-        systemFile.setAlwaysShowScrollBars(true);
-        systemFile.setStyleName("systemFileScrollPanel");*/
         treeGrid = new TreeGrid();
         systemFileRoot.add(treeGrid);
 
         // add editor's content
         Grid gridEditor = new Grid(2,2);
 
-
-        // textArea codeMirror
-        //TODO
-        codeMirror = new HTML("<form><textarea id=\"code\" name=\"code\"> </textarea></form>");
+        //codeMirror = new HTML("<form><textarea id=\"code\" name=\"code\" > </textarea></form>");
+        codeMirror = new HTML();
 
         // textArea Display codeMirror's stuff
         textAreaCodeShow = new HTML();
         textAreaCodeShow.setStyleName("textAreaCodeShow");
-        codeMirror = new TextArea();
+        /*codeMirror = new TextArea();
         codeMirror.setHeight("800px");
-        codeMirror.setWidth("300px");
+        codeMirror.setWidth("300px");*/
 
         gridEditor.setWidget(0,0,codeMirror);
         gridEditor.setWidget(0,1,textAreaCodeShow);
 
-        codeMirror.addKeyUpHandler(new KeyUpHandler() {
+      /*  codeMirror.addKeyUpHandler(new KeyUpHandler() {
             @Override
             public void onKeyUp(KeyUpEvent event) {
                 repositoryToolsServices.updateContentFileAndCommit(codeMirror.getText().getBytes(), login, new AsyncCallback<Boolean>() {
@@ -108,19 +99,14 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                     public void onFailure(Throwable throwable) {
                         //To change body of implemented methods use File | Settings | File Templates.
                     }
-
                     @Override
                     public void onSuccess(Boolean aBoolean) {
                         textAreaCodeShow.setHTML(codeMirror.getText());
                     }
-
                 });
             }
 
-        });
-
-        //TODO
-
+        }); */
 
         editor.add(gridEditor);
 
@@ -144,7 +130,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             }
         });
 
-        Button btnUploadFile = new Button("Import a file into repository");
+        Button btnUploadFile = new Button("Import a file");
         btnUploadFile.setWidth("125px");
         btnUploadFile.addClickHandler(new ClickHandler() {
             @Override
@@ -371,15 +357,15 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     @Override
     public void invokeMirrorCallback(JavaScriptObject obj) {
         //TODO
-        //textAreaCodeShow.setHTML(CodeMirrorEditorWrapper.getText());
-        textAreaCodeShow.setHTML(codeMirror.getText());
+        textAreaCodeShow.setHTML(CodeMirrorEditorWrapper.getText());
+        //textAreaCodeShow.setHTML(codeMirror.getText());
         writeEditorContentToFile();
     }
 
     public void writeEditorContentToFile(){
         //TODO
-        //  String contentEditor =  CodeMirrorEditorWrapper.getText();
-        String contentEditor =  codeMirror.getText();
+        String contentEditor =  CodeMirrorEditorWrapper.getText();
+        //String contentEditor =  codeMirror.getText();
 
         repositoryToolsServices.updateContentFileAndCommit(contentEditor.getBytes(), login, new AsyncCallback<Boolean>() {
             @Override
@@ -439,7 +425,21 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                         event.cancel();
                         if(!event.getRecord().getAttributeAsBoolean("isFolder")){
                             AbstractItem item = (AbstractItem) event.getRecord().getAttributeAsObject("abstractItem");
-                            Window.alert(item.getPath());
+                          //  Window.alert(item.getPath());
+                            repositoryToolsServices.getFileContent(item.getPath(), new AsyncCallback<String>() {
+                                @Override
+                                public void onFailure(Throwable throwable) {
+                                    //To change body of implemented methods use File | Settings | File Templates.
+                                }
+
+                                @Override
+                                public void onSuccess(String s) {
+                                    CodeMirrorEditorWrapper.setText(s);
+                                    //TODO
+                                    // codeMirror.setText(s);
+                                    textAreaCodeShow.setHTML(s);
+                                }
+                            });
                         }
 
                     }
@@ -488,10 +488,32 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 if(currentSelectedNode.getAttributeAsBoolean("isFolder")){
                     //TODO
-                    Window.alert("Le parent est : "+item.getPath());
+                   // Window.alert("Le parent est : "+item.getPath());
+                    repositoryToolsServices.createFileIntoLocalRepository(new FileItem(item.getPath()+"/test" + System.currentTimeMillis() + ".txt"), new AsyncCallback<AbstractItem>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            //To change body of implemented methods use File | Settings | File Templates.
+                        }
+
+                        @Override
+                        public void onSuccess(AbstractItem item) {
+                            loadFileSystem(item);
+                        }
+                    });
                 }else{
                     //TODO
-                    Window.alert("Le parent est : "+item.getParent().getPath());
+                   // Window.alert("Le parent est : "+item.getParent().getPath());
+                    repositoryToolsServices.createFileIntoLocalRepository(new FileItem(item.getParent().getPath()+"/test" + System.currentTimeMillis() + ".txt"), new AsyncCallback<AbstractItem>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            //To change body of implemented methods use File | Settings | File Templates.
+                        }
+
+                        @Override
+                        public void onSuccess(AbstractItem item) {
+                            loadFileSystem(item);
+                        }
+                    });
                 }
             }
         });
