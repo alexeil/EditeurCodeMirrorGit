@@ -79,6 +79,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
        /* systemFile = new ScrollPanel();
         systemFile.setAlwaysShowScrollBars(true);
         systemFile.setStyleName("systemFileScrollPanel");*/
+        treeGrid = new TreeGrid();
         systemFileRoot.add(treeGrid);
 
         // add editor's content
@@ -385,6 +386,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             public void onFailure(Throwable throwable) {
                 //To change body of implemented methods use File | Settings | File Templates.
             }
+
             @Override
             public void onSuccess(Boolean aBoolean) {
             }
