@@ -15,17 +15,22 @@
 
     <properties>
         <gwtVersion>2.4.0</gwtVersion>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <hibernate.version>4.1.0.Final</hibernate.version>
-        <kevoree.include>*:*</kevoree.include>
-        <kevoree.version>${project.version}</kevoree.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <kevoree.exclude>javax.servlet:*</kevoree.exclude>
     </properties>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>${gwtVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>2.4.0</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.mylyn.github</groupId>
             <artifactId>org.eclipse.egit.github.core</artifactId>
@@ -56,16 +61,6 @@
             <groupId>org.kevoree.library.javase</groupId>
             <artifactId>org.kevoree.library.javase.fileSystemGitRepository</artifactId>
             <version>${kevoree.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwtVersion}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>2.4.0</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
@@ -123,15 +118,13 @@
                     <execution>
                         <phase>generate-resources</phase>
                         <configuration>
-
-
                             <localWorkers>4</localWorkers>
                             <!-- use style OBF for prod -->
                             <style>OBFUSCATED</style>
                             <extraJvmArgs>-Xmx2048m -Xss1024k</extraJvmArgs>
                             <gwtVersion>${version.gwt}</gwtVersion>
-                            <runTarget>TarificateurDirectM.html</runTarget>
-                            <hostedWebapp>${webappDirectory}</hostedWebapp>
+                            <!--<runTarget>TarificateurDirectM.html</runTarget>-->
+                            <webappDirectory>${webappDirectory}</webappDirectory>
                             <i18nMessagesBundle>fr.directm.tarificateur.client.Messages</i18nMessagesBundle>
                         </configuration>
                         <goals>

@@ -1,5 +1,6 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.server;
 
+import com.google.gwt.user.server.rpc.RPC;
 import org.kevoree.annotation.ComponentType;
 import org.kevoree.annotation.DictionaryAttribute;
 import org.kevoree.annotation.DictionaryType;
@@ -32,38 +33,13 @@ public class RepositoryToolsComponent extends ParentAbstractPage {
 
 
 	public void startPage () {
-        servletRepository = new LocalServletRegistry(){
-            @Override
-            public String getCDefaultPath(){
-                return "/ihmcodemirror";
-            }
-
-            @Override
-            public List<ServletContextListener> listeners() {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
-            }
-
-            @Override
-            public void listeners_$eq(List<ServletContextListener> listeners) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        };
-		/*servletRepository = new LocalServletRegistry() {
+		servletRepository = new LocalServletRegistry() {
 			@Override
 			public String getCDefaultPath () {
 				return "/ihmcodemirror";
 			}
+		};
 
-			@Override
-			public List<ServletContextListener> listeners () {
-				return null;
-			}
-
-            @Override
-            public void listeners_$eq(List<ServletContextListener> listeners) {
-                //To change body of implemented methods use File | Settings | File Templates.
-            }
-        }; */
 		super.startPage();
 		servletRepository.registerServlet("/ihmcodemirror/htmleditor", new RepositoryToolsServicesImpl(this.getDictionary().get("directoryPath").toString()));
 		servletRepository.registerServlet("/ihmcodemirror/systemFileServices", new StructureServiceImpl());
@@ -80,8 +56,11 @@ public class RepositoryToolsComponent extends ParentAbstractPage {
 				return response;
 			}
 		}
+		ClassLoader l = Thread.currentThread().getContextClassLoader();
+		Thread.currentThread().setContextClassLoader(RepositoryToolsComponent.class.getClassLoader());
 
 		boolean res = servletRepository.tryURL(request.getUrl(), request, response);
+		Thread.currentThread().setContextClassLoader(l);
 		if (res) {
 			logger.debug("one servlet is able to respond to the request: {}", request.getUrl());
 			return response;

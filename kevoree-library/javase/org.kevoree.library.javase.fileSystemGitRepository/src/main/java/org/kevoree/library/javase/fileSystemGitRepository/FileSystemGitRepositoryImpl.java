@@ -26,7 +26,7 @@ import java.io.IOException;
  * To change this template use File | Settings | File Templates.
  */
 @Provides({
-        @ProvidedPort(name = "createRepo", type= PortType.SERVICE, className = GitRepositoryActions.class),
+        @ProvidedPort(name = "createRepo", type= PortType.SERVICE, className = GitRepositoryActions.class)
 })
 @ComponentType
 public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRepositoryActions {
