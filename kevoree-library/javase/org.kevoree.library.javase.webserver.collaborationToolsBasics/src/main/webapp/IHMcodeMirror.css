@@ -5,14 +5,14 @@ body{
 }
 
 #buttonBar {
-    width: 915px;
+    width: 1000px;
     height: 100px;
     background-color: whitesmoke;
 }
 
 #fileSystem {
     float: left;
-    min-width: 300px;
+    min-width: 200px;
     min-height: 800px;
 
     background:#252525;
@@ -23,8 +23,8 @@ body{
 
 #editor {
     float:left;
-    min-width: 500px;
-    min-height: 700px;
+    min-width: 325px;
+    min-height: 800px;
 }
 
 .buttonBarGrid table{
@@ -40,10 +40,20 @@ body{
 .textAreaCodeShow
 {
     border: solid 1px;
-    width: 300px;
+    width: 375px;
     min-height: 800px;
 }
 
+.gridBody
+{
+    height:800px;
+}
+
+.CodeMirror-scroll
+{
+    width: 375px;
+    height: 825px;
+}
 .systemFileScrollPanel{
     min-height:800px;
 }

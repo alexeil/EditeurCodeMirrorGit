@@ -1,16 +1,21 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import org.kevoree.library.javase.fileSystemGit.GitFileSystem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.StructureService;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
 
 
 public class StructureServiceImpl extends RemoteServiceServlet implements StructureService{
+
+    private Logger logger = LoggerFactory.getLogger(StructureServiceImpl.class);
 
     public AbstractItem getArborescence(AbstractItem folder) {
         String nameDirectory = folder.getName();
@@ -27,13 +32,15 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
             if(file.isFile()){
                 FileItem itemToAdd = new FileItem(file.getName());
                 itemToAdd.setParent(item);
-                itemToAdd.setPath(getItemPath(itemToAdd));
+                itemToAdd.setPath(file.getPath());
+                //itemToAdd.setPath(getItemPath(itemToAdd));
                 item.add(itemToAdd);
             }
             else if (file.isDirectory()) {
                 FolderItem folder = new FolderItem(file.getName());
                 folder.setParent(item);
-                folder.setPath(getItemPath(folder));
+                folder.setPath(file.getPath());
+                //folder.setPath(getItemPath(folder));
                 item.add(folder);
                 File[] listOfFiles = file.listFiles();
                 if(listOfFiles!=null) {
@@ -43,17 +50,18 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
             }
         }
     }
-
+    /*
     private String getItemPath(AbstractItem item) {
         String pathItem = item.getName();
         String path = "";
+
         while(item.getParent() != null){
             path = item.getParent().getName()+"/" + path;
             item = item.getParent();
         }
         path = path + pathItem;
         return path;
-    }
+    }   */
 
 
 

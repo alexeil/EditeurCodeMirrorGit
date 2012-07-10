@@ -39,7 +39,7 @@ import java.util.Scanner;
 
 public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements RepositoryToolsServices {
 
-    private Logger logger = LoggerFactory.getLogger(GitFileSystem.class);
+    private Logger logger = LoggerFactory.getLogger(RepositoryToolsServicesImpl.class);
     AbstractItem baseFolder;
     private String directoryPath;
     private Git git;
@@ -65,6 +65,11 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
             deleteDir(new File(directoryPath+nameRepository));
             cloneRepository(url, nameRepository);
             baseFolder.setName(directoryPath+nameRepository);
+
+            logger.debug("NameRepository -----------6> " + nameRepository );
+            logger.debug(" baseFolder.setName directoryPath+nameRepository -----------6> " + directoryPath+nameRepository );
+
+
             return baseFolder;
         }else{
             return null;
@@ -114,12 +119,13 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         service.getClient().setCredentials(login, password);
         try {
             service.getRepository(login, nameRepository);
-            logger.debug("Error the repository exists ");
+            logger.debug("The repository exists ");
+            return true;
+
         } catch (IOException e) {
+            logger.debug("The repository doesn't exist ");
             return false;
         }
-
-        return true;
     }
 
     @Override
@@ -139,10 +145,9 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
     @Override
     public void createFileToInitRepository(String url, String nomRepo) {
-        file = new File(directoryPath+nomRepo+"/monFichier.txt");
+        file = new File(directoryPath+nomRepo+"/READEME.md");
         try {
             file.createNewFile();
-            System.err.print("FICHIER : "+file.getName());
             addFileToRepository(file);
             commitRepository("add files","","");
         } catch (IOException e) {
@@ -231,7 +236,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     public String getFileContent(String filePath)  throws IOException {
         StringBuilder text = new StringBuilder();
         String NL = System.getProperty("line.separator");
-        Scanner scanner = new Scanner(new FileInputStream(directoryPath+filePath), "UTF-8");
+        Scanner scanner = new Scanner(new FileInputStream(filePath), "UTF-8");
         try {
             while (scanner.hasNextLine()){
                 text.append(scanner.nextLine() + NL);

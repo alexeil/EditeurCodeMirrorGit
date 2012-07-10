@@ -37,8 +37,9 @@ import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.Fold
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
-    private TextBox textBoxLoginNew, textBoxPasswordNew, textBoxNameRepositoryNew,
-            textBoxURLRepositoryImport, textBoxLoginImport, textBoxPasswordImport;
+    private TextBox textBoxLoginNew, textBoxNameRepositoryNew,
+            textBoxURLRepositoryImport, textBoxLoginImport ;
+    private PasswordTextBox  textBoxPasswordImport,textBoxPasswordNew;
     private HTML textAreaCodeShow;
     private String login, password, nomRepository, urlRepository;
     private PopupPanel popupFormNew, popupFormOpen, popupUploadFile;
@@ -49,8 +50,6 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     private Tree tree;
     private TreeGrid treeGrid;
     private TreeNode currentSelectedNode;
-
-    private HTML codeMirror;
 
     private final StructureServiceAsync structureService = GWT
             .create(StructureService.class);
@@ -64,7 +63,6 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
      */
     public void onModuleLoad() {
         // Listener CodeMirror
-        //TODO
         CodeMirrorEditorWrapper.addOnChangeHandler(this);
 
         // get Divs
@@ -73,46 +71,21 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         systemFileRoot = RootPanel.get("fileSystem");
 
         treeGrid = new TreeGrid();
+        treeGrid.setHeight("800px");
         systemFileRoot.add(treeGrid);
 
         // add editor's content
-        Grid gridEditor = new Grid(2,2);
-
-        //codeMirror = new HTML("<form><textarea id=\"code\" name=\"code\" > </textarea></form>");
-        codeMirror = new HTML();
+        Grid gridEditor = new Grid(0,0);
 
         // textArea Display codeMirror's stuff
         textAreaCodeShow = new HTML();
         textAreaCodeShow.setStyleName("textAreaCodeShow");
-        /*codeMirror = new TextArea();
-        codeMirror.setHeight("800px");
-        codeMirror.setWidth("300px");*/
 
-        gridEditor.setWidget(0,0,codeMirror);
-        gridEditor.setWidget(0,1,textAreaCodeShow);
-
-      /*  codeMirror.addKeyUpHandler(new KeyUpHandler() {
-            @Override
-            public void onKeyUp(KeyUpEvent event) {
-                repositoryToolsServices.updateContentFileAndCommit(codeMirror.getText().getBytes(), login, new AsyncCallback<Boolean>() {
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
-                    @Override
-                    public void onSuccess(Boolean aBoolean) {
-                        textAreaCodeShow.setHTML(codeMirror.getText());
-                    }
-                });
-            }
-
-        }); */
+        gridEditor.setWidget(0,0,textAreaCodeShow);
 
         editor.add(gridEditor);
 
         // add buttonBar's Content
-
-        // general Layout
         Grid grid = new Grid(2, 3);
         buttonBar.add(grid);
         buttonBar.setStyleName("buttonBarGrid");
@@ -174,7 +147,6 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                     public void onFailure(Throwable throwable) {
                         //To change body of implemented methods use File | Settings | File Templates.
                     }
-
                     @Override
                     public void onSuccess(AbstractItem item) {
                         loadFileSystem(item);
@@ -186,26 +158,25 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         Button btnImport = new Button("Import");
         btnImport.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                popupFormOpen.hide();
-                btnSave.setEnabled(true);
-                login = textBoxLoginImport.getText();
-                password = textBoxPasswordImport.getText();
-                urlRepository = textBoxURLRepositoryImport.getText();
-                if(!login.isEmpty() && !password.isEmpty() && !urlRepository.isEmpty())
-                    repositoryToolsServices.importRepository(login, password, urlRepository, new AsyncCallback<AbstractItem>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            RootPanel.get().add(new HTML(" FAIL at import repo " ));
-                        }
-
-                        @Override
-                        public void onSuccess(AbstractItem abstractItem) {
-                            textAreaCodeShow.setHTML("");
-                            codeMirror.setText("");
-                            loadFileSystem(abstractItem);
-                            popupUploadFile = new UploadFileForm(abstractItem);
-                        }
-                    });
+        popupFormOpen.hide();
+        btnSave.setEnabled(true);
+        login = textBoxLoginImport.getText();
+        password = textBoxPasswordImport.getText();
+        urlRepository = textBoxURLRepositoryImport.getText();
+        if(!login.isEmpty() && !password.isEmpty() && !urlRepository.isEmpty())
+            repositoryToolsServices.importRepository(login, password, urlRepository, new AsyncCallback<AbstractItem>() {
+                @Override
+                public void onFailure(Throwable throwable) {
+                    RootPanel.get().add(new HTML(" FAIL at import repo " ));
+                }
+                @Override
+                public void onSuccess(AbstractItem abstractItem) {
+                    textAreaCodeShow.setHTML("");
+                    CodeMirrorEditorWrapper.setText("");
+                    loadFileSystem(abstractItem);
+                    popupUploadFile = new UploadFileForm(abstractItem);
+                }
+            });
             }
         });
 
@@ -231,7 +202,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         Label lblPassword = new Label("Password :");
         gridFieldsNew.setWidget(1, 0, lblPassword);
 
-        textBoxPasswordNew = new TextBox();
+        textBoxPasswordNew = new PasswordTextBox();
         gridFieldsNew.setWidget(1, 1, textBoxPasswordNew);
 
         Label lblNomDuRepository = new Label("Nom du repository :");
@@ -245,7 +216,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         lblLogin2.setHeight("25px");
         textBoxLoginImport = new TextBox();
         Label lblPassword2 = new Label("Password :");
-        textBoxPasswordImport = new TextBox();
+        textBoxPasswordImport = new PasswordTextBox();
 
         textBoxURLRepositoryImport = new TextBox();
         gridFieldsOpen.setWidget(0, 0, lblLogin2);
@@ -259,26 +230,25 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         Button btnCreateRepo = new Button("Create repository");
         btnCreateRepo.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                login = textBoxLoginNew.getText();
-                password = textBoxPasswordNew.getText();
-                nomRepository = textBoxNameRepositoryNew.getText();
-                if(!login.isEmpty() && !password.isEmpty() && !nomRepository.isEmpty())
-                    repositoryToolsServices.initRepository(login,password,nomRepository,new AsyncCallback<AbstractItem>() {
-                        @Override
-                        public void onFailure(Throwable throwable) { }
+            login = textBoxLoginNew.getText();
+            password = textBoxPasswordNew.getText();
+            nomRepository = textBoxNameRepositoryNew.getText();
+            if(!login.isEmpty() && !password.isEmpty() && !nomRepository.isEmpty())
+                repositoryToolsServices.initRepository(login,password,nomRepository,new AsyncCallback<AbstractItem>() {
+                    @Override
+                    public void onFailure(Throwable throwable) { }
 
-
-
-                        @Override
-                        public void onSuccess(AbstractItem abstractItem) {
-                            textAreaCodeShow.setHTML("");
-                            codeMirror.setText("");
-                            loadFileSystem(abstractItem);
-                            popupFormNew.hide();
-                            btnSave.setEnabled(true);
-                            popupUploadFile = new UploadFileForm(abstractItem);
-                        }
-                    });
+                    @Override
+                    public void onSuccess(AbstractItem abstractItem) {
+                        textAreaCodeShow.setHTML("");
+                        //TODO
+                        //codeMirror.setText("");
+                        loadFileSystem(abstractItem);
+                        popupFormNew.hide();
+                        btnSave.setEnabled(true);
+                        popupUploadFile = new UploadFileForm(abstractItem);
+                    }
+                });
             }
         });
 
@@ -291,51 +261,51 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
             @Override
             public void onPreviewNativeEvent(NativePreviewEvent event) {
-                ne = event.getNativeEvent();
+            ne = event.getNativeEvent();
 
-                if (ne.getType().equals("keydown")
-                        && ne.getCtrlKey()
-                        && (ne.getKeyCode() == 'n' || ne.getKeyCode() == 'N')) {
-                    ne.preventDefault();
-                    Scheduler.get().scheduleDeferred( new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            if (popupFormNew.isShowing()) {
-                                popupFormNew.hide();
-                            } else {
-                                popupFormNew.center();
-                            }
+            if (ne.getType().equals("keydown")
+                    && ne.getCtrlKey()
+                    && (ne.getKeyCode() == 'n' || ne.getKeyCode() == 'N')) {
+                ne.preventDefault();
+                Scheduler.get().scheduleDeferred( new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (popupFormNew.isShowing()) {
+                            popupFormNew.hide();
+                        } else {
+                            popupFormNew.center();
                         }
-                    });
-                } else if (ne.getType().equals("keydown")
-                        && ne.getCtrlKey()
-                        && (ne.getKeyCode() == 'o' || ne.getKeyCode() == 'O')) {
-                    ne.preventDefault();
-                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            if (popupFormOpen.isShowing()) {
-                                popupFormOpen.hide();
-                            } else {
-                                popupFormOpen.center();
-                            }
+                    }
+                });
+            } else if (ne.getType().equals("keydown")
+                    && ne.getCtrlKey()
+                    && (ne.getKeyCode() == 'o' || ne.getKeyCode() == 'O')) {
+                ne.preventDefault();
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (popupFormOpen.isShowing()) {
+                            popupFormOpen.hide();
+                        } else {
+                            popupFormOpen.center();
                         }
-                    });
-                } else if (ne.getType().equals("keydown")
-                        && ne.getCtrlKey()
-                        && (ne.getKeyCode() == 's' || ne.getKeyCode() == 'S')) {
-                    ne.preventDefault();
+                    }
+                });
+            } else if (ne.getType().equals("keydown")
+                    && ne.getCtrlKey()
+                    && (ne.getKeyCode() == 's' || ne.getKeyCode() == 'S')) {
+                ne.preventDefault();
 
-                    Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-                        @Override
-                        public void execute() {
-                            if (btnSave.isEnabled()) {
-                                // fonction to call for saving
-                                pushContentEditorToRepo();
-                            }
+                Scheduler.get().scheduleDeferred(new ScheduledCommand() {
+                    @Override
+                    public void execute() {
+                        if (btnSave.isEnabled()) {
+                            // fonction to call for saving
+                            pushContentEditorToRepo();
                         }
-                    });
-                }
+                    }
+                });
+            }
             }
         });
 
@@ -356,17 +326,12 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
     @Override
     public void invokeMirrorCallback(JavaScriptObject obj) {
-        //TODO
         textAreaCodeShow.setHTML(CodeMirrorEditorWrapper.getText());
-        //textAreaCodeShow.setHTML(codeMirror.getText());
         writeEditorContentToFile();
     }
 
     public void writeEditorContentToFile(){
-        //TODO
         String contentEditor =  CodeMirrorEditorWrapper.getText();
-        //String contentEditor =  codeMirror.getText();
-
         repositoryToolsServices.updateContentFileAndCommit(contentEditor.getBytes(), login, new AsyncCallback<Boolean>() {
             @Override
             public void onFailure(Throwable throwable) {
@@ -376,41 +341,43 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             @Override
             public void onSuccess(Boolean aBoolean) {
             }
-
         });
     }
 
     public void pushContentEditorToRepo() {
         repositoryToolsServices.pushRepository(login, password,new
                 AsyncCallback<Boolean>(){
-
                     @Override public void onFailure(Throwable throwable) { }
-
                     @Override public void onSuccess(Boolean aBoolean) {  }
-
                 });
     }
 
     public void loadFileSystem(AbstractItem abstractItem) {
         // add FileSystem's content
         structureService.getArborescence(abstractItem, new AsyncCallback<AbstractItem>() {
-
             @Override
             public void onFailure(Throwable caught) {
                 RootPanel.get().add(new HTML("FAIL" + caught.getStackTrace().toString() + " message " + caught.getMessage()));
             }
-
             @Override
             public void onSuccess(AbstractItem result) {
-                RootPanel.get().add(new HTML("SUCCESS"));
+                // result ---> /tmp/root for exemple
+                // realRoot ---> root
+                FolderItem realRoot = (FolderItem) ((FolderItem) result).getChilds().get(0);
                 tree = new Tree();
-                TreeNode root = new TreeNode(result.getName());
+                TreeNode root = new TreeNode(realRoot.getName());
+                root.setAttribute("abstractItem", realRoot);
+                root.setAttribute("isFolder",true);
+
+               // TreeNode root = new TreeNode(result.getName());
                 tree.setData(new TreeNode[] { root });
-                createGwtTree(result, root);
+                createGwtTree(realRoot, root);
+
+               // createGwtTree(result, root);
                 treeGrid.setData(tree);
                 treeGrid.setContextMenu(initContextMenu());
                 treeGrid.draw();
-                //don't allow right clicks on tree grid
+                //don't allow rightdirectoryPath clicks on tree grid
                 treeGrid.addCellContextClickHandler(new CellContextClickHandler(){
                     public void onCellContextClick(CellContextClickEvent event) {
                         event.cancel();
@@ -419,29 +386,24 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                     }
                 });
                 treeGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
-
                     @Override
                     public void onCellDoubleClick(CellDoubleClickEvent event) {
                         event.cancel();
                         if(!event.getRecord().getAttributeAsBoolean("isFolder")){
                             AbstractItem item = (AbstractItem) event.getRecord().getAttributeAsObject("abstractItem");
-                          //  Window.alert(item.getPath());
+                            //Window.alert(" Double CLick " + item.getPath());
                             repositoryToolsServices.getFileContent(item.getPath(), new AsyncCallback<String>() {
                                 @Override
                                 public void onFailure(Throwable throwable) {
-                                    //To change body of implemented methods use File | Settings | File Templates.
+                                   //To change body of implemented methods use File | Settings | File Templates.
                                 }
-
                                 @Override
                                 public void onSuccess(String s) {
                                     CodeMirrorEditorWrapper.setText(s);
-                                    //TODO
-                                    // codeMirror.setText(s);
                                     textAreaCodeShow.setHTML(s);
                                 }
                             });
                         }
-
                     }
                 });
                /* tree = new Tree();
@@ -486,35 +448,11 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             @Override
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
-                if(currentSelectedNode.getAttributeAsBoolean("isFolder")){
-                    //TODO
-                   // Window.alert("Le parent est : "+item.getPath());
-                    repositoryToolsServices.createFileIntoLocalRepository(new FileItem(item.getPath()+"/test" + System.currentTimeMillis() + ".txt"), new AsyncCallback<AbstractItem>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            //To change body of implemented methods use File | Settings | File Templates.
-                        }
-
-                        @Override
-                        public void onSuccess(AbstractItem item) {
-                            loadFileSystem(item);
-                        }
-                    });
-                }else{
-                    //TODO
-                   // Window.alert("Le parent est : "+item.getParent().getPath());
-                    repositoryToolsServices.createFileIntoLocalRepository(new FileItem(item.getParent().getPath()+"/test" + System.currentTimeMillis() + ".txt"), new AsyncCallback<AbstractItem>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            //To change body of implemented methods use File | Settings | File Templates.
-                        }
-
-                        @Override
-                        public void onSuccess(AbstractItem item) {
-                            loadFileSystem(item);
-                        }
-                    });
-                }
+                Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
+                FormAddFile formAddFile = new FormAddFile(item,rightClickOnFolder);
+                formAddFile.center();
+                while (formAddFile.isShowing()){}
+                loadFileSystem(item);
             }
         });
 
@@ -526,10 +464,10 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 if(currentSelectedNode.getAttributeAsBoolean("isFolder")){
                     //TODO
-                    Window.alert("Le parent est : "+item.getPath());
+                   // Window.alert("Le parent est : "+item.getPath());
                 }else{
                     //TODO
-                    Window.alert("Le parent est : "+item.getParent().getPath());
+                    //Window.alert("Le parent est : "+item.getParent().getPath());
                 }
             }
         });
@@ -541,7 +479,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 //TODO
-                Window.alert("Le parent est : "+item.getPath());
+               // Window.alert("Le parent est : "+item.getPath());
             }
         });
 
@@ -555,6 +493,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             if (((FolderItem) item).getChilds().get(i).getClass() == FolderItem.class) {
                 FolderItem itemFolder = (FolderItem) ((FolderItem) item).getChilds().get(i);
                 TreeNode folder = new TreeNode(itemFolder.getName());
+               // Window.alert("setAttribute(abstractItem : "+itemFolder.getPath() +" " + itemFolder.getName());
                 folder.setAttribute("abstractItem", itemFolder);
                 folder.setAttribute("isFolder",true);
                 tree.add(folder, root);
@@ -566,6 +505,8 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                 TreeNode file = new TreeNode(((FolderItem) item).getChilds()
                         .get(i).getName());
                 file.setAttribute("isFolder",false);
+              //  Window.alert("setAttribute(abstractItem : "+((FolderItem) item).getChilds().get(i).getPath() +" " + ((FolderItem) item).getChilds().get(i).getName());
+
                 file.setAttribute("abstractItem", ((FolderItem) item).getChilds().get(i));
                 tree.add(file, root);
             }
