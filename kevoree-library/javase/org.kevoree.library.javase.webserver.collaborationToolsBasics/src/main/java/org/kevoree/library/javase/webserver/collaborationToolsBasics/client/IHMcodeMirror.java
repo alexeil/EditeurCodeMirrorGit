@@ -75,7 +75,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         systemFileRoot.add(treeGrid);
 
         // add editor's content
-        Grid gridEditor = new Grid(0,0);
+        Grid gridEditor = new Grid(1,1);
 
         // textArea Display codeMirror's stuff
         textAreaCodeShow = new HTML();
@@ -406,35 +406,6 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                         }
                     }
                 });
-               /* tree = new Tree();
-                root = new TreeItem(result.getName());
-
-                tree.addSelectionHandler(new SelectionHandler<TreeItem>() {
-
-                    @Override
-                    public void onSelection(SelectionEvent<TreeItem> event) {
-                        TreeItem item = event.getSelectedItem();
-                        repositoryToolsServices.getFileContent(getItemPath(item), new AsyncCallback<String>() {
-                            @Override
-                            public void onFailure(Throwable throwable) {
-                                //To change body of implemented methods use File | Settings | File Templates.
-                            }
-
-                            @Override
-                            public void onSuccess(String s) {
-                                // CodeMirrorEditorWrapper.setText(s);
-                                //TODO
-                                codeMirror.setText(s);
-                                textAreaCodeShow.setHTML(s);
-                            }
-                        });
-                    }
-                });
-                createGwtTree(result, root);
-                tree.addItem(root.getChild(0));
-                systemFile.clear();
-                systemFile.add(tree);   */
-
             }
         });
     }
@@ -444,15 +415,15 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         Menu mainMenu = new Menu();
         MenuItem createFileMenu = new MenuItem("Create file");
         createFileMenu.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-
             @Override
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
                 FormAddFile formAddFile = new FormAddFile(item,rightClickOnFolder);
                 formAddFile.center();
-                while (formAddFile.isShowing()){}
-                loadFileSystem(item);
+               // Window.alert(formAddFile.isShowing()+"");
+               /* while (formAddFile.isShowing()){}
+                loadFileSystem(item);  */
             }
         });
 
@@ -462,13 +433,9 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             @Override
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
-                if(currentSelectedNode.getAttributeAsBoolean("isFolder")){
-                    //TODO
-                   // Window.alert("Le parent est : "+item.getPath());
-                }else{
-                    //TODO
-                    //Window.alert("Le parent est : "+item.getParent().getPath());
-                }
+                Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
+                FormAddFolder formAddFolder = new FormAddFolder(item,rightClickOnFolder);
+                formAddFolder.center();
             }
         });
 
@@ -478,8 +445,9 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             @Override
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
-                //TODO
-               // Window.alert("Le parent est : "+item.getPath());
+                Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
+                FormRenameFileOrFolder formRenameFileOrFolder = new FormRenameFileOrFolder(item,rightClickOnFolder);
+                formRenameFileOrFolder.center();
             }
         });
 

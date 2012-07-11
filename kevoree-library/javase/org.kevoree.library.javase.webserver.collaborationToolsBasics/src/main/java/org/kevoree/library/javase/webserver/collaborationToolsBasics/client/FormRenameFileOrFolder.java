@@ -15,25 +15,25 @@ import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.File
  * Time: 5:05 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FormAddFile extends PopupPanel {
+public class FormRenameFileOrFolder extends PopupPanel {
 
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
 
     private TextBox tbNewFile;
-    private AbstractItem item;
+    private AbstractItem oldItem;
     private boolean onFolder;
 
 
-    public FormAddFile(AbstractItem absItem, boolean rightClickOnFolder){
+    public FormRenameFileOrFolder(AbstractItem absItem, boolean rightClickOnFolder){
         super(false);
-        this.item = absItem;
+        this.oldItem = absItem;
         this.onFolder = rightClickOnFolder;
         setStyleName("popup");
 
         Grid grid = new Grid(2, 2);
-        Label lblNewFile = new Label("Enter a new file name");
+        Label lblNewFile = new Label("Rename " + absItem.getName() + " into : ");
         tbNewFile = new TextBox();
         Button btnOk = new Button("Ok");
         Button btnCancel = new Button("Cancel");
@@ -48,13 +48,13 @@ public class FormAddFile extends PopupPanel {
         btnOk.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                AbstractItem fileTocreate = new FileItem(tbNewFile.getText());
+                AbstractItem newFileName = new FileItem(tbNewFile.getText());
                 if(onFolder) {
-                    fileTocreate.setPath(item.getPath()+"/"+fileTocreate.getName());
+                    newFileName.setPath(oldItem.getPath()+"/"+newFileName.getName());
                 }else{
-                    fileTocreate.setPath(item.getParent().getPath()+"/"+fileTocreate.getName());
+                    newFileName.setPath(oldItem.getParent().getPath()+"/"+newFileName.getName());
                 }
-                repositoryToolsServices.createFileIntoLocalRepository(fileTocreate, new AsyncCallback<AbstractItem>() {
+                repositoryToolsServices.ChangeFileOrFolderName(oldItem,newFileName, new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     }

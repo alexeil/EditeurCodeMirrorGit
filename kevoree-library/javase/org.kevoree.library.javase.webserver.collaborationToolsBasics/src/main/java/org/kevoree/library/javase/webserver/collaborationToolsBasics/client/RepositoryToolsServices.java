@@ -29,4 +29,8 @@ public interface RepositoryToolsServices extends RemoteService {
 
     AbstractItem createFileIntoLocalRepository(AbstractItem item);
 
+    AbstractItem createFolderIntoLocalRepository(AbstractItem item);
+
+    AbstractItem ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem);
+
 }

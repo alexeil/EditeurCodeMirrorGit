@@ -77,15 +77,37 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     }
 
     @Override
+    public AbstractItem ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem){
+        File oldFile = new File(baseFolder.getName()+"/"+oldItem.getName());
+        File newFile = new File(baseFolder.getName()+"/"+newItem.getName());
+        logger.debug("oldFile " + oldFile.getName() + " newFile " + newFile.getName());
+        oldFile.renameTo(newFile);
+        logger.debug("after rename " + oldFile.getName());
+        addFileToRepository(oldFile);
+        commitRepository("rename "+ oldFile.getName() + " into " + newFile.getName(),"","");
+        return baseFolder;
+    }
+
+    @Override
     public AbstractItem createFileIntoLocalRepository(AbstractItem item){
-        File fichier = new File(baseFolder.getName()+"/"+item.getName());
+        File file = new File(baseFolder.getName()+"/"+item.getName());
         try {
-            fichier.createNewFile();
-            addFileToRepository(fichier);
+            file.createNewFile();
+            addFileToRepository(file);
         } catch (IOException e) {
             logger.debug("cannot create or add the file to the repository");
         }
-        commitRepository("yeye","","");
+        commitRepository("add file" + file.getName(),"","");
+        return baseFolder;
+    }
+
+    @Override
+    public AbstractItem createFolderIntoLocalRepository(AbstractItem item){
+        File folder = new File(baseFolder.getName()+"/"+item.getName());
+        logger.debug(" FOLDER NAME " + folder.getName() + " FOLDER PATH " + folder.getPath());
+        folder.mkdir();
+        addFileToRepository(folder);
+        commitRepository("add folder" + folder.getName(),"","");
         return baseFolder;
     }
 

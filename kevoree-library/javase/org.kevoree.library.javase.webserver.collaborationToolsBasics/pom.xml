@@ -120,7 +120,7 @@
                         <configuration>
                             <localWorkers>4</localWorkers>
                             <!-- use style OBF for prod -->
-                            <style>OBFUSCATED</style>
+                            <!--<style>OBFUSCATED</style>-->
                             <extraJvmArgs>-Xmx2048m -Xss1024k</extraJvmArgs>
                             <gwtVersion>${version.gwt}</gwtVersion>
                             <!--<runTarget>TarificateurDirectM.html</runTarget>-->

@@ -15,7 +15,7 @@ import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.File
  * Time: 5:05 PM
  * To change this template use File | Settings | File Templates.
  */
-public class FormAddFile extends PopupPanel {
+public class FormAddFolder extends PopupPanel {
 
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
@@ -26,14 +26,14 @@ public class FormAddFile extends PopupPanel {
     private boolean onFolder;
 
 
-    public FormAddFile(AbstractItem absItem, boolean rightClickOnFolder){
+    public FormAddFolder(AbstractItem absItem, boolean rightClickOnFolder){
         super(false);
         this.item = absItem;
         this.onFolder = rightClickOnFolder;
         setStyleName("popup");
 
         Grid grid = new Grid(2, 2);
-        Label lblNewFile = new Label("Enter a new file name");
+        Label lblNewFile = new Label("Enter a new folder name");
         tbNewFile = new TextBox();
         Button btnOk = new Button("Ok");
         Button btnCancel = new Button("Cancel");
@@ -54,7 +54,7 @@ public class FormAddFile extends PopupPanel {
                 }else{
                     fileTocreate.setPath(item.getParent().getPath()+"/"+fileTocreate.getName());
                 }
-                repositoryToolsServices.createFileIntoLocalRepository(fileTocreate, new AsyncCallback<AbstractItem>() {
+                repositoryToolsServices.createFolderIntoLocalRepository(fileTocreate, new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     }

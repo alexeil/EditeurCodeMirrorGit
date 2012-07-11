@@ -27,4 +27,8 @@ public interface RepositoryToolsServicesAsync {
 
     void createFileIntoLocalRepository(AbstractItem item, AsyncCallback<AbstractItem> callback);
 
+    void createFolderIntoLocalRepository(AbstractItem item, AsyncCallback<AbstractItem> callback);
+
+    void ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem, AsyncCallback<AbstractItem> callback);
+
 }
