@@ -4,9 +4,23 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Label;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
+import com.smartgwt.client.widgets.tree.Tree;
+import com.smartgwt.client.widgets.tree.TreeGrid;
+import com.smartgwt.client.widgets.tree.TreeNode;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
+
+import java.awt.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,17 +31,23 @@ import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.File
  */
 public class FormAddFile extends PopupPanel {
 
-
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
+
+    private final StructureServiceAsync structureService = GWT
+            .create(StructureService.class);
 
     private TextBox tbNewFile;
     private AbstractItem item;
     private boolean onFolder;
 
+    private TreeGrid localTreeGrid;
+    private AbstractItem abstractItemRoot;
 
-    public FormAddFile(AbstractItem absItem, boolean rightClickOnFolder){
+    public FormAddFile(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder,TreeGrid treeGrid){
         super(false);
+        this.localTreeGrid = treeGrid;
+        this.abstractItemRoot = absItemRoot;
         this.item = absItem;
         this.onFolder = rightClickOnFolder;
         setStyleName("popup");
@@ -54,6 +74,8 @@ public class FormAddFile extends PopupPanel {
                 }else{
                     fileTocreate.setPath(item.getParent().getPath()+"/"+fileTocreate.getName());
                 }
+                RootPanel.get().add(new HTML(" fileToCreate " + fileTocreate.getPath()));
+
                 repositoryToolsServices.createFileIntoLocalRepository(fileTocreate, new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) {
@@ -62,7 +84,7 @@ public class FormAddFile extends PopupPanel {
                     @Override
                     public void onSuccess(AbstractItem item) {
                         hide();
-                        //loadFileSystem(item);
+                        Singleton.getInstance().loadFileSystem(abstractItemRoot, localTreeGrid);
                     }
                 });
             }

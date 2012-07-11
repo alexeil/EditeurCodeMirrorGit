@@ -11,7 +11,7 @@ public interface RepositoryToolsServicesAsync {
 
     void createFileToInitRepository(String url,  String nomRepo, AsyncCallback<Void> callback);
 
-    void updateContentFileAndCommit(byte [] editorText,  String login, AsyncCallback<Boolean> callback);
+    void updateContentFileAndCommit(String file, byte [] editorText,  String login, AsyncCallback<Boolean> callback);
 
     void cloneRepository(String url, String foldToPutRepo,AsyncCallback<Void> callback);
 

@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.smartgwt.client.widgets.tree.TreeGrid;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
 
@@ -24,11 +25,14 @@ public class FormRenameFileOrFolder extends PopupPanel {
     private TextBox tbNewFile;
     private AbstractItem oldItem;
     private boolean onFolder;
+    private AbstractItem abstractItemRoot;
+    private TreeGrid localTreeGrid;
 
-
-    public FormRenameFileOrFolder(AbstractItem absItem, boolean rightClickOnFolder){
+    public FormRenameFileOrFolder(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder, TreeGrid treeGrid){
         super(false);
         this.oldItem = absItem;
+        this.abstractItemRoot = absItemRoot;
+        this.localTreeGrid  = treeGrid;
         this.onFolder = rightClickOnFolder;
         setStyleName("popup");
 
@@ -54,7 +58,7 @@ public class FormRenameFileOrFolder extends PopupPanel {
                 }else{
                     newFileName.setPath(oldItem.getParent().getPath()+"/"+newFileName.getName());
                 }
-                repositoryToolsServices.ChangeFileOrFolderName(oldItem,newFileName, new AsyncCallback<AbstractItem>() {
+                repositoryToolsServices.ChangeFileOrFolderName(oldItem, newFileName, new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     }
@@ -62,7 +66,7 @@ public class FormRenameFileOrFolder extends PopupPanel {
                     @Override
                     public void onSuccess(AbstractItem item) {
                         hide();
-                        //loadFileSystem(item);
+                        Singleton.getInstance().loadFileSystem(abstractItemRoot, localTreeGrid);
                     }
                 });
             }

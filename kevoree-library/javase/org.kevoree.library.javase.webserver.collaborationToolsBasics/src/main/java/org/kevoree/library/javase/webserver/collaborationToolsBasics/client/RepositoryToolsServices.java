@@ -13,7 +13,7 @@ public interface RepositoryToolsServices extends RemoteService {
 
     void createFileToInitRepository(String url, String nomRepo);
 
-    boolean updateContentFileAndCommit(byte [] editorText, String login);
+    boolean updateContentFileAndCommit(String file, byte [] editorText, String login);
 
     void cloneRepository(String url, String nameRepository);
 

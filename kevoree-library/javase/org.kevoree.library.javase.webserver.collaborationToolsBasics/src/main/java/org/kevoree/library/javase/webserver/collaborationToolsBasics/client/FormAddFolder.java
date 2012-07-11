@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.smartgwt.client.widgets.tree.TreeGrid;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
 
@@ -22,12 +23,15 @@ public class FormAddFolder extends PopupPanel {
             .create(RepositoryToolsServices.class);
 
     private TextBox tbNewFile;
-    private AbstractItem item;
+    private AbstractItem abstractItemRoot;
     private boolean onFolder;
+    private TreeGrid localTreeGrid;
+    private AbstractItem item;
 
-
-    public FormAddFolder(AbstractItem absItem, boolean rightClickOnFolder){
+    public FormAddFolder(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder,TreeGrid treeGrid){
         super(false);
+        this.localTreeGrid = treeGrid;
+        this.abstractItemRoot = absItemRoot;
         this.item = absItem;
         this.onFolder = rightClickOnFolder;
         setStyleName("popup");
@@ -62,7 +66,7 @@ public class FormAddFolder extends PopupPanel {
                     @Override
                     public void onSuccess(AbstractItem item) {
                         hide();
-                        //loadFileSystem(item);
+                        Singleton.getInstance().loadFileSystem(abstractItemRoot, localTreeGrid);
                     }
                 });
             }

@@ -10,7 +10,6 @@ import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.kevoree.library.javase.fileSystemGit.GitFileSystem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.RepositoryToolsServices;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
@@ -26,24 +25,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pdespagn
- * Date: 5/31/12
- * Time: 10:57 AM
- * To change this template use File | Settings | File Templates.
- */
-
-
-
-
 public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements RepositoryToolsServices {
 
     private Logger logger = LoggerFactory.getLogger(RepositoryToolsServicesImpl.class);
     AbstractItem baseFolder;
     private String directoryPath;
     private Git git;
-    private File file;
 
     public RepositoryToolsServicesImpl(String directoryPath){
         baseFolder = new FolderItem(directoryPath);
@@ -78,19 +65,18 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
     @Override
     public AbstractItem ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem){
-        File oldFile = new File(baseFolder.getName()+"/"+oldItem.getName());
-        File newFile = new File(baseFolder.getName()+"/"+newItem.getName());
-        logger.debug("oldFile " + oldFile.getName() + " newFile " + newFile.getName());
+        File oldFile = new File(oldItem.getPath());
+        File newFile = new File(newItem.getPath());
         oldFile.renameTo(newFile);
-        logger.debug("after rename " + oldFile.getName());
-        addFileToRepository(oldFile);
+        addFileToRepository(newFile);
+        removeFileToRepository(oldFile);
         commitRepository("rename "+ oldFile.getName() + " into " + newFile.getName(),"","");
         return baseFolder;
     }
 
     @Override
     public AbstractItem createFileIntoLocalRepository(AbstractItem item){
-        File file = new File(baseFolder.getName()+"/"+item.getName());
+        File file = new File(item.getPath());
         try {
             file.createNewFile();
             addFileToRepository(file);
@@ -103,8 +89,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
     @Override
     public AbstractItem createFolderIntoLocalRepository(AbstractItem item){
-        File folder = new File(baseFolder.getName()+"/"+item.getName());
-        logger.debug(" FOLDER NAME " + folder.getName() + " FOLDER PATH " + folder.getPath());
+        File folder = new File(item.getPath());
         folder.mkdir();
         addFileToRepository(folder);
         commitRepository("add folder" + folder.getName(),"","");
@@ -167,7 +152,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
     @Override
     public void createFileToInitRepository(String url, String nomRepo) {
-        file = new File(directoryPath+nomRepo+"/READEME.md");
+       File file = new File(directoryPath+nomRepo+"/README.md");
         try {
             file.createNewFile();
             addFileToRepository(file);
@@ -179,14 +164,16 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
 
     @Override
-    public boolean updateContentFileAndCommit(byte[] editorText, String login) {
+    public boolean updateContentFileAndCommit(String file, byte[] editorText, String login) {
+        logger.debug("I write there --------->" + file);
         boolean result = false;
+        File fileToWrite = new File(file);
         try {
             FileOutputStream fos = new FileOutputStream(file);
             fos.write(editorText);
             fos.close();
-            addFileToRepository(file);
-            commitRepository("update" + System.currentTimeMillis(), login, "");
+            addFileToRepository(fileToWrite);
+            commitRepository("update content of " + file, login, "");
             result = true;
         } catch (IOException e) {
             logger.debug("Cannot write into the file "+e);
@@ -230,6 +217,18 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         return result;
     }
 
+    public boolean removeFileToRepository(File fileToAdd) {
+        Boolean result = false;
+        File workingDir = git.getRepository().getWorkTree();
+        try {
+            git.rm().addFilepattern(fileToAdd.getName()).call();
+            result = true;
+        } catch (NoFilepatternException e) {
+            logger.debug("Cannot remove file to repository " + e);
+        }
+        return result;
+    }
+
     private String getFilePattern(File baseDir, File file) {
         String baseDirStr = baseDir.getAbsolutePath();
         String fileStr = file.getAbsolutePath();
@@ -267,7 +266,8 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         finally{
             scanner.close();
         }
-        file = new File(directoryPath+filePath);
+       // File file = new File(filePath);
+        logger.debug("--------------6> filePath " + filePath + " content " + text);
         return text.toString();
     }
 

@@ -1,9 +1,20 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
+
 /**
 * Doc can be found http://codemirror.net/doc/manual.html
 * */
 public class CodeMirrorEditorWrapper {
+
+    private static String fileOpened;
+
+    public static synchronized String getFileOpened(){
+        return fileOpened;
+    }
+
+    public static synchronized void setFileOpened(String fileOpenedPath){
+        fileOpened = fileOpenedPath;
+    }
 
 	public static native String getText() /*-{
 		return $wnd.codeMirrorEditor.getValue();
