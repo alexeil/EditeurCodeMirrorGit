@@ -26,13 +26,13 @@ public class FormRenameFileOrFolder extends PopupPanel {
     private AbstractItem oldItem;
     private boolean onFolder;
     private AbstractItem abstractItemRoot;
-    private TreeGrid localTreeGrid;
+    private RootPanel systemFileRoot;
 
-    public FormRenameFileOrFolder(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder, TreeGrid treeGrid){
+    public FormRenameFileOrFolder(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder, RootPanel systemFile){
         super(false);
         this.oldItem = absItem;
         this.abstractItemRoot = absItemRoot;
-        this.localTreeGrid  = treeGrid;
+        this.systemFileRoot = systemFile;
         this.onFolder = rightClickOnFolder;
         setStyleName("popup");
 
@@ -66,7 +66,7 @@ public class FormRenameFileOrFolder extends PopupPanel {
                     @Override
                     public void onSuccess(AbstractItem item) {
                         hide();
-                        Singleton.getInstance().loadFileSystem(abstractItemRoot, localTreeGrid);
+                        Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
                     }
                 });
             }

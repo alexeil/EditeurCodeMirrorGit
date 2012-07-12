@@ -31,4 +31,5 @@ public interface RepositoryToolsServicesAsync {
 
     void ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem, AsyncCallback<AbstractItem> callback);
 
+    void addFiletoRepositoryAfterUpload(AbstractItem item, AsyncCallback<AbstractItem> callback);
 }

@@ -25,12 +25,12 @@ public class FormAddFolder extends PopupPanel {
     private TextBox tbNewFile;
     private AbstractItem abstractItemRoot;
     private boolean onFolder;
-    private TreeGrid localTreeGrid;
+    private RootPanel systemFileRoot;
     private AbstractItem item;
 
-    public FormAddFolder(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder,TreeGrid treeGrid){
+    public FormAddFolder(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder, RootPanel systemFile){
         super(false);
-        this.localTreeGrid = treeGrid;
+        this.systemFileRoot = systemFile;
         this.abstractItemRoot = absItemRoot;
         this.item = absItem;
         this.onFolder = rightClickOnFolder;
@@ -66,7 +66,7 @@ public class FormAddFolder extends PopupPanel {
                     @Override
                     public void onSuccess(AbstractItem item) {
                         hide();
-                        Singleton.getInstance().loadFileSystem(abstractItemRoot, localTreeGrid);
+                        Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
                     }
                 });
             }

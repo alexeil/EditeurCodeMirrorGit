@@ -14,23 +14,9 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
-import com.smartgwt.client.widgets.menu.Menu;
-import com.smartgwt.client.widgets.menu.MenuItem;
-import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
-import com.smartgwt.client.widgets.tree.Tree;
-import com.smartgwt.client.widgets.tree.TreeGrid;
-import com.smartgwt.client.widgets.tree.TreeNode;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
-
 
 
 /**
@@ -43,26 +29,17 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     private HTML textAreaCodeShow;
     private String login, password, nomRepository, urlRepository;
     private PopupPanel popupFormNew, popupFormOpen, popupUploadFile;
-    private Button btnOpen, btnSave, btnCreateFile;
+    private Button btnOpen, btnSave;
     private NativeEvent ne;
 
     private RootPanel buttonBar,editor,systemFileRoot;
-    private Tree tree;
-    private TreeGrid treeGrid;
-    private TreeNode currentSelectedNode;
 
     private AbstractItem abstractItemRoot;
-
-    private final StructureServiceAsync structureService = GWT
-            .create(StructureService.class);
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
 
 
-    /**
-     * This is the entry point method.
-     */
     public void onModuleLoad() {
         // Listener CodeMirror
         CodeMirrorEditorWrapper.addOnChangeHandler(this);
@@ -72,9 +49,9 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         editor = RootPanel.get("editor");
         systemFileRoot = RootPanel.get("fileSystem");
 
-        treeGrid = new TreeGrid();
+      /*  treeGrid = new TreeGrid();
         treeGrid.setHeight("800px");
-        systemFileRoot.add(treeGrid);
+        systemFileRoot.add(treeGrid);  */
 
         // add editor's content
         Grid gridEditor = new Grid(1,1);
@@ -104,16 +81,6 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                 popupFormNew.center();
             }
         });
-
-        Button btnUploadFile = new Button("Import a file");
-        btnUploadFile.setWidth("125px");
-        btnUploadFile.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-                popupUploadFile.center();
-            }
-        });
-        grid.setWidget(0, 2, btnUploadFile);
 
         grid.setWidget(0, 0, btnNouveau);
         btnNouveau.setWidth("123px");
@@ -156,10 +123,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                     CodeMirrorEditorWrapper.setText("");
                     CodeMirrorEditorWrapper.setFileOpened(null);
                     abstractItemRoot = abstractItem;
-                    Singleton.getInstance().loadFileSystem(abstractItemRoot,treeGrid);
-
-                   //TODO
-                   // popupUploadFile = new UploadFileForm(abstractItemRoot);
+                    Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
                 }
             });
             }
@@ -229,12 +193,9 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                         //TODO
                         //codeMirror.setText("");
                         abstractItemRoot =  abstractItem;
-                        Singleton.getInstance().loadFileSystem(abstractItemRoot,treeGrid);
+                        Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
                         popupFormNew.hide();
                         btnSave.setEnabled(true);
-
-                        //TODO
-                        popupUploadFile = new UploadFileForm(abstractItemRoot);
                     }
                 });
             }
@@ -321,7 +282,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     public void writeEditorContentToFile(){
         String contentEditor =  CodeMirrorEditorWrapper.getText();
         String filePath = CodeMirrorEditorWrapper.getFileOpened();
-        repositoryToolsServices.updateContentFileAndCommit(filePath,contentEditor.getBytes(), login, new AsyncCallback<Boolean>() {
+        repositoryToolsServices.updateContentFileAndCommit(filePath, contentEditor.getBytes(), login, new AsyncCallback<Boolean>() {
             @Override
             public void onFailure(Throwable throwable) {
                 //To change body of implemented methods use File | Settings | File Templates.

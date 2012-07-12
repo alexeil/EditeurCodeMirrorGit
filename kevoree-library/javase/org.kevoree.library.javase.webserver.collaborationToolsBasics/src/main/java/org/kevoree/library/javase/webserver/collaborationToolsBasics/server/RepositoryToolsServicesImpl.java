@@ -41,9 +41,6 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         super.doGet(req, resp);
-        /*PrintWriter writer = resp.getWriter();
-        writer.write("bla");
-         */
     }
 
     public AbstractItem importRepository(String login, String password, String url) {
@@ -74,12 +71,23 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         return baseFolder;
     }
 
+
+    @Override
+    public AbstractItem addFiletoRepositoryAfterUpload(AbstractItem item){
+        File file = new File(item.getPath());
+        addFileToRepository(file);
+        commitRepository("add file" + file.getName(),"","");
+        return baseFolder;
+    }
+
     @Override
     public AbstractItem createFileIntoLocalRepository(AbstractItem item){
         File file = new File(item.getPath());
         try {
             file.createNewFile();
             addFileToRepository(file);
+            // TODO TEST ADD FOLDER
+            addFileToRepository(new File(item.getParent().getPath()));
         } catch (IOException e) {
             logger.debug("cannot create or add the file to the repository");
         }
@@ -91,8 +99,8 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     public AbstractItem createFolderIntoLocalRepository(AbstractItem item){
         File folder = new File(item.getPath());
         folder.mkdir();
-        addFileToRepository(folder);
-        commitRepository("add folder" + folder.getName(),"","");
+        //addFileToRepository(folder);
+        //commitRepository("add folder" + folder.getName(),"","");
         return baseFolder;
     }
 
@@ -156,7 +164,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         try {
             file.createNewFile();
             addFileToRepository(file);
-            commitRepository("add files","","");
+            commitRepository("Init Repository with a README.md ","","");
         } catch (IOException e) {
             logger.debug("Cannot create the file "+e);
         }
@@ -209,8 +217,14 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         Boolean result = false;
         File workingDir = git.getRepository().getWorkTree();
         try {
+           // git.add();
+           // git.add().call();
+            //git.add().addFilepattern(fileToAdd.getPath()).call();
             git.add().addFilepattern(fileToAdd.getName()).call();
-            result = true;
+            logger.debug(" addFilePattern -----------<  Name" + fileToAdd.getName() + " path " + fileToAdd.getPath());
+
+            logger.debug(" git directory" + git.getRepository().getDirectory().getName() );
+                    result = true;
         } catch (NoFilepatternException e) {
             logger.debug("Cannot add file to repository " + e);
         }
@@ -221,7 +235,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         Boolean result = false;
         File workingDir = git.getRepository().getWorkTree();
         try {
-            git.rm().addFilepattern(fileToAdd.getName()).call();
+            git.rm().addFilepattern(fileToAdd.getPath()).call();
             result = true;
         } catch (NoFilepatternException e) {
             logger.debug("Cannot remove file to repository " + e);

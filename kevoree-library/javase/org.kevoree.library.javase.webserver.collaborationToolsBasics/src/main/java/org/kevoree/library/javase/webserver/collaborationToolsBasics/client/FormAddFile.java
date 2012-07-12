@@ -41,12 +41,12 @@ public class FormAddFile extends PopupPanel {
     private AbstractItem item;
     private boolean onFolder;
 
-    private TreeGrid localTreeGrid;
+    private RootPanel systemFileRoot;
     private AbstractItem abstractItemRoot;
 
-    public FormAddFile(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder,TreeGrid treeGrid){
+    public FormAddFile(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder,RootPanel systemFile){
         super(false);
-        this.localTreeGrid = treeGrid;
+        this.systemFileRoot = systemFile;
         this.abstractItemRoot = absItemRoot;
         this.item = absItem;
         this.onFolder = rightClickOnFolder;
@@ -71,10 +71,12 @@ public class FormAddFile extends PopupPanel {
                 AbstractItem fileTocreate = new FileItem(tbNewFile.getText());
                 if(onFolder) {
                     fileTocreate.setPath(item.getPath()+"/"+fileTocreate.getName());
+                    fileTocreate.setParent(item);
                 }else{
                     fileTocreate.setPath(item.getParent().getPath()+"/"+fileTocreate.getName());
+                    fileTocreate.setParent(item.getParent());
                 }
-                RootPanel.get().add(new HTML(" fileToCreate " + fileTocreate.getPath()));
+                RootPanel.get().add(new HTML(" fileToCreate " + fileTocreate.getPath()+ " his parent " + fileTocreate.getParent().getName()));
 
                 repositoryToolsServices.createFileIntoLocalRepository(fileTocreate, new AsyncCallback<AbstractItem>() {
                     @Override
@@ -84,7 +86,7 @@ public class FormAddFile extends PopupPanel {
                     @Override
                     public void onSuccess(AbstractItem item) {
                         hide();
-                        Singleton.getInstance().loadFileSystem(abstractItemRoot, localTreeGrid);
+                        Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
                     }
                 });
             }

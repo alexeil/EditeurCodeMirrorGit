@@ -1,6 +1,7 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -32,6 +33,7 @@ public final class Singleton {
     private TreeNode currentSelectedNode;
     private AbstractItem abstractItemRoot;
     private String fileOpenedPath;
+    private RootPanel systemFileRoot;
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
@@ -55,14 +57,19 @@ public final class Singleton {
         return Singleton.instance;
     }
 
-    public void loadFileSystem(AbstractItem abstractItem, TreeGrid treeGrid) {
+    public void loadFileSystem(AbstractItem abstractItem, RootPanel systemFile) {
         this.abstractItemRoot = abstractItem;
-        this.localTreeGrid = treeGrid;
+        this.localTreeGrid = new TreeGrid();
+        this.systemFileRoot = systemFile;
+        this.localTreeGrid.setHeight("800px");
+        this.systemFileRoot.clear();
+        this.systemFileRoot.add(localTreeGrid);
+
         // add FileSystem's content
         structureService.getArborescence(abstractItem, new AsyncCallback<AbstractItem>() {
             @Override
             public void onFailure(Throwable caught) {
-                RootPanel.get().add(new HTML("FAIL" + caught.getStackTrace().toString() + " message " + caught.getMessage()));
+                RootPanel.get().add(new HTML("FAIL : message " + caught.getMessage()));
             }
             @Override
             public void onSuccess(AbstractItem result) {
@@ -91,6 +98,7 @@ public final class Singleton {
                         localTreeGrid.getContextMenu().showContextMenu();
                     }
                 });
+
                 localTreeGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
                     @Override
                     public void onCellDoubleClick(CellDoubleClickEvent event) {
@@ -108,10 +116,6 @@ public final class Singleton {
                                 public void onSuccess(String s) {
                                     CodeMirrorEditorWrapper.setFileOpened(fileOpenedPath);
                                     CodeMirrorEditorWrapper.setText(s);
-
-
-                                    RootPanel.get().add(new HTML(" text " + s + " path " + fileOpenedPath));
-
                                 }
                             });
                         }
@@ -152,7 +156,7 @@ public final class Singleton {
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
-                FormAddFile formAddFile = new FormAddFile(item,abstractItemRoot,rightClickOnFolder, localTreeGrid);
+                FormAddFile formAddFile = new FormAddFile(item,abstractItemRoot,rightClickOnFolder, systemFileRoot);
                 formAddFile.center();
             }
         });
@@ -164,7 +168,7 @@ public final class Singleton {
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
-                FormAddFolder formAddFolder = new FormAddFolder(item,abstractItemRoot,rightClickOnFolder,localTreeGrid);
+                FormAddFolder formAddFolder = new FormAddFolder(item,abstractItemRoot,rightClickOnFolder,systemFileRoot);
                 formAddFolder.center();
             }
         });
@@ -176,12 +180,23 @@ public final class Singleton {
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
-                FormRenameFileOrFolder formRenameFileOrFolder = new FormRenameFileOrFolder(item,abstractItemRoot,rightClickOnFolder,localTreeGrid);
+                FormRenameFileOrFolder formRenameFileOrFolder = new FormRenameFileOrFolder(item,abstractItemRoot,rightClickOnFolder,systemFileRoot);
                 formRenameFileOrFolder.center();
             }
         });
 
-        mainMenu.setItems(createFileMenu,createFolderMenu,refactorMenu);
+        com.smartgwt.client.widgets.menu.MenuItem importMenu = new com.smartgwt.client.widgets.menu.MenuItem("Import");
+        refactorMenu.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+            @Override
+            public void onClick(MenuItemClickEvent event) {
+                AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
+                Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
+                FormUploadFile formUploadFile = new FormUploadFile(item,abstractItemRoot,rightClickOnFolder,systemFileRoot);
+                formUploadFile.center();
+            }
+        });
+
+        mainMenu.setItems(createFileMenu,createFolderMenu,refactorMenu,importMenu);
         return mainMenu;
     }
 }

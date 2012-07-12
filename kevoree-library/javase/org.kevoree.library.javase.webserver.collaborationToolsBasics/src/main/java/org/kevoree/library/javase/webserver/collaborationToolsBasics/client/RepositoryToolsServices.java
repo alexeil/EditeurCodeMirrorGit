@@ -33,4 +33,6 @@ public interface RepositoryToolsServices extends RemoteService {
 
     AbstractItem ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem);
 
+    AbstractItem addFiletoRepositoryAfterUpload(AbstractItem item);
+
 }

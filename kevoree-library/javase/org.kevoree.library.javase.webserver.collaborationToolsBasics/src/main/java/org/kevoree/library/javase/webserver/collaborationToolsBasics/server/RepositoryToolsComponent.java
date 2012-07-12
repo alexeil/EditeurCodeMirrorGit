@@ -43,7 +43,7 @@ public class RepositoryToolsComponent extends ParentAbstractPage {
 		super.startPage();
 		servletRepository.registerServlet("/ihmcodemirror/htmleditor", new RepositoryToolsServicesImpl(this.getDictionary().get("directoryPath").toString()));
 		servletRepository.registerServlet("/ihmcodemirror/systemFileServices", new StructureServiceImpl());
-		//servletRepository.registerServlet("/ihmcodemirror/upload", new UploadFileServer());
+		servletRepository.registerServlet("/ihmcodemirror/upload", new UploadFileServer());
 	}
 
 	@Override
