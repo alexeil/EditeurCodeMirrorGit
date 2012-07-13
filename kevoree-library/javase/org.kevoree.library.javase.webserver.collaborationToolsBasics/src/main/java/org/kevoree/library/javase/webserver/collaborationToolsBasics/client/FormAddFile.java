@@ -34,9 +34,6 @@ public class FormAddFile extends PopupPanel {
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
 
-    private final StructureServiceAsync structureService = GWT
-            .create(StructureService.class);
-
     private TextBox tbNewFile;
     private AbstractItem item;
     private boolean onFolder;

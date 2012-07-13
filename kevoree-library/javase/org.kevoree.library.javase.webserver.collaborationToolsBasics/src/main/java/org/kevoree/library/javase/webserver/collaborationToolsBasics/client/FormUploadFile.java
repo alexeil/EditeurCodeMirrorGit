@@ -19,9 +19,6 @@ public class FormUploadFile extends PopupPanel{
 
     private static final String UPLOAD_ACTION_URL = GWT.getModuleBaseURL() + "upload";
 
-    private final StructureServiceAsync structureService = GWT
-            .create(StructureService.class);
-
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
 

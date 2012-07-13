@@ -27,12 +27,13 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             textBoxURLRepositoryImport, textBoxLoginImport ;
     private PasswordTextBox  textBoxPasswordImport,textBoxPasswordNew;
     private HTML textAreaCodeShow;
-    private String login, password, nomRepository, urlRepository;
-    private PopupPanel popupFormNew, popupFormOpen, popupUploadFile;
+    private StringBuilder login, password, nomRepository, urlRepository;
+    private PopupPanel popupUploadFile;
     private Button btnOpen, btnSave;
     private NativeEvent ne;
     private Label labelError;
-
+    private FormOpen formOpen;
+    private FormNew formNew;
     private RootPanel buttonBar,editor,systemFileRoot;
 
     private AbstractItem abstractItemRoot;
@@ -49,6 +50,8 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         buttonBar = RootPanel.get("buttonBar");
         editor = RootPanel.get("editor");
         systemFileRoot = RootPanel.get("fileSystem");
+
+
 
         // add editor's content
         Grid gridEditor = new Grid(1,1);
@@ -73,15 +76,15 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         buttonBar.add(labelError);
 
         // Form open existing project
-        popupFormOpen = new PopupPanel(true);
+      /*  popupFormOpen = new PopupPanel(true);
         popupFormOpen.setStyleName("popup");
         Grid gridFieldsOpen = new Grid(4, 2);
-        Label lblURLRepository = new Label("HTTPS du repository :");
+        Label lblURLRepository = new Label("HTTPS du repository :");  */
 
         Button btnNouveau = new Button("New");
         btnNouveau.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                popupFormNew.center();
+                formNew.center();
             }
         });
 
@@ -96,53 +99,60 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             }
         });
 
+        login = new StringBuilder();
+        password = new StringBuilder();
+
+
+        formOpen =  new FormOpen(labelError, btnSave, abstractItemRoot,systemFileRoot, login, password);
+        formNew =  new FormNew(labelError, btnSave, abstractItemRoot,systemFileRoot, login, password);
+
         btnOpen = new Button("Open");
         grid.setWidget(0, 1, btnOpen);
         btnOpen.setWidth("125px");
 
         btnOpen.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                popupFormOpen.center();
+                formOpen.center();
             }
         });
 
-        Button btnImport = new Button("Import");
+        /*Button btnImport = new Button("Import");
         btnImport.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
 
-        login = textBoxLoginImport.getText();
-        password = textBoxPasswordImport.getText();
-        urlRepository = textBoxURLRepositoryImport.getText();
-        if(!login.isEmpty() && !password.isEmpty() && !urlRepository.isEmpty())
-            repositoryToolsServices.importRepository(login, password, urlRepository, new AsyncCallback<AbstractItem>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    labelError.setText("Error importing the repository ( Wrong repository URL Or login/password");
-                    labelError.setVisible(true);
-                    btnSave.setEnabled(false);
-                }
-                @Override
-                public void onSuccess(AbstractItem abstractItem) {
-                    labelError.setVisible(true);
-                    textAreaCodeShow.setHTML("");
-                    CodeMirrorEditorWrapper.setText("");
-                    CodeMirrorEditorWrapper.setFileOpened(null);
-                    abstractItemRoot = abstractItem;
-                    Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
-                    popupFormOpen.hide();
-                }
-            });
+                login = textBoxLoginImport.getText();
+                password = textBoxPasswordImport.getText();
+                urlRepository = textBoxURLRepositoryImport.getText();
+                if(!login.isEmpty() && !password.isEmpty() && !urlRepository.isEmpty())
+                    repositoryToolsServices.importRepository(login, password, urlRepository, new AsyncCallback<AbstractItem>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            labelError.setText("Error importing the repository ( Wrong repository URL Or login/password");
+                            labelError.setVisible(true);
+                            btnSave.setEnabled(false);
+                        }
+                        @Override
+                        public void onSuccess(AbstractItem abstractItem) {
+                            labelError.setVisible(true);
+                            textAreaCodeShow.setHTML("");
+                            CodeMirrorEditorWrapper.setText("");
+                            CodeMirrorEditorWrapper.setFileOpened(null);
+                            abstractItemRoot = abstractItem;
+                            Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
+                            popupFormOpen.hide();
+                        }
+                    });
             }
-        });
+        });  */
 
         grid.setWidget(1, 0, btnSave);
         btnSave.setWidth("125px");
         btnSave.setEnabled(false);
 
-        popupFormOpen.setWidget(gridFieldsOpen);
+       // popupFormOpen.setWidget(gridFieldsOpen);
 
         // Form New project
-        popupFormNew = new PopupPanel(true);
+       /* popupFormNew = new PopupPanel(true);
         popupFormNew.setStyleName("popup");
         Grid gridFieldsNew = new Grid(4, 2);
 
@@ -164,10 +174,10 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         gridFieldsNew.setWidget(2, 0, lblNomDuRepository);
 
         textBoxNameRepositoryNew = new TextBox();
-        gridFieldsNew.setWidget(2, 1, textBoxNameRepositoryNew);
+        gridFieldsNew.setWidget(2, 1, textBoxNameRepositoryNew);    */
 
         // component for form Open
-        Label lblLogin2 = new Label("Login :");
+      /*  Label lblLogin2 = new Label("Login :");
         lblLogin2.setHeight("25px");
         textBoxLoginImport = new TextBox();
         Label lblPassword2 = new Label("Password :");
@@ -180,9 +190,9 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         gridFieldsOpen.setWidget(1, 1, textBoxPasswordImport);
         gridFieldsOpen.setWidget(2, 0, lblURLRepository);
         gridFieldsOpen.setWidget(2, 1, textBoxURLRepositoryImport);
-        gridFieldsOpen.setWidget(3, 0, btnImport);
+        gridFieldsOpen.setWidget(3, 0, btnImport); */
 
-        Button btnCreateRepo = new Button("Create repository");
+      /*  Button btnCreateRepo = new Button("Create repository");
         btnCreateRepo.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
             login = textBoxLoginNew.getText();
@@ -209,12 +219,12 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                     }
                 });
             }
-        });
+        });        */
 
 
-        gridFieldsNew.setWidget(3, 0, btnCreateRepo);
-        popupFormNew.setWidget(gridFieldsNew);
-        popupFormOpen.setWidget(gridFieldsOpen);
+       /* gridFieldsNew.setWidget(3, 0, btnCreateRepo);
+        popupFormNew.setWidget(gridFieldsNew);  */
+     //   popupFormOpen.setWidget(gridFieldsOpen);
 
         HandlerRegistration logHandler = Event.addNativePreviewHandler(new NativePreviewHandler() {
 
@@ -229,10 +239,10 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                 Scheduler.get().scheduleDeferred( new ScheduledCommand() {
                     @Override
                     public void execute() {
-                        if (popupFormNew.isShowing()) {
-                            popupFormNew.hide();
+                        if (formNew.isShowing()) {
+                            formNew.hide();
                         } else {
-                            popupFormNew.center();
+                            formNew.center();
                         }
                     }
                 });
@@ -243,10 +253,10 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                 Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                     @Override
                     public void execute() {
-                        if (popupFormOpen.isShowing()) {
-                            popupFormOpen.hide();
+                        if (formOpen.isShowing()) {
+                            formOpen.hide();
                         } else {
-                            popupFormOpen.center();
+                            formOpen.center();
                         }
                     }
                 });
@@ -292,7 +302,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     public void writeEditorContentToFile(){
         String contentEditor =  CodeMirrorEditorWrapper.getText();
         String filePath = CodeMirrorEditorWrapper.getFileOpened();
-        repositoryToolsServices.updateContentFileAndCommit(filePath, contentEditor.getBytes(), login, new AsyncCallback<Boolean>() {
+        repositoryToolsServices.updateContentFileAndCommit(filePath, contentEditor.getBytes(), login.toString(), new AsyncCallback<Boolean>() {
             @Override
             public void onFailure(Throwable throwable) {
                 //To change body of implemented methods use File | Settings | File Templates.
@@ -305,7 +315,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     }
 
     public void pushContentEditorToRepo() {
-        repositoryToolsServices.pushRepository(login, password,new
+        repositoryToolsServices.pushRepository(login.toString(), password.toString(),new
                 AsyncCallback<Boolean>(){
                     @Override public void onFailure(Throwable throwable) { }
                     @Override public void onSuccess(Boolean aBoolean) {  }
