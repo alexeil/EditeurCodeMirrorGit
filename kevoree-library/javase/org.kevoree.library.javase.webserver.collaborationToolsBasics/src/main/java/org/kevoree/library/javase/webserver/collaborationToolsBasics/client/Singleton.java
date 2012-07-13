@@ -186,7 +186,7 @@ public final class Singleton {
         });
 
         com.smartgwt.client.widgets.menu.MenuItem importMenu = new com.smartgwt.client.widgets.menu.MenuItem("Import");
-        refactorMenu.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+        importMenu.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
             @Override
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");

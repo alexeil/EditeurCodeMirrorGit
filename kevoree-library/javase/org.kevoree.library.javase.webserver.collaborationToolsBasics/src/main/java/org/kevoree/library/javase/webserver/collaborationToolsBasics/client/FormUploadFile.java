@@ -31,7 +31,7 @@ public class FormUploadFile extends PopupPanel{
     private boolean onFolder;
     private AbstractItem abstractItemRoot;
     private TextBox tbPath;
-
+     private  FileUpload upload;
     public FormUploadFile(AbstractItem fileToUpload, AbstractItem absItemRoot, boolean rightClickOnFolder, RootPanel systemFile) {
         super(false);
         setStyleName("popup");
@@ -50,12 +50,15 @@ public class FormUploadFile extends PopupPanel{
         VerticalPanel panel = new VerticalPanel();
         form.setWidget(panel);
 
+
+
+
         tbPath = new TextBox();
-        tbPath.setText(fileToUpload.getName());
+        tbPath.setText(fileUpload.getPath());
         tbPath.setName("nomDossier");
         panel.add(tbPath);
 
-        FileUpload upload = new FileUpload();
+        upload = new FileUpload();
         upload.setName("uploadFormElement");
         panel.add(upload);
 
@@ -74,8 +77,7 @@ public class FormUploadFile extends PopupPanel{
 
         form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
             public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-
-                AbstractItem fileTocreate = new FileItem(tbPath.getText());
+                AbstractItem fileTocreate = new FileItem(upload.getFilename().substring(upload.getFilename().lastIndexOf("\\")+1));
                 if(onFolder) {
                     fileTocreate.setPath(fileUpload.getPath()+"/"+fileTocreate.getName());
                     fileTocreate.setParent(fileUpload);
@@ -83,8 +85,7 @@ public class FormUploadFile extends PopupPanel{
                     fileTocreate.setPath(fileUpload.getParent().getPath()+"/"+fileTocreate.getName());
                     fileTocreate.setParent(fileUpload.getParent());
                 }
-
-                repositoryToolsServices.addFiletoRepositoryAfterUpload(fileUpload, new AsyncCallback<AbstractItem>() {
+                 repositoryToolsServices.addFiletoRepositoryAfterUpload(fileTocreate, new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                         //To change body of implemented methods use File | Settings | File Templates.
@@ -92,8 +93,9 @@ public class FormUploadFile extends PopupPanel{
 
                     @Override
                     public void onSuccess(AbstractItem abstractItem) {
+
                         Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
-                        // hide();
+                         hide();
                     }
                 });
             }

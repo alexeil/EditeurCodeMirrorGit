@@ -31,6 +31,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     private PopupPanel popupFormNew, popupFormOpen, popupUploadFile;
     private Button btnOpen, btnSave;
     private NativeEvent ne;
+    private Label labelError;
 
     private RootPanel buttonBar,editor,systemFileRoot;
 
@@ -49,10 +50,6 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         editor = RootPanel.get("editor");
         systemFileRoot = RootPanel.get("fileSystem");
 
-      /*  treeGrid = new TreeGrid();
-        treeGrid.setHeight("800px");
-        systemFileRoot.add(treeGrid);  */
-
         // add editor's content
         Grid gridEditor = new Grid(1,1);
 
@@ -65,9 +62,15 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         editor.add(gridEditor);
 
         // add buttonBar's Content
-        Grid grid = new Grid(2, 3);
+        Grid grid = new Grid(2, 2);
         buttonBar.add(grid);
         buttonBar.setStyleName("buttonBarGrid");
+
+        labelError = new Label();
+        labelError.setVisible(false);
+        labelError.setStyleName("labelError");
+        //grid.setWidget(2,0, labelError);
+        buttonBar.add(labelError);
 
         // Form open existing project
         popupFormOpen = new PopupPanel(true);
@@ -106,8 +109,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         Button btnImport = new Button("Import");
         btnImport.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-        popupFormOpen.hide();
-        btnSave.setEnabled(true);
+
         login = textBoxLoginImport.getText();
         password = textBoxPasswordImport.getText();
         urlRepository = textBoxURLRepositoryImport.getText();
@@ -115,15 +117,19 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             repositoryToolsServices.importRepository(login, password, urlRepository, new AsyncCallback<AbstractItem>() {
                 @Override
                 public void onFailure(Throwable throwable) {
-                    RootPanel.get().add(new HTML(" FAIL at import repo " ));
+                    labelError.setText("Error importing the repository ( Wrong repository URL Or login/password");
+                    labelError.setVisible(true);
+                    btnSave.setEnabled(false);
                 }
                 @Override
                 public void onSuccess(AbstractItem abstractItem) {
+                    labelError.setVisible(true);
                     textAreaCodeShow.setHTML("");
                     CodeMirrorEditorWrapper.setText("");
                     CodeMirrorEditorWrapper.setFileOpened(null);
                     abstractItemRoot = abstractItem;
                     Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
+                    popupFormOpen.hide();
                 }
             });
             }
@@ -185,13 +191,17 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             if(!login.isEmpty() && !password.isEmpty() && !nomRepository.isEmpty())
                 repositoryToolsServices.initRepository(login,password,nomRepository,new AsyncCallback<AbstractItem>() {
                     @Override
-                    public void onFailure(Throwable throwable) { }
+                    public void onFailure(Throwable throwable) {
+                        labelError.setText("Error : repository already exists Or wrong login/password");
+                        labelError.setVisible(true);
+                        btnSave.setEnabled(false);
+                    }
 
                     @Override
                     public void onSuccess(AbstractItem abstractItem) {
                         textAreaCodeShow.setHTML("");
-                        //TODO
-                        //codeMirror.setText("");
+                        CodeMirrorEditorWrapper.setText("");
+                        CodeMirrorEditorWrapper.setFileOpened(null);
                         abstractItemRoot =  abstractItem;
                         Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
                         popupFormNew.hide();

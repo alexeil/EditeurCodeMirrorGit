@@ -37,6 +37,10 @@ body{
     border                 :    3px solid black;
 }
 
+.labelError{
+    color:red;
+    text-align: center
+}
 .textAreaCodeShow
 {
     border: solid 1px;

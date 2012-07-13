@@ -50,10 +50,6 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
             cloneRepository(url, nameRepository);
             baseFolder.setName(directoryPath+nameRepository);
 
-            logger.debug("NameRepository -----------6> " + nameRepository );
-            logger.debug(" baseFolder.setName directoryPath+nameRepository -----------6> " + directoryPath+nameRepository );
-
-
             return baseFolder;
         }else{
             return null;
@@ -217,14 +213,9 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         Boolean result = false;
         File workingDir = git.getRepository().getWorkTree();
         try {
-           // git.add();
-           // git.add().call();
-            //git.add().addFilepattern(fileToAdd.getPath()).call();
-            git.add().addFilepattern(fileToAdd.getName()).call();
-            logger.debug(" addFilePattern -----------<  Name" + fileToAdd.getName() + " path " + fileToAdd.getPath());
-
-            logger.debug(" git directory" + git.getRepository().getDirectory().getName() );
-                    result = true;
+             String finalFilePath = fileToAdd.getPath().substring(fileToAdd.getPath().indexOf(workingDir.getPath())+ workingDir.getPath().length() + 1);
+             git.add().addFilepattern(finalFilePath).call();
+             result = true;
         } catch (NoFilepatternException e) {
             logger.debug("Cannot add file to repository " + e);
         }
