@@ -1,6 +1,5 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.server;
 
-import com.google.gwt.user.server.rpc.RPC;
 import org.kevoree.annotation.ComponentType;
 import org.kevoree.annotation.DictionaryAttribute;
 import org.kevoree.annotation.DictionaryType;
@@ -10,18 +9,8 @@ import org.kevoree.library.javase.webserver.KevoreeHttpRequest;
 import org.kevoree.library.javase.webserver.KevoreeHttpResponse;
 import org.kevoree.library.javase.webserver.ParentAbstractPage;
 import org.kevoree.library.javase.webserver.servlet.LocalServletRegistry;
-import scala.collection.immutable.List;
-
-import javax.servlet.ServletContextListener;
 
 
-/**
- * Created with IntelliJ IDEA.
- * User: pdespagn
- * Date: 5/31/12
- * Time: 11:45 AM
- * To change this template use File | Settings | File Templates.
- */
 @Library(name = "JavaSE")
 @ComponentType
 @DictionaryType({

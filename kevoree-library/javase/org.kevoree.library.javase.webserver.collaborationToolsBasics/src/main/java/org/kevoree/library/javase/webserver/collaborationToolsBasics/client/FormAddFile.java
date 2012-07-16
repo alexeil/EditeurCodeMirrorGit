@@ -4,31 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.*;
-import com.google.gwt.user.client.ui.Label;
-import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
-import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
-import com.smartgwt.client.widgets.menu.Menu;
-import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
-import com.smartgwt.client.widgets.tree.Tree;
-import com.smartgwt.client.widgets.tree.TreeGrid;
-import com.smartgwt.client.widgets.tree.TreeNode;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
 
-import java.awt.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: tboschat
- * Date: 7/10/12
- * Time: 5:05 PM
- * To change this template use File | Settings | File Templates.
- */
 public class FormAddFile extends PopupPanel {
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT

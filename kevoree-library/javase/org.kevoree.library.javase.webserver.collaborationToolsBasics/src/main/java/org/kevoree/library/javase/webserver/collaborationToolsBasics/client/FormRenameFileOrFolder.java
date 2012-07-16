@@ -5,17 +5,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import com.smartgwt.client.widgets.tree.TreeGrid;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
 
-/**
- * Created with IntelliJ IDEA.
- * User: tboschat
- * Date: 7/10/12
- * Time: 5:05 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class FormRenameFileOrFolder extends PopupPanel {
 
 

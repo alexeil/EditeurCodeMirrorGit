@@ -1,7 +1,6 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -17,13 +16,6 @@ import com.smartgwt.client.widgets.tree.TreeNode;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
 
-/**
- * Created with IntelliJ IDEA.
- * User: tboschat
- * Date: 7/11/12
- * Time: 4:39 PM
- * To change this template use File | Settings | File Templates.
- */
 public final class Singleton {
 
     private static volatile Singleton instance = null;

@@ -14,14 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-
-/**
- * Created with IntelliJ IDEA.
- * User: pdespagn
- * Date: 6/25/12
- * Time: 10:51 AM
- * To change this template use File | Settings | File Templates.
- */
 public class UploadFileServer extends HttpServlet {
     private  String uploadDirectory;
 

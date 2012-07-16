@@ -7,13 +7,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 
-/**
- * Created with IntelliJ IDEA.
- * User: tboschat
- * Date: 7/13/12
- * Time: 11:27 AM
- * To change this template use File | Settings | File Templates.
- */
+
 public class FormNew extends PopupPanel {
     TextBox textBoxLoginNew,  textBoxPasswordNew, textBoxNameRepositoryNew;
     StringBuilder login, password;

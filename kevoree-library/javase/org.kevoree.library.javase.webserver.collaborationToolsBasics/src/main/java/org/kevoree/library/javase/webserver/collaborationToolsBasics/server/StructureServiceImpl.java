@@ -1,7 +1,6 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import org.kevoree.library.javase.fileSystemGit.GitFileSystem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.StructureService;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
@@ -50,20 +49,6 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
             }
         }
     }
-    /*
-    private String getItemPath(AbstractItem item) {
-        String pathItem = item.getName();
-        String path = "";
-
-        while(item.getParent() != null){
-            path = item.getParent().getName()+"/" + path;
-            item = item.getParent();
-        }
-        path = path + pathItem;
-        return path;
-    }   */
-
-
 
     private void trierListe(List<AbstractItem> listeTest) {
         int indexCurrentChar = 0;

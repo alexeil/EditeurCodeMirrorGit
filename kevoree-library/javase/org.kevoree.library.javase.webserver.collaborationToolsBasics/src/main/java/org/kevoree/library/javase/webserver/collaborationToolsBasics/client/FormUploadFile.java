@@ -8,13 +8,6 @@ import com.google.gwt.user.client.ui.*;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
 
-/**
- * Created with IntelliJ IDEA.
- * User: pdespagn
- * Date: 6/25/12
- * Time: 10:13 AM
- * To change this template use File | Settings | File Templates.
- */
 public class FormUploadFile extends PopupPanel{
 
     private static final String UPLOAD_ACTION_URL = GWT.getModuleBaseURL() + "upload";
