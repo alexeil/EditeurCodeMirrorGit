@@ -16,7 +16,8 @@ import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.Abst
  */
 public class FormNew extends PopupPanel {
     TextBox textBoxLoginNew,  textBoxPasswordNew, textBoxNameRepositoryNew;
-    StringBuilder login, password, nomRepository;
+    StringBuilder login, password;
+    String nomRepository;
     Label labelError;
     Button btnSave;
     AbstractItem abstractItemRoot;
@@ -63,12 +64,12 @@ public class FormNew extends PopupPanel {
             public void onClick(ClickEvent event) {
                 login.append(textBoxLoginNew.getText());
                 password.append(textBoxPasswordNew.getText());
-                nomRepository.append(textBoxNameRepositoryNew.getText());
+                nomRepository = textBoxNameRepositoryNew.getText();
 
-                 RootPanel.get().add(new HTML(" login " + login.toString() + " PW " + password.toString() + " url " + nomRepository.toString()));
+                RootPanel.get().add(new HTML(" login " + login.toString() + " PW " + password.toString() + " url " + nomRepository));
 
-                if(!login.toString().isEmpty() && !password.toString().isEmpty() && !nomRepository.toString().isEmpty())
-                    repositoryToolsServices.initRepository(login.toString(),password.toString(),nomRepository.toString(),new AsyncCallback<AbstractItem>() {
+                if(!login.toString().isEmpty() && !password.toString().isEmpty() && !nomRepository.isEmpty())
+                    repositoryToolsServices.initRepository(login.toString(),password.toString(),nomRepository,new AsyncCallback<AbstractItem>() {
                         @Override
                         public void onFailure(Throwable throwable) {
                             labelError.setText("Error : repository already exists Or wrong login/password");

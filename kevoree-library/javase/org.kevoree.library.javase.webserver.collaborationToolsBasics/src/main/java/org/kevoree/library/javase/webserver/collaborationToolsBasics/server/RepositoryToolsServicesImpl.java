@@ -247,6 +247,7 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
     @Override
     public boolean pushRepository(String login, String password) {
+        logger.debug("Erreur PUSH COMMAND login " + login + " Password " + password);
         Boolean result = false;
         UsernamePasswordCredentialsProvider user = new UsernamePasswordCredentialsProvider(login, password);
         try {

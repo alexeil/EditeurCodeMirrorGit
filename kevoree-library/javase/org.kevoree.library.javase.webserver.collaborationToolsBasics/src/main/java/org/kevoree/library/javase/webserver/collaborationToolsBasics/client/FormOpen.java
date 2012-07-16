@@ -10,7 +10,8 @@ import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.Abst
 
 public class FormOpen extends PopupPanel{
     TextBox  textBoxLoginImport,  textBoxPasswordImport, textBoxURLRepositoryImport;
-    StringBuilder login, password,urlRepository;
+    StringBuilder login, password;
+    String urlRepository;
     Label labelError;
     Button btnSave;
     AbstractItem abstractItemRoot;
@@ -27,6 +28,7 @@ public class FormOpen extends PopupPanel{
         this.systemFileRoot = systemFile;
         this.login = strLogin;
         this.password = strPassword;
+
 
         setStyleName("popup");
 
@@ -46,10 +48,10 @@ public class FormOpen extends PopupPanel{
             public void onClick(ClickEvent event) {
                 login.append(textBoxLoginImport.getText());
                 password.append(textBoxPasswordImport.getText());
-                urlRepository.append(textBoxURLRepositoryImport.getText());
-               // RootPanel.get().add(new HTML(" login " + login + " PW " + password + " url " + urlRepository));
-                if(!login.toString().isEmpty() && !password.toString().isEmpty() && !urlRepository.toString().isEmpty())
-                    repositoryToolsServices.importRepository(login.toString(), password.toString(), urlRepository.toString(), new AsyncCallback<AbstractItem>() {
+                urlRepository = textBoxURLRepositoryImport.getText();
+                //RootPanel.get().add(new HTML(" login " + login.toString() + " PW " + password.toString() + " url " + urlRepository));
+                if(!login.toString().isEmpty() && !password.toString().isEmpty() && !urlRepository.isEmpty())
+                    repositoryToolsServices.importRepository(login.toString(), password.toString(), urlRepository, new AsyncCallback<AbstractItem>() {
                         @Override
                         public void onFailure(Throwable throwable) {
                             labelError.setText("Error importing the repository ( Wrong repository URL Or login/password");
@@ -59,11 +61,13 @@ public class FormOpen extends PopupPanel{
                         @Override
                         public void onSuccess(AbstractItem abstractItem) {
                             labelError.setVisible(false);
+                            btnSave.setEnabled(true);
                             CodeMirrorEditorWrapper.setText("");
                             CodeMirrorEditorWrapper.setFileOpened(null);
                             abstractItemRoot = abstractItem;
                             Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
                             hide();
+                           // RootPanel.get().add(new HTML(" login " + login + " password " + password + " abstractItem " + abstractItemRoot.getName()));
                         }
                     });
             }
