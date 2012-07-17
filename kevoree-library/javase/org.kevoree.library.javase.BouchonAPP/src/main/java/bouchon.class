@@ -1,0 +1,11 @@
+package org.kevoree.library.javase.BouchonAPP;
+
+@Library(name = "JavaSE")
+@ComponentType
+@Requires({
+        @RequiredPort(name = "htmlservice", type = org.kevoree.annotation.PortType.SERVICE,optional=true)
+})
+public class GitFileSystem extends AbstractComponentType implements LockFilesService {
+
+
+}
