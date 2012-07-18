@@ -24,6 +24,7 @@
         <module>../org.kevoree.library.javase.webserver.collaborationToolsBasics</module>
         <!--<module>../org.kevoree.library.javase.webserver.pebble</module>-->
         <module>../org.kevoree.library.javase.webserver.codemirrorEditor</module>
+        <module>../org.kevoree.library.javase.fileSystem</module>
 
     </modules>
 
