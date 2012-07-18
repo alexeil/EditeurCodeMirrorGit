@@ -5,8 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.FileItem;
 
 public class FormUploadFile extends PopupPanel{
 
@@ -75,19 +75,19 @@ public class FormUploadFile extends PopupPanel{
                     fileTocreate.setPath(fileUpload.getParent().getPath()+"/"+fileTocreate.getName());
                     fileTocreate.setParent(fileUpload.getParent());
                 }
-                 repositoryToolsServices.addFiletoRepositoryAfterUpload(fileTocreate, new AsyncCallback<AbstractItem>() {
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        //To change body of implemented methods use File | Settings | File Templates.
-                    }
+                 repositoryToolsServices.createFolderIntoLocalRepository(fileTocreate, new AsyncCallback<Boolean>() {
+                     @Override
+                     public void onFailure(Throwable throwable) {
+                         //To change body of implemented methods use File | Settings | File Templates.
+                     }
 
-                    @Override
-                    public void onSuccess(AbstractItem abstractItem) {
+                     @Override
+                     public void onSuccess(Boolean bool) {
 
-                        Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
+                         Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
                          hide();
-                    }
-                });
+                     }
+                 });
             }
         });
         this.add(form);

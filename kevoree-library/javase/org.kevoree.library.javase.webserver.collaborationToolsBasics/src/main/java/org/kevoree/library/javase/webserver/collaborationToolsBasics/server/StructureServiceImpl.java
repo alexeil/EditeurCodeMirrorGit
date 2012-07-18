@@ -1,10 +1,10 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.FileItem;
+import org.kevoree.library.javase.fileSystem.client.FolderItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.StructureService;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -5,7 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 
 
 public class FormNew extends PopupPanel {
@@ -72,10 +72,10 @@ public class FormNew extends PopupPanel {
                         }
 
                         @Override
-                        public void onSuccess(AbstractItem abstractItem) {
+                        public void onSuccess(AbstractItem absItem) {
                             CodeMirrorEditorWrapper.setText("");
                             CodeMirrorEditorWrapper.setFileOpened(null);
-                            abstractItemRoot =  abstractItem;
+                            abstractItemRoot = absItem;
                             Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
                             hide();
                             labelError.setVisible(false);

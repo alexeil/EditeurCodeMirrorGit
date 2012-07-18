@@ -5,7 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 
 
 public class FormOpen extends PopupPanel{

@@ -16,7 +16,7 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 
 
 /**

@@ -13,8 +13,8 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tree.Tree;
 import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeNode;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FolderItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.FolderItem;
 
 public final class Singleton {
 

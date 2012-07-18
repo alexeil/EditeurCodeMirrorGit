@@ -32,6 +32,11 @@
             <version>2.4.0</version>
         </dependency>
         <dependency>
+            <groupId>org.kevoree.library.javase</groupId>
+            <artifactId>org.kevoree.library.javase.fileSystemGitRepository</artifactId>
+            <version>${kevoree.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.eclipse.mylyn.github</groupId>
             <artifactId>org.eclipse.egit.github.core</artifactId>
             <version>2.0-alpha-2</version>
@@ -58,11 +63,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.kevoree.library.javase</groupId>
-            <artifactId>org.kevoree.library.javase.fileSystemGitRepository</artifactId>
-            <version>${kevoree.version}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.2</version>
@@ -77,7 +77,6 @@
             <artifactId>smartgwt</artifactId>
             <version>2.4</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -122,10 +121,10 @@
                             <!-- use style OBF for prod -->
                             <!--<style>OBFUSCATED</style>-->
                             <extraJvmArgs>-Xmx2048m -Xss1024k</extraJvmArgs>
-                            <gwtVersion>${version.gwt}</gwtVersion>
+                            <!--<gwtVersion>${version.gwt}</gwtVersion>-->
                             <!--<runTarget>TarificateurDirectM.html</runTarget>-->
                             <webappDirectory>${webappDirectory}</webappDirectory>
-                            <i18nMessagesBundle>fr.directm.tarificateur.client.Messages</i18nMessagesBundle>
+                            <!--<i18nMessagesBundle>fr.directm.tarificateur.client.Messages</i18nMessagesBundle>-->
                         </configuration>
                         <goals>
                             <goal>compile</goal>

@@ -7,11 +7,12 @@
     <inherits name='com.google.gwt.user.User'/>
     <inherits name="com.smartgwt.SmartGwt"/>
 
+    <inherits name="org.kevoree.library.javase.fileSystem.FileSystem" />
+
     <!-- Specify the app entry point class.                   -->
     <entry-point class='org.kevoree.library.javase.webserver.collaborationToolsBasics.client.IHMcodeMirror'/>
 
     <source path='client'/>
-    <source path='shared'/>
 
 
 </module>

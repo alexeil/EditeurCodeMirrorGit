@@ -5,8 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.FileItem;
 
 
 public class FormAddFolder extends PopupPanel {
@@ -51,13 +51,13 @@ public class FormAddFolder extends PopupPanel {
                 }else{
                     fileTocreate.setPath(item.getParent().getPath()+"/"+fileTocreate.getName());
                 }
-                repositoryToolsServices.createFolderIntoLocalRepository(fileTocreate, new AsyncCallback<AbstractItem>() {
+                repositoryToolsServices.createFolderIntoLocalRepository(fileTocreate, new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     }
 
                     @Override
-                    public void onSuccess(AbstractItem item) {
+                    public void onSuccess(Boolean bool) {
                         hide();
                         Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
                     }

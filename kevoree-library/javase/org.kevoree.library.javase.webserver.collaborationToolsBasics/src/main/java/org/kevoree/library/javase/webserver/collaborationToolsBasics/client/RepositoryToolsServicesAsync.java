@@ -2,34 +2,24 @@ package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 
 
 public interface RepositoryToolsServicesAsync {
 
-    void createRepository(String login, String password, String nameRepository, AsyncCallback<Boolean> callback);
+    void initRepository(String login, String password, String nameRepository,AsyncCallback<AbstractItem> callback) ;
 
-    void createFileToInitRepository(String url,  String nomRepo, AsyncCallback<Void> callback);
+    void importRepository(String login, String password, String url,AsyncCallback<AbstractItem> callback);
 
     void updateContentFileAndCommit(String file, byte [] editorText,  String login, AsyncCallback<Boolean> callback);
-
-    void cloneRepository(String url, String foldToPutRepo,AsyncCallback<Void> callback);
-
-    void commitRepository(String message, String nom, String email, AsyncCallback<Boolean> callback);
 
     void pushRepository( String login, String password, AsyncCallback<Boolean> callback);
 
     void getFileContent(String filePath, AsyncCallback<String> callback);
 
-    void  initRepository(String login, String password, String nameRepository,AsyncCallback<AbstractItem> callback) ;
+    void newFileIntoRepository(AbstractItem item, AsyncCallback<AbstractItem> callback);
 
-    void  importRepository(String login, String password, String url,AsyncCallback<AbstractItem> callback);
+    void createFolderIntoLocalRepository(AbstractItem folder, AsyncCallback<Boolean> callback);
 
-    void createFileIntoLocalRepository(AbstractItem item, AsyncCallback<AbstractItem> callback);
-
-    void createFolderIntoLocalRepository(AbstractItem item, AsyncCallback<AbstractItem> callback);
-
-    void ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem, AsyncCallback<AbstractItem> callback);
-
-    void addFiletoRepositoryAfterUpload(AbstractItem item, AsyncCallback<AbstractItem> callback);
+    void move(AbstractItem oldItem, AbstractItem newItem, AsyncCallback<AbstractItem> callback);
 }

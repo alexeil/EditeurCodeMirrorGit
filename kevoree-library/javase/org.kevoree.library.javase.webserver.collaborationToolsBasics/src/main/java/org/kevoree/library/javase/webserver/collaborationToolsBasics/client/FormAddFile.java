@@ -5,8 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.FileItem;
 
 
 public class FormAddFile extends PopupPanel {
@@ -55,7 +55,7 @@ public class FormAddFile extends PopupPanel {
                 }
                 RootPanel.get().add(new HTML(" fileToCreate " + fileTocreate.getPath()+ " his parent " + fileTocreate.getParent().getName()));
 
-                repositoryToolsServices.createFileIntoLocalRepository(fileTocreate, new AsyncCallback<AbstractItem>() {
+                repositoryToolsServices.newFileIntoRepository(fileTocreate, new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     }

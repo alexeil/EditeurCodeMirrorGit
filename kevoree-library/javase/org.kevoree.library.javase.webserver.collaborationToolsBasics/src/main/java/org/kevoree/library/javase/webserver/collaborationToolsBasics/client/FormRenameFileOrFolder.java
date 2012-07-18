@@ -5,8 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.FileItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.FileItem;
 
 
 public class FormRenameFileOrFolder extends PopupPanel {
@@ -51,7 +51,7 @@ public class FormRenameFileOrFolder extends PopupPanel {
                 }else{
                     newFileName.setPath(oldItem.getParent().getPath()+"/"+newFileName.getName());
                 }
-                repositoryToolsServices.ChangeFileOrFolderName(oldItem, newFileName, new AsyncCallback<AbstractItem>() {
+                repositoryToolsServices.move(oldItem, newFileName, new AsyncCallback<AbstractItem>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     }

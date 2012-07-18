@@ -2,22 +2,16 @@ package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import org.kevoree.library.javase.webserver.collaborationToolsBasics.shared.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 
 import java.io.IOException;
 
 
 @RemoteServiceRelativePath(value = "htmleditor")
 public interface RepositoryToolsServices extends RemoteService {
-    void createRepository(String login, String password, String nameRepository);
 
-    void createFileToInitRepository(String url, String nomRepo);
 
     boolean updateContentFileAndCommit(String file, byte [] editorText, String login);
-
-    void cloneRepository(String url, String nameRepository);
-
-    boolean commitRepository(String message, String nom, String email);
 
     boolean pushRepository(String login, String password);
 
@@ -27,12 +21,9 @@ public interface RepositoryToolsServices extends RemoteService {
 
     AbstractItem importRepository(String login, String password, String url);
 
-    AbstractItem createFileIntoLocalRepository(AbstractItem item);
+    boolean createFolderIntoLocalRepository(AbstractItem item);
 
-    AbstractItem createFolderIntoLocalRepository(AbstractItem item);
+    boolean move(AbstractItem oldItem, AbstractItem newItem);
 
-    AbstractItem ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem);
-
-    AbstractItem addFiletoRepositoryAfterUpload(AbstractItem item);
-
+    boolean newFileIntoRepository(AbstractItem item);
 }

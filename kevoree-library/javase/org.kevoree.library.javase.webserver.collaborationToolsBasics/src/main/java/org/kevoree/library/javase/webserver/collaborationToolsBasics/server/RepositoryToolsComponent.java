@@ -1,9 +1,8 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.server;
 
-import org.kevoree.annotation.ComponentType;
-import org.kevoree.annotation.DictionaryAttribute;
-import org.kevoree.annotation.DictionaryType;
-import org.kevoree.annotation.Library;
+import org.kevoree.annotation.*;
+import org.kevoree.library.javase.fileSystemGitRepository.GitRepositoryActions;
+import org.kevoree.library.javase.fileSystem.client.LockFilesService;
 import org.kevoree.library.javase.webserver.FileServiceHelper;
 import org.kevoree.library.javase.webserver.KevoreeHttpRequest;
 import org.kevoree.library.javase.webserver.KevoreeHttpResponse;
@@ -16,6 +15,12 @@ import org.kevoree.library.javase.webserver.servlet.LocalServletRegistry;
 @DictionaryType({
 		@DictionaryAttribute(name = "directoryPath", defaultValue = "/tmp/")
 })
+@Requires({ @RequiredPort(name = "createRepo", type = PortType.SERVICE,
+        className = GitRepositoryActions.class, optional = true, needCheckDependency = true),
+        @RequiredPort(name = "files", type = PortType.SERVICE,
+                className = LockFilesService.class, optional = true, needCheckDependency = true)
+})
+//@Requires(value = @RequiredPort(name = "createRepo", type = PortType.SERVICE, className = GitRepositoryActions.class, optional = true, needCheckDependency = true))
 public class RepositoryToolsComponent extends ParentAbstractPage {
 
 	private LocalServletRegistry servletRepository = null;
@@ -30,7 +35,7 @@ public class RepositoryToolsComponent extends ParentAbstractPage {
 		};
 
 		super.startPage();
-		servletRepository.registerServlet("/ihmcodemirror/htmleditor", new RepositoryToolsServicesImpl(this.getDictionary().get("directoryPath").toString()));
+		servletRepository.registerServlet("/ihmcodemirror/htmleditor", new RepositoryToolsServicesImpl(this, this.getDictionary().get("directoryPath").toString()));
 		servletRepository.registerServlet("/ihmcodemirror/systemFileServices", new StructureServiceImpl());
 		servletRepository.registerServlet("/ihmcodemirror/upload", new UploadFileServer());
 	}
