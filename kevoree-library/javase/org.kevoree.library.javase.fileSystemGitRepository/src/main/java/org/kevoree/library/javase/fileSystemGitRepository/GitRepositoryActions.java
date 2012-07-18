@@ -1,8 +1,6 @@
 package org.kevoree.library.javase.fileSystemGitRepository;
 
-import org.eclipse.jgit.api.Git;
-
-import java.io.File;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,19 +10,28 @@ import java.io.File;
  * To change this template use File | Settings | File Templates.
  */
 public interface GitRepositoryActions {
-    public boolean createRepository(String login, String password, String nameRepository);
 
-    public File createFileAndAddToClonedRepository(String url, Git git, String nomRepo);
+    void createRepository(String login, String password, String nameRepository);
+     //TODO
+    void updateContentFileAndCommit(String file, byte [] editorText, String login);
 
-    public boolean updateContentFileAndCommit(byte [] editorText, File file, Git git, String login);
+    void commitRepository(String message, String nom, String email);
 
-    public Git cloneRepository(String url, String foldToPutRepo);
+    void pushRepository(String login, String password);
+    //TODO
+    void createFileIntoLocalRepository(AbstractItem item);
+    //TODO
+    void createFolderIntoLocalRepository(AbstractItem item);
+    //TODO
+    void ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem);
+    //TODO
+    void addFiletoRepositoryAfterUpload(AbstractItem item);
 
-    public boolean commitRepository(Git git, String message, String nom, String email);
+    void importRepository(String login, String password, String url, String nameRepository, String path);
 
-    public boolean addFileToRepository(Git git, File file);
+    void createFileToInitRepository(String url, String nomRepo, String directoryPath);
 
-    public boolean pushRepository(Git git, String login, String password);
+    void cloneRepository(String url, String nameRepository, String pathRepository);
 
-    public String getFilePattern(File baseDir, File file);
+    AbstractItem initRepository(String login, String password, String nameRepository, String pathRepository);
 }

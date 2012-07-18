@@ -31,6 +31,11 @@
         </dependency>
         <dependency>
             <groupId>org.kevoree.library.javase</groupId>
+            <artifactId>org.kevoree.library.javase.fileSystem</artifactId>
+            <version>${kevoree.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kevoree.library.javase</groupId>
             <artifactId>org.kevoree.library.javase.fileSystemGit</artifactId>
             <version>${kevoree.version}</version>
         </dependency>

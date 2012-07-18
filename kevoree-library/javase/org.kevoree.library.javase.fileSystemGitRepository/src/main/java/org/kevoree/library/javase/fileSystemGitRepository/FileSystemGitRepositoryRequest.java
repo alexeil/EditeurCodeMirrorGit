@@ -1,25 +1,22 @@
-package org.kevoree.library.javase.fileSystemGitRepository; /**
- * Created with IntelliJ IDEA.
- * User: pdespagn
- * Date: 5/15/12
- * Time: 4:53 PM
- * To change this template use File | Settings | File Templates.
- */
+package org.kevoree.library.javase.fileSystemGitRepository;
 
-import org.eclipse.jgit.api.Git;
 import org.kevoree.annotation.*;
 import org.kevoree.framework.AbstractComponentType;
+import org.kevoree.library.javase.fileSystem.client.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.FolderItem;
+import org.kevoree.library.javase.fileSystem.client.LockFilesService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
-import java.io.File;
 
 
-@Requires(value = @RequiredPort(name = "createRepo", type = PortType.SERVICE, className = GitRepositoryActions.class, optional = true, needCheckDependency = true))
+@Requires({ @RequiredPort(name = "createRepo", type = PortType.SERVICE,
+        className = GitRepositoryActions.class, optional = true, needCheckDependency = true),
+        @RequiredPort(name = "files", type = PortType.SERVICE,
+                className = LockFilesService.class, optional = true, needCheckDependency = true)
+})
 @ComponentType
 public class FileSystemGitRepositoryRequest extends AbstractComponentType {
 
@@ -39,103 +36,73 @@ public class FileSystemGitRepositoryRequest extends AbstractComponentType {
 
     private class MyFrame extends JFrame {
 
-        private JButton createRepo, cloneRepo, pushRepo;
+        private JButton createRepo, importRepo;
         private String login;
         private String password;
         private String nameRepository;
 
-
-        TextField loginField = new TextField();
-        JPasswordField passwordField = new JPasswordField(10);
-        TextField nameRepositoryField = new TextField();
-        Label errorLabel = new Label();
-
-
-
-        TextArea editorField = new TextArea();
-
-        Git git;
-        File file;
+        String pathRepository;
 
         public MyFrame() {
+            login = "AccountTest";
+            password = "AccountTest1";
+            nameRepository= "createRepositoryTest"+System.currentTimeMillis();
+            pathRepository = "/tmp/";
 
-            loginField.setText("AccountTest");
-            passwordField.setText("AccountTest1");
-            nameRepositoryField.setText("createRepositoryTest"+System.currentTimeMillis());
-
-            createRepo = new JButton("createRepo");
+            createRepo = new JButton("initRepo");
             createRepo.addActionListener(new ActionListener() {
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if(isPortBinded("createRepo"))            {
-                        errorLabel.setText(getPortByName("createRepo", GitRepositoryActions.class)
-                                .createRepository(loginField.getText(), passwordField.getText(), nameRepositoryField.getText())+"");
-
+                        getPortByName("createRepo", GitRepositoryActions.class).initRepository(login, password, nameRepository, pathRepository);
                     }
                 }
             });
 
-            cloneRepo = new JButton("cloneRepo");
-            cloneRepo.addActionListener(new ActionListener() {
+
+
+            importRepo = new JButton("cloneRepo");
+            importRepo.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(isPortBinded("createRepo"))            {
-                        errorLabel.setText("https://"+loginField.getText()+"@github.com/"+loginField.getText()
-                                +"/"+nameRepositoryField.getText()+".git");
-                        git = getPortByName("createRepo", GitRepositoryActions.class)
-                                .cloneRepository("https://"+loginField.getText()+"@github.com/"+loginField.getText()
-                                        +"/"+nameRepositoryField.getText()+".git"
-                                        ,nameRepositoryField.getText());
+                    if(isPortBinded("createRepo")) {
+                        nameRepository ="GL";
+                        getPortByName("createRepo", GitRepositoryActions.class).importRepository(login, password, "https://"+login+"@github.com/"+login+
+                                "/"+nameRepository+".git" ,nameRepository, pathRepository);
 
+                        AbstractItem absItem = new FolderItem(pathRepository+nameRepository);
+                        AbstractItem root = getPortByName("files", LockFilesService.class).getArborecence(absItem);
 
-                        file =  getPortByName("createRepo", GitRepositoryActions.class)
-                                .createFileAndAddToClonedRepository("https://"+loginField.getText()
-                                        +"@github.com/"+loginField.getText()+"/"+nameRepositoryField.getText()+".git",git,nameRepositoryField.getText());
+                        FolderItem realRoot = (FolderItem) ((FolderItem) root).getChilds().get(0);
+
+                        System.err.println(realRoot.getChilds().get(4).getName() + " - " + realRoot.getChilds().get(4).getPath());
+
+                        System.err.println(" bool " +  getPortByName("files", LockFilesService.class).delete(realRoot.getChilds().get(4).getPath()));
+
+                        getPortByName("files", LockFilesService.class).mkdirs("/tototutu/tititutu/trope");
+                        getPortByName("files", LockFilesService.class).saveFile("/tototutu/tititutu/trope/tryc.txt","toto".getBytes(),true);
+
+                        getPortByName("files", LockFilesService.class).move("/tototutu/tititutu/trope/tryc.txt", "/tryc.xml");
+                       // getPortByName("createRepo", GitRepositoryActions.class).
                     }
                 }
             });
 
-
-            editorField.addTextListener(new TextListener() {
-                @Override
-                public void textValueChanged(TextEvent e) {
-                    errorLabel.setText(getPortByName("createRepo", GitRepositoryActions.class)
-                            .updateContentFileAndCommit(editorField.getText().getBytes(), file, git,loginField.getText())+"");
-                }
-            });
-
-            pushRepo = new JButton("pushRepo");
-            pushRepo.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if(isPortBinded("createRepo"))            {
-                        errorLabel.setText(getPortByName("createRepo", GitRepositoryActions.class)
-                                .pushRepository(git, loginField.getText(), passwordField.getText())+"");
-
-                    }
-                }
-            });
-
-
-
-            Label loginLabel = new Label("Login : ");
-            Label passwordLabel = new Label("Password : ");
-            Label nameRepositoryLabel = new Label("Nom du repo : ");
-
+            /*
+           editorField.addTextListener(new TextListener() {
+               @Override
+               public void textValueChanged(TextEvent e) {
+                   getPortByName("createRepo", GitRepositoryActions.class)
+                           .updateContentFileAndCommit("/tmp/TestFile.txt", editorField.getText().getBytes(), login);
+               }
+           });
+            */
 
             setLayout(new FlowLayout());
-            add(loginLabel);
-            add(loginField);
-            add(passwordLabel);
-            add(passwordField);
-            add(nameRepositoryLabel);
-            add(nameRepositoryField);
             add(createRepo);
-            add(cloneRepo);
-            add(editorField);
-            add(pushRepo);
-            add(errorLabel);
+            add(importRepo);
+
 
             this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
