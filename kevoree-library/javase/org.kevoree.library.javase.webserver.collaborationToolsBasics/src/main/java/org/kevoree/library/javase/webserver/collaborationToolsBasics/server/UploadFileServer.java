@@ -5,6 +5,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.kevoree.library.javase.webserver.servlet.FakeServletContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,6 +22,12 @@ public class UploadFileServer extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         super.doGet(req, resp);
+    }
+
+
+
+    public javax.servlet.ServletContext getServletContext() {
+        return new FakeServletContext();
     }
 
     @Override

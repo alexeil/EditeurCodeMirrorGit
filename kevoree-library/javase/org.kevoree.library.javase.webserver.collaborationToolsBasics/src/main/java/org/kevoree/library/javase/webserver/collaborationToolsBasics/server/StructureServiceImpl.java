@@ -5,6 +5,7 @@ import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 import org.kevoree.library.javase.fileSystem.client.FileItem;
 import org.kevoree.library.javase.fileSystem.client.FolderItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.StructureService;
+import org.kevoree.library.javase.webserver.servlet.FakeServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,13 @@ public class StructureServiceImpl extends RemoteServiceServlet implements Struct
         trierListe(root.getChilds());
         return root;
     }
+
+
+
+    public javax.servlet.ServletContext getServletContext() {
+        return new FakeServletContext();
+    }
+
 
     public void Process(File file, FolderItem item) {
         if(!file.getName().contains(".git") && !file.getName().endsWith("~"))

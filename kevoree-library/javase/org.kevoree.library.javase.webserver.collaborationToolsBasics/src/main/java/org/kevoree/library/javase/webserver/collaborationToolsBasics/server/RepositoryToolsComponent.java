@@ -1,5 +1,6 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.server;
 
+import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.kevoree.annotation.*;
 import org.kevoree.library.javase.fileSystemGitRepository.GitRepositoryActions;
 import org.kevoree.library.javase.fileSystem.client.LockFilesService;
@@ -8,6 +9,8 @@ import org.kevoree.library.javase.webserver.KevoreeHttpRequest;
 import org.kevoree.library.javase.webserver.KevoreeHttpResponse;
 import org.kevoree.library.javase.webserver.ParentAbstractPage;
 import org.kevoree.library.javase.webserver.servlet.LocalServletRegistry;
+
+import javax.servlet.http.HttpServlet;
 
 
 @Library(name = "JavaSE")
@@ -35,9 +38,15 @@ public class RepositoryToolsComponent extends ParentAbstractPage {
 		};
 
 		super.startPage();
-		servletRepository.registerServlet("/ihmcodemirror/htmleditor", new RepositoryToolsServicesImpl(this, this.getDictionary().get("directoryPath").toString()));
-		servletRepository.registerServlet("/ihmcodemirror/systemFileServices", new StructureServiceImpl());
-		servletRepository.registerServlet("/ihmcodemirror/upload", new UploadFileServer());
+
+        RemoteServiceServlet s1 = new RepositoryToolsServicesImpl(this, this.getDictionary().get("directoryPath").toString());
+
+        RemoteServiceServlet s2 =   new StructureServiceImpl();
+        HttpServlet s3 =   new UploadFileServer();
+
+		servletRepository.registerServlet("/ihmcodemirror/htmleditor", s1);
+		servletRepository.registerServlet("/ihmcodemirror/systemFileServices", s2);
+		servletRepository.registerServlet("/ihmcodemirror/upload", s3);
 	}
 
 	@Override

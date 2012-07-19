@@ -10,7 +10,7 @@
     <parent>
         <artifactId>org.kevoree.library</artifactId>
         <groupId>org.kevoree.library</groupId>
-        <version>1.8.1</version>
+        <version>1.8.3-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -19,12 +19,12 @@
     </properties>
 
     <modules>
+        <module>../org.kevoree.library.javase.fileSystem</module>
         <module>../org.kevoree.library.javase.fileSystemGitRepository</module>
-        <module>../org.kevoree.library.javase.webserver</module>
+        <!--<module>../org.kevoree.library.javase.webserver</module>                      -->
         <module>../org.kevoree.library.javase.webserver.collaborationToolsBasics</module>
         <!--<module>../org.kevoree.library.javase.webserver.pebble</module>-->
-        <module>../org.kevoree.library.javase.webserver.codemirrorEditor</module>
-        <module>../org.kevoree.library.javase.fileSystem</module>
+        <!--<module>../org.kevoree.library.javase.webserver.codemirrorEditor</module>-->
 
     </modules>
 

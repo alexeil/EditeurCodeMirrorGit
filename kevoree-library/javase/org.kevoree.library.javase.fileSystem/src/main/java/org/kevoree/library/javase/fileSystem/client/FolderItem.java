@@ -9,13 +9,18 @@ import java.util.List;
 
 public class FolderItem extends AbstractItem implements IsSerializable, Serializable {
 
+
+    private static final long serialVersionUID = 2388319784164372900L;
     private List<AbstractItem> listeItem;
 
-    public FolderItem(){};
+    public FolderItem(){
 
-        public FolderItem(String name){
+        this.listeItem = new ArrayList<AbstractItem>();
+
+    };
+
+    public FolderItem(String name){
             this.name = name;
-            this.listeItem = new ArrayList<AbstractItem>();
         }
 
     public void add(AbstractItem itemToAdd){

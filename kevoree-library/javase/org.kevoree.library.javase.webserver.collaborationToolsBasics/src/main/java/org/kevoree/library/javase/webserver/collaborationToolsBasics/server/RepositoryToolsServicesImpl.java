@@ -7,6 +7,7 @@ import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 import org.kevoree.library.javase.fileSystem.client.FolderItem;
 import org.kevoree.library.javase.fileSystem.client.LockFilesService;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.RepositoryToolsServices;
+import org.kevoree.library.javase.webserver.servlet.FakeServletContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,13 +28,21 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         baseFolder = new FolderItem(directoryPath);
         this.directoryPath = directoryPath;
         this.repositoryToolsComponent = repoToolsComponent;
+
     }
+
+    public javax.servlet.ServletContext getServletContext() {
+        return new FakeServletContext();
+    }
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         super.doGet(req, resp);
     }
+
+
 
     public AbstractItem importRepository(String login, String password,String url) {
         String nameRepository = url.substring(url.lastIndexOf("/")+1,url.lastIndexOf("."));
