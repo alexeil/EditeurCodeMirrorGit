@@ -1,0 +1,28 @@
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.nanohttp/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.javaseNode/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.sky/org.kevoree.library.sky.jails/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.socketChannels/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.nioChannels/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.defaultChannels/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.sky/org.kevoree.library.sky.api/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.sky/org.kevoree.library.sky.provider/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.webserver.api/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.authentication/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.javase/org.kevoree.library.javase.webserver.tjws/{kevoree.version}'
+merge 'mvn:org.kevoree.library.javase/org.kevoree.library.javase.fileSystemGitRepository/{kevoree.version}'
+merge 'mvn:org.kevoree.corelibrary.sky/org.kevoree.library.sky.minicloud/{kevoree.version}'
+addNode editor_node:MiniCloudNode
+ {
+  addComponent FileSyste133@editor_node : FileSystemGitRepositoryImpl {}
+  addComponent FileSyste946@editor_node : FileSystemGitRepositoryRequest {}
+addChannel defMSG498 : defMSG {}
+addChannel defMSG832 : defMSG {}
+bind FileSyste946.files@editor_node => defMSG498
+bind FileSyste133.files@editor_node => defMSG498
+bind FileSyste946.createRepo@editor_node => defMSG832
+bind FileSyste133.createRepo@editor_node => defMSG832
+updateDictionary defMSG498
+updateDictionary defMSG832
+updateDictionary FileSyste133@editor_node
+updateDictionary FileSyste946@editor_node
+}

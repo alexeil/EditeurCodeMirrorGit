@@ -1,9 +1,10 @@
 package org.kevoree.library.javase.fileSystem.client;
 
+import com.google.gwt.user.client.rpc.IsSerializable;
+
 import java.io.Serializable;
 
-
-public abstract class AbstractItem implements Serializable
+public abstract class AbstractItem implements IsSerializable, Serializable
 
 {
     protected String name;

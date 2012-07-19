@@ -66,7 +66,7 @@ public class FormNew extends PopupPanel {
                     repositoryToolsServices.initRepository(login.toString(),password.toString(),nomRepository,new AsyncCallback<AbstractItem>() {
                         @Override
                         public void onFailure(Throwable throwable) {
-                            labelError.setText("Error : repository already exists Or wrong login/password");
+                            labelError.setText("Error : repository already exists Or wrong login/password" + " error " + throwable.getMessage() + " " + login + " " + password + " " + nomRepository );
                             labelError.setVisible(true);
                             btnSave.setEnabled(false);
                         }

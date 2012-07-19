@@ -30,9 +30,17 @@ addGroup sync : NanoRestGroup
 addToGroup sync node0
 addComponent WebServer49@node0 : WebServer {port='8080',timeout='5000'}
 addComponent Repositor232@node0 : RepositoryToolsComponent {directoryPath='/tmp/',urlpattern='/'}
+addComponent FileSyste336@node0 : FileSystemGitRepositoryImpl {login='',url='',pass=''}
 addChannel responseChannel : defMSG
 addChannel requestChannel : defMSG
+addChannel defSERVIC906 : defSERVICE {}
+addChannel defMSG42 : defMSG {}
 bind WebServer49.handler@node0 => requestChannel
 bind Repositor232.request@node0 => requestChannel
 bind Repositor232.content@node0 => responseChannel
 bind WebServer49.response@node0 => responseChannel
+bind Repositor232.createRepo@node0 => defSERVIC906
+bind FileSyste336.createRepo@node0 => defSERVIC906
+bind Repositor232.files@node0 => defMSG42
+bind FileSyste336.files@node0 => defMSG42
+

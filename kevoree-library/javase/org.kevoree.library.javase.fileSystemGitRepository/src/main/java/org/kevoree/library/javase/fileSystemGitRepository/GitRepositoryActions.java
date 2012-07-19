@@ -34,4 +34,5 @@ public interface GitRepositoryActions {
     void cloneRepository(String url, String nameRepository, String pathRepository);
 
     AbstractItem initRepository(String login, String password, String nameRepository, String pathRepository);
+
 }

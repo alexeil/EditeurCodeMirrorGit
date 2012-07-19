@@ -95,7 +95,10 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
     public AbstractItem initRepository(String login, String password, String nameRepository){
 
-       return repositoryToolsComponent.getPortByName("createRepo", GitRepositoryActions.class).initRepository(login, password, nameRepository, directoryPath);
+        AbstractItem test = repositoryToolsComponent.getPortByName("createRepo", GitRepositoryActions.class).initRepository(login, password, nameRepository, directoryPath);
+        logger.debug(" value abstractItem de retour " + test.getName() + " " + test.getPath());
+
+       return test;
 
         /*
         createRepository(login, password, nameRepository);

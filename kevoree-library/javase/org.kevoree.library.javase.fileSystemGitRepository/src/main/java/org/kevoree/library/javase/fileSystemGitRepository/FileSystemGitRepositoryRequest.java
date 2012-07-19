@@ -5,6 +5,8 @@ import org.kevoree.framework.AbstractComponentType;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 import org.kevoree.library.javase.fileSystem.client.FolderItem;
 import org.kevoree.library.javase.fileSystem.client.LockFilesService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +21,7 @@ import java.awt.event.ActionListener;
 })
 @ComponentType
 public class FileSystemGitRepositoryRequest extends AbstractComponentType {
-
+    private Logger logger = LoggerFactory.getLogger(FileSystemGitRepositoryRequest.class);
     private MyFrame frame = null;
 
     @Start
@@ -44,6 +46,8 @@ public class FileSystemGitRepositoryRequest extends AbstractComponentType {
         String pathRepository;
 
         public MyFrame() {
+
+
             login = "AccountTest";
             password = "AccountTest1";
             nameRepository= "createRepositoryTest"+System.currentTimeMillis();
@@ -55,7 +59,8 @@ public class FileSystemGitRepositoryRequest extends AbstractComponentType {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if(isPortBinded("createRepo"))            {
-                        getPortByName("createRepo", GitRepositoryActions.class).initRepository(login, password, nameRepository, pathRepository);
+                        AbstractItem root = getPortByName("createRepo", GitRepositoryActions.class).initRepository(login, password, nameRepository, pathRepository);
+                          logger.debug(" namùe " + root.getName() + " " + root.getPath());
                     }
                 }
             });

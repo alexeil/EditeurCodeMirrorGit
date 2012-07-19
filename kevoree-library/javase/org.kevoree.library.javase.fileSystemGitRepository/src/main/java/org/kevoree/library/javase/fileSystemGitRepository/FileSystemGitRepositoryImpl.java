@@ -271,6 +271,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
     @Override
     @Port(name="createRepo", method = "cloneRepository")
     public void cloneRepository(String url, String nameRepository, String pathRepository) {
+        baseClone = new File(pathRepository+nameRepository);
         CloneCommand clone = new CloneCommand();
         clone.setURI(url);
         clone.setDirectory(new File(pathRepository+nameRepository));
