@@ -14,13 +14,15 @@ public class FolderItem extends AbstractItem implements IsSerializable, Serializ
     private List<AbstractItem> listeItem;
 
     public FolderItem(){
-
+        super();
         this.listeItem = new ArrayList<AbstractItem>();
 
     };
 
     public FolderItem(String name){
+            this();
             this.name = name;
+            this.path = name;
         }
 
     public void add(AbstractItem itemToAdd){

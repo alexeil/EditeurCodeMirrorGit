@@ -192,7 +192,7 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
     @Override
     public boolean saveFile (String relativePath, byte[] data, Boolean unlock) {
         boolean result = saveFile(relativePath, data);
-
+        logger.debug("debug " + relativePath);
         File f = new File(baseClone.getAbsolutePath() + relativePath);
         if (f.exists()) {
             //SVNCommitClient clientCommit = new SVNCommitClient(authManager, SVNWCUtil.createDefaultOptions(true));
