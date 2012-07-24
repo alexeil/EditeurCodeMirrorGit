@@ -3,9 +3,11 @@ package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
+
 
 
 public class FormNew extends PopupPanel {
@@ -56,39 +58,56 @@ public class FormNew extends PopupPanel {
         Button btnCreateRepo = new Button("Create repository");
         btnCreateRepo.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
+                login.setLength(0);
                 login.append(textBoxLoginNew.getText());
+                password.setLength(0);
                 password.append(textBoxPasswordNew.getText());
                 nomRepository = textBoxNameRepositoryNew.getText();
 
-                RootPanel.get().add(new HTML(" login " + login.toString() + " PW " + password.toString() + " url " + nomRepository));
+                if(isAnySpecialChar(nomRepository)){
+                    labelError.setText("Error : repository name invalid ");
+                    labelError.setVisible(true);
+                }else{
+                    if(!login.toString().isEmpty() && !password.toString().isEmpty() && !nomRepository.isEmpty())
+                        repositoryToolsServices.initRepository(login.toString(),password.toString(),nomRepository,new AsyncCallback<AbstractItem>() {
+                            @Override
+                            public void onFailure(Throwable throwable) {
+                                hide();
+                                labelError.setText("Error : repository already exists Or wrong login/password");
+                                labelError.setVisible(true);
+                                btnSave.setEnabled(false);
+                            }
 
-                if(!login.toString().isEmpty() && !password.toString().isEmpty() && !nomRepository.isEmpty())
-                    repositoryToolsServices.initRepository(login.toString(),password.toString(),nomRepository,new AsyncCallback<AbstractItem>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            labelError.setText("Error : repository already exists Or wrong login/password" + " error " + throwable.getMessage() + " " + login + " " + password + " " + nomRepository );
-                            labelError.setVisible(true);
-                            btnSave.setEnabled(false);
-                        }
-
-                        @Override
-                        public void onSuccess(AbstractItem absItem) {
-                            CodeMirrorEditorWrapper.setText("");
-                            CodeMirrorEditorWrapper.setFileOpened(null);
-                            abstractItemRoot = absItem;
-                            Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
-                            hide();
-                            labelError.setVisible(false);
-                            btnSave.setEnabled(true);
-                            RootPanel.get().add(new HTML(" login " + login + " password " + password));
-                        }
-                    });
+                            @Override
+                            public void onSuccess(AbstractItem absItem) {
+                                CodeMirrorEditorWrapper.setText("");
+                                CodeMirrorEditorWrapper.setFileOpened("");
+                                abstractItemRoot = absItem;
+                                Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
+                                hide();
+                                labelError.setVisible(false);
+                                btnSave.setEnabled(true);
+                            }
+                        });
+                }
             }
         });
 
         gridFieldsNew.setWidget(3, 0, btnCreateRepo);
+
+        Button cancel = new Button("Cancel");
+        cancel.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                hide();
+            }
+        });
+        gridFieldsNew.setWidget(3, 1, cancel);
         setWidget(gridFieldsNew);
     }
 
-
+    private boolean isAnySpecialChar(String nameRepository) {
+        RegExp regExp = RegExp.compile("[^ \\w]", "g");
+        return regExp.test(nameRepository);
+    }
 }

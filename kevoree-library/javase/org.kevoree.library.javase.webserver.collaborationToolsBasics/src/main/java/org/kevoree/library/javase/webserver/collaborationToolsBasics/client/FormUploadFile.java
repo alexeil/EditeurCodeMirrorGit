@@ -21,7 +21,7 @@ public class FormUploadFile extends PopupPanel{
     private boolean onFolder;
     private AbstractItem abstractItemRoot;
     private TextBox tbPath;
-     private  FileUpload upload;
+    private  FileUpload upload;
     public FormUploadFile(AbstractItem fileToUpload, AbstractItem absItemRoot, boolean rightClickOnFolder, RootPanel systemFile) {
         super(false);
         setStyleName("popup");
@@ -30,8 +30,6 @@ public class FormUploadFile extends PopupPanel{
         this.abstractItemRoot = absItemRoot;
         this.onFolder = rightClickOnFolder;
 
-
-
         form = new FormPanel();
         form.setAction(UPLOAD_ACTION_URL);
         form.setEncoding(FormPanel.ENCODING_MULTIPART);
@@ -39,9 +37,6 @@ public class FormUploadFile extends PopupPanel{
 
         VerticalPanel panel = new VerticalPanel();
         form.setWidget(panel);
-
-
-
 
         tbPath = new TextBox();
         tbPath.setText(fileUpload.getPath());
@@ -67,27 +62,8 @@ public class FormUploadFile extends PopupPanel{
 
         form.addSubmitCompleteHandler(new FormPanel.SubmitCompleteHandler() {
             public void onSubmitComplete(FormPanel.SubmitCompleteEvent event) {
-                AbstractItem fileTocreate = new FileItem(upload.getFilename().substring(upload.getFilename().lastIndexOf("\\")+1));
-                if(onFolder) {
-                    fileTocreate.setPath(fileUpload.getPath()+"/"+fileTocreate.getName());
-                    fileTocreate.setParent(fileUpload);
-                }else{
-                    fileTocreate.setPath(fileUpload.getParent().getPath()+"/"+fileTocreate.getName());
-                    fileTocreate.setParent(fileUpload.getParent());
-                }
-                 repositoryToolsServices.createFolderIntoLocalRepository(fileTocreate, new AsyncCallback<Boolean>() {
-                     @Override
-                     public void onFailure(Throwable throwable) {
-                         //To change body of implemented methods use File | Settings | File Templates.
-                     }
-
-                     @Override
-                     public void onSuccess(Boolean bool) {
-
-                         Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
-                         hide();
-                     }
-                 });
+                hide();
+                Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
             }
         });
         this.add(form);

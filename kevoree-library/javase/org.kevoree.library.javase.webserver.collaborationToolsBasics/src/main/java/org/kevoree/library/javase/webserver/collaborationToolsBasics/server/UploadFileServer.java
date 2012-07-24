@@ -5,17 +5,23 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FilenameUtils;
+import org.kevoree.library.javase.fileSystem.client.LockFilesService;
 import org.kevoree.library.javase.webserver.servlet.FakeServletContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class UploadFileServer extends HttpServlet {
+
+    private Logger logger = LoggerFactory.getLogger(UploadFileServer.class);
     private  String uploadDirectory;
 
     @Override
@@ -24,6 +30,11 @@ public class UploadFileServer extends HttpServlet {
         super.doGet(req, resp);
     }
 
+    private  RepositoryToolsComponent repositoryToolsComponent;
+
+    public UploadFileServer(RepositoryToolsComponent repoToolsComponent){
+        this.repositoryToolsComponent = repoToolsComponent;
+    }
 
 
     public javax.servlet.ServletContext getServletContext() {
@@ -33,10 +44,8 @@ public class UploadFileServer extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-
         // process only multipart requests
         if (ServletFileUpload.isMultipartContent(req)) {
-
             // Create a factory for disk-based file items
             FileItemFactory factory = new DiskFileItemFactory();
 
@@ -59,23 +68,38 @@ public class UploadFileServer extends HttpServlet {
                         fileName = FilenameUtils. getName(fileName);
                     }
 
-                    File uploadedFile = new File(uploadDirectory, fileName);
-                    if (uploadedFile.createNewFile()) {
-                        item.write(uploadedFile);
-                        resp.setStatus(HttpServletResponse.SC_CREATED);
-                        resp.getWriter().print("The file was created successfully.");
-                        resp.flushBuffer();
-                    } else
-                        throw new IOException("The file already exists in repository.");
+
+                    String pathFile = uploadDirectory+fileName;
+                    byte[] content = item.getString().getBytes();
+
+
+
+                  Boolean bool = repositoryToolsComponent.getPortByName("files", LockFilesService.class).saveFile(pathFile, content, true);
                 }
             } catch (Exception e) {
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                         "An error occurred while creating the file : " + e.getMessage());
+
+                logger.debug(" Exeption ",e);
             }
 
         } else {
+            logger.debug(" else ");
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
                     "Request contents type is not supported by the servlet.");
         }
+    }
+
+    public byte[] convertStream (InputStream in) throws Exception {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int l;
+        do {
+            l = (in.read(buffer));
+            if (l > 0) {
+                out.write(buffer, 0, l);
+            }
+        } while (l > 0);
+        return out.toByteArray();
     }
 }

@@ -47,21 +47,20 @@ public class FormAddFile extends PopupPanel {
             public void onClick(ClickEvent clickEvent) {
                 AbstractItem fileTocreate = new FileItem(tbNewFile.getText());
                 if(onFolder) {
-                    fileTocreate.setPath(item.getPath()+"/"+fileTocreate.getName());
+                    fileTocreate.setPath(item.getPath()+fileTocreate.getName());
                     fileTocreate.setParent(item);
                 }else{
-                    fileTocreate.setPath(item.getParent().getPath()+"/"+fileTocreate.getName());
+                    fileTocreate.setPath(item.getParent().getPath()+fileTocreate.getName());
                     fileTocreate.setParent(item.getParent());
                 }
-                RootPanel.get().add(new HTML(" fileToCreate " + fileTocreate.getPath()+ " his parent " + fileTocreate.getParent().getName()));
 
-                repositoryToolsServices.newFileIntoRepository(fileTocreate, new AsyncCallback<AbstractItem>() {
+                repositoryToolsServices.newFileIntoRepository(fileTocreate, new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     }
 
                     @Override
-                    public void onSuccess(AbstractItem item) {
+                    public void onSuccess(Boolean bool) {
                         hide();
                         Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
                     }

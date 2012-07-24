@@ -11,23 +11,13 @@ import org.kevoree.library.javase.fileSystem.client.AbstractItem;
  */
 public interface GitRepositoryActions {
 
-    void createRepository(String login, String password, String nameRepository);
-     //TODO
-    void updateContentFileAndCommit(String file, byte [] editorText, String login);
+    boolean createRepository(String login, String password, String nameRepository);
 
     void commitRepository(String message, String nom, String email);
 
-    void pushRepository(String login, String password);
-    //TODO
-    void createFileIntoLocalRepository(AbstractItem item);
-    //TODO
-    void createFolderIntoLocalRepository(AbstractItem item);
-    //TODO
-    void ChangeFileOrFolderName(AbstractItem oldItem, AbstractItem newItem);
-    //TODO
-    void addFiletoRepositoryAfterUpload(AbstractItem item);
+    boolean pushRepository(String login, String password);
 
-    void importRepository(String login, String password, String url, String nameRepository, String path);
+    AbstractItem importRepository(String login, String password, String url, String nameRepository, String path);
 
     void createFileToInitRepository(String url, String nomRepo, String directoryPath);
 

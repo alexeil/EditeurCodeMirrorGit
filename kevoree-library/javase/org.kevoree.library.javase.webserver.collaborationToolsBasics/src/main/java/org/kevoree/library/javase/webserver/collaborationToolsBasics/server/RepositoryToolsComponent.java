@@ -2,8 +2,8 @@ package org.kevoree.library.javase.webserver.collaborationToolsBasics.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import org.kevoree.annotation.*;
-import org.kevoree.library.javase.fileSystemGitRepository.GitRepositoryActions;
 import org.kevoree.library.javase.fileSystem.client.LockFilesService;
+import org.kevoree.library.javase.fileSystemGitRepository.GitRepositoryActions;
 import org.kevoree.library.javase.webserver.FileServiceHelper;
 import org.kevoree.library.javase.webserver.KevoreeHttpRequest;
 import org.kevoree.library.javase.webserver.KevoreeHttpResponse;
@@ -41,8 +41,8 @@ public class RepositoryToolsComponent extends ParentAbstractPage {
 
         RemoteServiceServlet s1 = new RepositoryToolsServicesImpl(this, this.getDictionary().get("directoryPath").toString());
 
-        RemoteServiceServlet s2 =   new StructureServiceImpl();
-        HttpServlet s3 =   new UploadFileServer();
+        RemoteServiceServlet s2 =   new StructureServiceImpl(this);
+        HttpServlet s3 =   new UploadFileServer(this);
 
 		servletRepository.registerServlet("/ihmcodemirror/htmleditor", s1);
 		servletRepository.registerServlet("/ihmcodemirror/systemFileServices", s2);

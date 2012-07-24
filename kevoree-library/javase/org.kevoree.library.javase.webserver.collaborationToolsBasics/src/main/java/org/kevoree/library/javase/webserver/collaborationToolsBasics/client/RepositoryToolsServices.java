@@ -10,7 +10,6 @@ import java.io.IOException;
 @RemoteServiceRelativePath(value = "htmleditor")
 public interface RepositoryToolsServices extends RemoteService {
 
-
     boolean updateContentFileAndCommit(String file, byte [] editorText, String login);
 
     boolean pushRepository(String login, String password);
@@ -26,4 +25,7 @@ public interface RepositoryToolsServices extends RemoteService {
     boolean move(AbstractItem oldItem, AbstractItem newItem);
 
     boolean newFileIntoRepository(AbstractItem item);
+
+    boolean saveFileAfterUpload(AbstractItem item);
+
 }

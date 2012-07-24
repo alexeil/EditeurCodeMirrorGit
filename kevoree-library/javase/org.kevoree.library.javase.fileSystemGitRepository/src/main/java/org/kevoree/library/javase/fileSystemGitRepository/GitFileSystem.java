@@ -123,9 +123,8 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
     private long lastRevisionCheck = -1;
 
     @Override
+    @Port(name = "files", method = "getFileContent")
     public byte[] getFileContent (String relativePath, Boolean lock) {
-
-
         //UPDATE PHASE
         try {
             git.pull().call();
@@ -133,21 +132,21 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
             logger.error("Error while getRevision");
         }
         if (lock) {
-            final String[] relatvePathClean = {relativePath};
+            final String[] relativePathClean = {relativePath};
             if (relativePath.startsWith("/")) {
-                relatvePathClean[0] = relativePath.substring(relativePath.indexOf("/") + 1);
+                relativePathClean[0] = relativePath.substring(relativePath.indexOf("/") + 1);
             }
-            if (!lockedFile.contains(relatvePathClean)) {
-                lockedFile.add(relatvePathClean[0]);
+            if (!lockedFile.contains(relativePathClean)) {
+                lockedFile.add(relativePathClean[0]);
                 Thread t = new Thread() {
                     @Override
                     public void run () {
                         Map<String, Long> locks = new HashMap<String, Long>();
-                        locks.put(relatvePathClean[0], lastRevisionCheck);
+                        locks.put(relativePathClean[0], lastRevisionCheck);
                         try {
 
                             //repository.lock(locks, "AutoLock Kevoree Editor", false, null);
-                            lockedFile.add(relatvePathClean[0]);
+                            lockedFile.add(relativePathClean[0]);
                         } catch (Exception e) {
                             logger.error("Error while acquire lock ", e);
                         }
@@ -155,12 +154,11 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
                 };
                 t.start();
             }
-
         }
-        return getFileContent(relativePath);
+        return this.getFileContent(relativePath);
     }
 
-    @Port(name = "files", method = "getFileContent")
+
     public byte[] getFileContent (String relativePath) {
         File f = new File(baseClone.getAbsolutePath() + relativePath);
         if (f.exists()) {
@@ -190,6 +188,7 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
     }
 
     @Override
+    @Port(name = "files", method = "saveFile")
     public boolean saveFile (String relativePath, byte[] data, Boolean unlock) {
         boolean result = saveFile(relativePath, data);
         logger.debug("debug " + relativePath);
@@ -252,7 +251,7 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
                 relativePathClean = relativePath.substring(relativePath.indexOf("/") + 1);
             }
             try {
-                 removeFileToRepository(f);
+                removeFileToRepository(f);
                 /*String finalFilePath = f.getPath().substring(f.getPath().indexOf(baseClone.getPath())+ baseClone.getPath().length() + 1);
                 git.rm().addFilepattern(finalFilePath).call();
                 commitRepository(" File " + relativePathClean + " removed ", " name " , " email "); */
@@ -318,17 +317,19 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
         }
     }
 
-    @Port(name = "files", method = "saveFile")
+
     public boolean saveFile (String relativePath, byte[] data) {
         File f = new File(baseClone.getAbsolutePath() + relativePath);
+        logger.debug(" Save File --> relative path " + relativePath + " absolutePath " + baseClone.getAbsolutePath() + relativePath);
         try {
             if(!f.exists())
                 f.createNewFile();
-
-            FileOutputStream fw = new FileOutputStream(f);
-            fw.write(data);
-            fw.flush();
-            fw.close();
+            if(data.length != 0){
+                FileOutputStream fw = new FileOutputStream(f);
+                fw.write(data);
+                fw.flush();
+                fw.close();
+            }
             return true;
         } catch (Exception e) {
             logger.error("Error while getting file ", e);
@@ -361,8 +362,7 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
         oldFile.renameTo(newFile);
         addFileToRepository(newFile);
         removeFileToRepository(oldFile);
-       // commitRepository("rename or move "+ oldFile.getName() + " into " + newFile.getName(),"","");
-
+        // commitRepository("rename or move "+ oldFile.getName() + " into " + newFile.getName(),"","");
         return true;
     }
     public void commitRepository(String message, String nom, String email) {

@@ -13,13 +13,15 @@ public interface RepositoryToolsServicesAsync {
 
     void updateContentFileAndCommit(String file, byte [] editorText,  String login, AsyncCallback<Boolean> callback);
 
-    void pushRepository( String login, String password, AsyncCallback<Boolean> callback);
+    void pushRepository(String login, String password, AsyncCallback<Boolean> callback);
 
     void getFileContent(String filePath, AsyncCallback<String> callback);
 
-    void newFileIntoRepository(AbstractItem item, AsyncCallback<AbstractItem> callback);
+    void newFileIntoRepository(AbstractItem item, AsyncCallback<Boolean> callback);
 
     void createFolderIntoLocalRepository(AbstractItem folder, AsyncCallback<Boolean> callback);
 
-    void move(AbstractItem oldItem, AbstractItem newItem, AsyncCallback<AbstractItem> callback);
+    void move(AbstractItem oldItem, AbstractItem newItem, AsyncCallback<Boolean> callback);
+
+    void saveFileAfterUpload(AbstractItem item, AsyncCallback<Boolean> callback);
 }

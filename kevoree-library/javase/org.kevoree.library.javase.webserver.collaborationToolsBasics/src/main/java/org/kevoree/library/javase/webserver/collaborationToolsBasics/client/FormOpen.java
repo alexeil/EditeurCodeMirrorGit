@@ -27,8 +27,9 @@ public class FormOpen extends PopupPanel{
         this.abstractItemRoot = absItemRoot;
         this.systemFileRoot = systemFile;
         this.login = strLogin;
+        this.login.setLength(0);
         this.password = strPassword;
-
+        this.password.setLength(0);
 
         setStyleName("popup");
 
@@ -46,14 +47,17 @@ public class FormOpen extends PopupPanel{
         Button btnImport = new Button("Import");
         btnImport.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
+                login.setLength(0);
                 login.append(textBoxLoginImport.getText());
+                password.setLength(0);
                 password.append(textBoxPasswordImport.getText());
                 urlRepository = textBoxURLRepositoryImport.getText();
-                //RootPanel.get().add(new HTML(" login " + login.toString() + " PW " + password.toString() + " url " + urlRepository));
+
                 if(!login.toString().isEmpty() && !password.toString().isEmpty() && !urlRepository.isEmpty())
                     repositoryToolsServices.importRepository(login.toString(), password.toString(), urlRepository, new AsyncCallback<AbstractItem>() {
                         @Override
                         public void onFailure(Throwable throwable) {
+                            hide();
                             labelError.setText("Error importing the repository ( Wrong repository URL Or login/password");
                             labelError.setVisible(true);
                             btnSave.setEnabled(false);
@@ -63,11 +67,10 @@ public class FormOpen extends PopupPanel{
                             labelError.setVisible(false);
                             btnSave.setEnabled(true);
                             CodeMirrorEditorWrapper.setText("");
-                            CodeMirrorEditorWrapper.setFileOpened(null);
+                            CodeMirrorEditorWrapper.setFileOpened("");
                             abstractItemRoot = abstractItem;
                             Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
                             hide();
-                           // RootPanel.get().add(new HTML(" login " + login + " password " + password + " abstractItem " + abstractItemRoot.getName()));
                         }
                     });
             }
@@ -80,6 +83,16 @@ public class FormOpen extends PopupPanel{
         gridFieldsOpen.setWidget(2, 0, lblURLRepository);
         gridFieldsOpen.setWidget(2, 1, textBoxURLRepositoryImport);
         gridFieldsOpen.setWidget(3, 0, btnImport);
+
+        Button cancel = new Button("Cancel");
+        cancel.addClickHandler(new ClickHandler() {
+            @Override
+            public void onClick(ClickEvent clickEvent) {
+                hide();
+            }
+        });
+
+        gridFieldsOpen.setWidget(3, 1, cancel);
 
         this.setWidget(gridFieldsOpen);
     }

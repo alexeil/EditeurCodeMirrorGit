@@ -47,17 +47,17 @@ public class FormRenameFileOrFolder extends PopupPanel {
             public void onClick(ClickEvent clickEvent) {
                 AbstractItem newFileName = new FileItem(tbNewFile.getText());
                 if(onFolder) {
-                    newFileName.setPath(oldItem.getPath()+"/"+newFileName.getName());
+                    newFileName.setPath(oldItem.getPath()+newFileName.getName());
                 }else{
-                    newFileName.setPath(oldItem.getParent().getPath()+"/"+newFileName.getName());
+                    newFileName.setPath(oldItem.getParent().getPath()+newFileName.getName());
                 }
-                repositoryToolsServices.move(oldItem, newFileName, new AsyncCallback<AbstractItem>() {
+                repositoryToolsServices.move(oldItem, newFileName, new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     }
 
                     @Override
-                    public void onSuccess(AbstractItem item) {
+                    public void onSuccess(Boolean item) {
                         hide();
                         Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
                     }

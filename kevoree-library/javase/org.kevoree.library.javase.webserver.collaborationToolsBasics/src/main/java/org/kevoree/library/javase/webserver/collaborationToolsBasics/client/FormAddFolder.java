@@ -47,9 +47,9 @@ public class FormAddFolder extends PopupPanel {
             public void onClick(ClickEvent clickEvent) {
                 AbstractItem fileTocreate = new FileItem(tbNewFile.getText());
                 if(onFolder) {
-                    fileTocreate.setPath(item.getPath()+"/"+fileTocreate.getName());
+                    fileTocreate.setPath(item.getPath()+fileTocreate.getName());
                 }else{
-                    fileTocreate.setPath(item.getParent().getPath()+"/"+fileTocreate.getName());
+                    fileTocreate.setPath(item.getParent().getPath()+fileTocreate.getName());
                 }
                 repositoryToolsServices.createFolderIntoLocalRepository(fileTocreate, new AsyncCallback<Boolean>() {
                     @Override

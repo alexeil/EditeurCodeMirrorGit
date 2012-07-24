@@ -35,17 +35,15 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
 
-
     public void onModuleLoad() {
         // Listener CodeMirror
         CodeMirrorEditorWrapper.addOnChangeHandler(this);
+        CodeMirrorEditorWrapper.setFileOpened("");
 
         // get Divs
         RootPanel buttonBar = RootPanel.get("buttonBar");
         RootPanel editor = RootPanel.get("editor");
         RootPanel systemFileRoot = RootPanel.get("fileSystem");
-
-
 
         // add editor's content
         Grid gridEditor = new Grid(1,1);
@@ -68,7 +66,6 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         labelError.setStyleName("labelError");
         buttonBar.add(labelError);
 
-
         Button btnNouveau = new Button("New");
         btnNouveau.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
@@ -90,7 +87,6 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         login = new StringBuilder();
         password = new StringBuilder();
 
-
         formOpen =  new FormOpen(labelError, btnSave, abstractItemRoot,systemFileRoot, login, password);
         formNew =  new FormNew(labelError, btnSave, abstractItemRoot,systemFileRoot, login, password);
 
@@ -104,11 +100,11 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
             }
         });
 
-
         grid.setWidget(1, 0, btnSave);
         btnSave.setWidth("125px");
         btnSave.setEnabled(false);
 
+        // shortcut keyboard for fun ~~ different behaviour between browser
         HandlerRegistration logHandler = Event.addNativePreviewHandler(new NativePreviewHandler() {
 
             @Override
@@ -178,8 +174,10 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
     @Override
     public void invokeMirrorCallback(JavaScriptObject obj) {
-        textAreaCodeShow.setHTML(CodeMirrorEditorWrapper.getText());
-        writeEditorContentToFile();
+        if(!CodeMirrorEditorWrapper.getFileOpened().isEmpty()){
+            textAreaCodeShow.setHTML(CodeMirrorEditorWrapper.getText());
+            writeEditorContentToFile();
+        }
     }
 
     public void writeEditorContentToFile(){
