@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 public class UploadFileServer extends HttpServlet {
@@ -35,7 +36,6 @@ public class UploadFileServer extends HttpServlet {
     public UploadFileServer(RepositoryToolsComponent repoToolsComponent){
         this.repositoryToolsComponent = repoToolsComponent;
     }
-
 
     public javax.servlet.ServletContext getServletContext() {
         return new FakeServletContext();
@@ -68,13 +68,11 @@ public class UploadFileServer extends HttpServlet {
                         fileName = FilenameUtils. getName(fileName);
                     }
 
-
                     String pathFile = uploadDirectory+fileName;
-                    byte[] content = item.getString().getBytes();
+                    byte[] content = convertStream(item.getInputStream());
 
-
-
-                  Boolean bool = repositoryToolsComponent.getPortByName("files", LockFilesService.class).saveFile(pathFile, content, true);
+                    if(!repositoryToolsComponent.getPortByName("files", LockFilesService.class).saveFile(pathFile, content, true))
+                        logger.debug(" Error while uploading {}", fileName);
                 }
             } catch (Exception e) {
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
@@ -84,7 +82,6 @@ public class UploadFileServer extends HttpServlet {
             }
 
         } else {
-            logger.debug(" else ");
             resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE,
                     "Request contents type is not supported by the servlet.");
         }

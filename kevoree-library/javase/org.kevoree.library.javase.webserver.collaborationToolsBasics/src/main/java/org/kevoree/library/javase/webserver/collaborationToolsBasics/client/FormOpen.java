@@ -61,6 +61,7 @@ public class FormOpen extends PopupPanel{
                             labelError.setText("Error importing the repository ( Wrong repository URL Or login/password");
                             labelError.setVisible(true);
                             btnSave.setEnabled(false);
+                            systemFileRoot.clear();
                         }
                         @Override
                         public void onSuccess(AbstractItem abstractItem) {

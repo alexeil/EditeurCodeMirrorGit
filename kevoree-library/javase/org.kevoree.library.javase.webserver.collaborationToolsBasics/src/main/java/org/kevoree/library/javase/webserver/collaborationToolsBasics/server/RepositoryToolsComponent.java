@@ -23,11 +23,9 @@ import javax.servlet.http.HttpServlet;
         @RequiredPort(name = "files", type = PortType.SERVICE,
                 className = LockFilesService.class, optional = true, needCheckDependency = true)
 })
-//@Requires(value = @RequiredPort(name = "createRepo", type = PortType.SERVICE, className = GitRepositoryActions.class, optional = true, needCheckDependency = true))
 public class RepositoryToolsComponent extends ParentAbstractPage {
 
 	private LocalServletRegistry servletRepository = null;
-
 
 	public void startPage () {
 		servletRepository = new LocalServletRegistry() {

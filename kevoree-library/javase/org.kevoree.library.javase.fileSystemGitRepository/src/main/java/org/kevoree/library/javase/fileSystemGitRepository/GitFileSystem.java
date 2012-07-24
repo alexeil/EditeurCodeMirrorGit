@@ -93,7 +93,7 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
                 boolean filtered = false;
                 if (extensions != null) {
                     filtered = true;
-                    logger.debug("Look for extension for " + base.getName());
+                    logger.debug("Look for extension for {}", base.getName());
                     for (String filter : extensions) {
                         if (base.getName().endsWith(filter)) {
                             filtered = false;
@@ -172,7 +172,7 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
                 logger.error("Error while getting file ", e);
             }
         } else {
-            logger.debug("No file exist = {}", baseClone.getAbsolutePath() + relativePath);
+            logger.debug("No file exist = {}{}", baseClone.getAbsolutePath(), relativePath);
             return new byte[0];
         }
         return new byte[0];
@@ -191,7 +191,6 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
     @Port(name = "files", method = "saveFile")
     public boolean saveFile (String relativePath, byte[] data, Boolean unlock) {
         boolean result = saveFile(relativePath, data);
-        logger.debug("debug " + relativePath);
         File f = new File(baseClone.getAbsolutePath() + relativePath);
         if (f.exists()) {
             //SVNCommitClient clientCommit = new SVNCommitClient(authManager, SVNWCUtil.createDefaultOptions(true));
@@ -320,7 +319,6 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
 
     public boolean saveFile (String relativePath, byte[] data) {
         File f = new File(baseClone.getAbsolutePath() + relativePath);
-        logger.debug(" Save File --> relative path " + relativePath + " absolutePath " + baseClone.getAbsolutePath() + relativePath);
         try {
             if(!f.exists())
                 f.createNewFile();

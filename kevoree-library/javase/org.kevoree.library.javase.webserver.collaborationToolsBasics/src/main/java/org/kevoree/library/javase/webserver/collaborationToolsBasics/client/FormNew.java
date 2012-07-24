@@ -76,6 +76,7 @@ public class FormNew extends PopupPanel {
                                 labelError.setText("Error : repository already exists Or wrong login/password");
                                 labelError.setVisible(true);
                                 btnSave.setEnabled(false);
+                                systemFileRoot.clear();
                             }
 
                             @Override

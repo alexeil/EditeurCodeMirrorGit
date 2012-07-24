@@ -47,12 +47,12 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     }
 
     public boolean newFileIntoRepository(AbstractItem item){
-        logger.debug(" saveFile " + item.getPath());
+        logger.debug(" saveFile {}" ,item.getPath());
         return repositoryToolsComponent.getPortByName("files", LockFilesService.class).saveFile(item.getPath(), new byte[0], true);
     }
 
     public boolean saveFileAfterUpload(AbstractItem item){
-        logger.debug(" saveFile after upload " + item.getPath());
+        logger.debug(" saveFile after upload {}", item.getPath());
         return repositoryToolsComponent.getPortByName("files", LockFilesService.class).saveFile(item.getPath(), new byte[0], true);
     }
 
@@ -63,7 +63,6 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     public AbstractItem initRepository(String login, String password, String nameRepository){
         AbstractItem itemReturned = repositoryToolsComponent.getPortByName("createRepo", GitRepositoryActions.class).initRepository(login, password, nameRepository, directoryPath);
         if(itemReturned==null){
-            logger.debug(" TEST ----------------------66> " + (itemReturned==null));
             throw new Error(" error during initRepository");
         }
         else{
@@ -72,18 +71,15 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     }
 
     public boolean updateContentFileAndCommit(String file, byte[] editorText, String login) {
-        logger.debug(" in updateContentFileAndCommit String file = " + file );
+        logger.debug(" in updateContentFileAndCommit String file = {}", file );
         return  repositoryToolsComponent.getPortByName("files", LockFilesService.class).saveFile(file, editorText, true);
     }
 
     public boolean pushRepository(String login, String password) {
-        repositoryToolsComponent.getPortByName("createRepo", GitRepositoryActions.class).pushRepository(login, password);
-        return true;
+        return repositoryToolsComponent.getPortByName("createRepo", GitRepositoryActions.class).pushRepository(login, password);
     }
 
     public String getFileContent(String filePath)  throws IOException {
-        logger.debug("File " + filePath + " new String " +new String(repositoryToolsComponent.getPortByName("files", LockFilesService.class).getFileContent(filePath, false) ));
-        logger.debug("File " + filePath + " .ToString " + (repositoryToolsComponent.getPortByName("files", LockFilesService.class).getFileContent(filePath, false) ).toString());
-        return new String(repositoryToolsComponent.getPortByName("files", LockFilesService.class).getFileContent(filePath, false));
+            return new String(repositoryToolsComponent.getPortByName("files", LockFilesService.class).getFileContent(filePath, false));
     }
 }

@@ -78,7 +78,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
     public AbstractItem initRepository(String login, String password, String nameRepository, String pathRepository){
         boolean isCreated = createRepository(login,password,nameRepository);
         if(isCreated){
-            logger.debug(" -------------------66> is created " + isCreated + " name Repo" +nameRepository);
+            logger.debug(" the Repository {} is created " , nameRepository);
             cloneRepository("https://" + login + "@github.com/" + login + "/" + nameRepository + ".git", nameRepository, pathRepository);
             createFileToInitRepository("https:  //" + login + "@github.com/" + login + "/" + nameRepository + ".git", nameRepository, pathRepository);
             commitRepository("commit init", login, "Email@login.org");
@@ -97,8 +97,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
             logger.debug("The repository exists ");
             return true;
         } catch (IOException e) {
-            logger.debug("The repository : " + nameRepository +" doesn't exist ");
-            logger.debug(" isRepoExist Error ", e);
+            logger.debug("The repository : {} doesn't exist " , nameRepository);
             return false;
         }
     }
@@ -131,7 +130,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
             addFileToRepository(file);
             commitRepository("Init Repository with a README.md ","","");
         } catch (IOException e) {
-            logger.debug("Cannot create the file "+e);
+            logger.debug("Cannot create the file ",e);
         }
     }
 
@@ -156,7 +155,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
         try {
             commit.call();
         } catch (Exception e) {
-            logger.debug("Cannot commit repository "+e);
+            logger.debug("Cannot commit repository ",e);
         }
     }
 
@@ -168,7 +167,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
             git.push().setCredentialsProvider(user).call();
             return true;
         } catch (InvalidRemoteException e) {
-            logger.debug("Cannot push repository "+e);
+            logger.debug("Cannot push repository ",e);
             return false;
         }
     }

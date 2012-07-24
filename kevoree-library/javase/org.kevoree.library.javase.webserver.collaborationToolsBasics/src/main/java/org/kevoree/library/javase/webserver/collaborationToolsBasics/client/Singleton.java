@@ -79,6 +79,7 @@ public final class Singleton {
                 createGwtTree(realRoot, root);
 
                 // createGwtTree(result, root);
+                tree.openFolder(root);
                 localTreeGrid.setData(tree);
                 localTreeGrid.setContextMenu(initContextMenu());
                 localTreeGrid.draw();

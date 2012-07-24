@@ -37,6 +37,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
 
     public void onModuleLoad() {
         // Listener CodeMirror
+        // TODO Erreur JSNI
         CodeMirrorEditorWrapper.addOnChangeHandler(this);
         CodeMirrorEditorWrapper.setFileOpened("");
 
