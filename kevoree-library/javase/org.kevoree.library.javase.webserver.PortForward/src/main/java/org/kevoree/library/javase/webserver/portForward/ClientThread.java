@@ -89,7 +89,7 @@ class ClientThread extends Thread {
 
     /**
      * Called by some of the forwarding threads to indicate
-     * that its socket connection is brokean and both client
+     * that its socket connection is broken and both client
      * and server sockets should be closed. Closing the client
      * and server sockets causes all threads blocked on reading
      * or writing to these sockets to get an exception and to

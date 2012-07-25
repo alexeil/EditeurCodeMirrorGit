@@ -57,9 +57,9 @@ class ForwardThread extends Thread {
             }
         } catch (IOException e) {
             // Read/write failed --> connection is broken
+        }  finally {
+            // Notify parent thread that the connection is broken
+            mParent.connectionBroken();
         }
-
-        // Notify parent thread that the connection is broken
-        mParent.connectionBroken();
     }
 }

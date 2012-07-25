@@ -30,7 +30,7 @@ public class PortForwarderComponent extends AbstractComponentType {
     private Logger logger = LoggerFactory.getLogger(PortForwarderComponent.class);
 
     @Start
-    public void start () throws IOException {
+    public void start() throws IOException {
 
         String source_host = this.getDictionary().get("source_host").toString();
         int source_port = Integer.parseInt(this.getDictionary().get("source_port").toString());
@@ -38,13 +38,13 @@ public class PortForwarderComponent extends AbstractComponentType {
         int destination_port = Integer.parseInt(this.getDictionary().get("destination_port").toString());
 
         ServerSocket serverSocket=null;
-            try{
-                 serverSocket = new ServerSocket();
-                serverSocket.bind(new InetSocketAddress(destination_host, destination_port), 50);
-
-            }   catch (Error error){
-                logger.debug(" erreur ---------6>" , error);
-            }
+        try{
+            serverSocket = new ServerSocket();
+            serverSocket.bind(new InetSocketAddress(destination_host, destination_port), 50);
+        } catch (IOException e) {
+            logger.debug(" Error with the socket server ", e);
+            serverSocket.close();
+        }
 
         while (true) {
             Socket clientSocket = serverSocket.accept();
