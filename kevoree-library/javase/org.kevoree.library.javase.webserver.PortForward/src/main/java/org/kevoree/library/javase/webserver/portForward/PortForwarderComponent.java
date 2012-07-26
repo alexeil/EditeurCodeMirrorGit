@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -39,8 +38,8 @@ public class PortForwarderComponent extends AbstractComponentType {
 
         ServerSocket serverSocket=null;
         try{
-            serverSocket = new ServerSocket();
-            serverSocket.bind(new InetSocketAddress(destination_host, destination_port), 50);
+            serverSocket = new ServerSocket(destination_port, 50, InetAddress.getByName(destination_host));
+
         } catch (IOException e) {
             logger.debug(" Error with the socket server ", e);
             serverSocket.close();
@@ -57,6 +56,4 @@ public class PortForwarderComponent extends AbstractComponentType {
     public void stop(){
 
     }
-
-
 }
