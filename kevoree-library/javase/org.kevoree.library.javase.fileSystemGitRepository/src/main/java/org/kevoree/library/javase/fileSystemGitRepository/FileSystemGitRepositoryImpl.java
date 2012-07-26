@@ -57,7 +57,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
             cloneRepository(url, nameRepository, pathRepository);
             return new FolderItem(baseClone.getPath());
         }
-        logger.debug("Can't import the repository, because {} doesn't exist in {}'s account ",nameRepository,login );
+        logger.debug("Can't import the repository, because {} doesn't exist in {}'s account or he's not a collaborator of that repository ",nameRepository,login );
         return null;
     }
 
@@ -121,7 +121,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
                 return false;
             }
         }
-        logger.debug(" Can't create the repository {} because it already exists in {}'s account or he's not a collaborator of that repository", nameRepository, login);
+        logger.debug(" Can't create the repository {} because it already exists in {}'s account", nameRepository, login);
         return false;
     }
 
