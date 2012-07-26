@@ -39,7 +39,14 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
 
     public AbstractItem importRepository(String login, String password,String url) {
         String nameRepository = url.substring(url.lastIndexOf("/")+1,url.lastIndexOf("."));
-        return repositoryToolsComponent.getPortByName("createRepo", GitRepositoryActions.class).importRepository(login, password, url ,nameRepository, directoryPath);
+
+        AbstractItem itemReturned = repositoryToolsComponent.getPortByName("createRepo", GitRepositoryActions.class).importRepository(login, password, url ,nameRepository, directoryPath);
+        if(itemReturned==null){
+            throw new Error(" error during importRepository");
+        }
+        else{
+            return itemReturned;
+        }
     }
 
     public boolean move(AbstractItem oldItem, AbstractItem newItem){

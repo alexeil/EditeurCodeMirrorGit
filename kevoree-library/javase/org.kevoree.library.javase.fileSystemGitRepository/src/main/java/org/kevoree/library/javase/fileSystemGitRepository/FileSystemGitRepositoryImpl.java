@@ -50,12 +50,15 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
     @Override
     @Port(name="createRepo", method = "importRepository")
     public AbstractItem importRepository(String login, String password, String url, String nameRepository, String pathRepository) {
+
         if(isRepoExist(login,password, nameRepository)){
             baseClone = new File(pathRepository+nameRepository);
             deleteDir(baseClone);
             cloneRepository(url, nameRepository, pathRepository);
+            return new FolderItem(baseClone.getPath());
         }
-        return new FolderItem(baseClone.getPath());
+        logger.debug("Can't import the repository, because {} doesn't exist in {}'s account ",nameRepository,login );
+        return null;
     }
 
     // Deletes all files and subdirectories under dir
@@ -118,6 +121,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
                 return false;
             }
         }
+        logger.debug(" Can't create the repository {} because it already exists in {}'s account or he's not a collaborator of that repository", nameRepository, login);
         return false;
     }
 
