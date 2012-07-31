@@ -18,7 +18,7 @@ public interface RepositoryToolsServices extends RemoteService {
 
     AbstractItem initRepository(String login, String password, String nameRepository);
 
-    AbstractItem importRepository(String login, String password, String url);
+    AbstractItem importRepository(String login, String password, String url) throws Exception;
 
     boolean createFolderIntoLocalRepository(AbstractItem item);
 

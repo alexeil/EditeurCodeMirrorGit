@@ -14,5 +14,12 @@
     <groupId>org.kevoree.library.javase.webserver.PortForward</groupId>
     <artifactId>org.kevoree.library.javase.webserver.PortForward</artifactId>
     <name>Kevoree :: Library :: JavaSE :: Webserver :: PortForwarding</name>
-    
+    <dependencies>
+        <dependency>
+            <groupId>org.kevoree.corelibrary.javase</groupId>
+            <artifactId>org.kevoree.library.javase.webserver.api</artifactId>
+            <version>${kevoree.version}</version>
+        </dependency>
+    </dependencies>
+
 </project>

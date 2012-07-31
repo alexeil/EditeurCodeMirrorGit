@@ -37,14 +37,16 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
         super.doGet(req, resp);
     }
 
-    public AbstractItem importRepository(String login, String password,String url) {
+    public AbstractItem importRepository(String login, String password,String url) throws Exception {
+
         String nameRepository = url.substring(url.lastIndexOf("/")+1,url.lastIndexOf("."));
 
         AbstractItem itemReturned = repositoryToolsComponent.getPortByName("createRepo", GitRepositoryActions.class).importRepository(login, password, url ,nameRepository, directoryPath);
         if(itemReturned==null){
-            throw new Error(" error during importRepository");
+            throw new Exception(" error during importRepository");
         }
         else{
+            logger.debug(" item return after import " + itemReturned.getPath());
             return itemReturned;
         }
     }

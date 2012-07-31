@@ -2,7 +2,6 @@ package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
@@ -25,7 +24,7 @@ public final class Singleton {
     private TreeNode currentSelectedNode;
     private AbstractItem abstractItemRoot;
     private String fileOpenedPath;
-    private RootPanel systemFileRoot;
+    private RootPanel  systemFileRoot;
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
@@ -49,8 +48,39 @@ public final class Singleton {
         return Singleton.instance;
     }
 
+    public TreeGrid loadFileSystemLight(AbstractItem abstractItem) {
+        this.localTreeGrid = new TreeGrid();
+        this.localTreeGrid.setHeight("150px");
+        this.localTreeGrid.setWidth("150px");
+
+        // add FileSystem's content
+        structureService.getArborescence(abstractItem, new AsyncCallback<AbstractItem>() {
+            @Override
+            public void onFailure(Throwable caught) {
+            }
+
+            @Override
+            public void onSuccess(AbstractItem result) {
+                FolderItem realRoot = (FolderItem) ((FolderItem) result).getChilds().get(0);
+                tree = new com.smartgwt.client.widgets.tree.Tree();
+
+                TreeNode root = new TreeNode(realRoot.getName());
+                root.setAttribute("abstractItem", realRoot);
+                root.setAttribute("isFolder", true);
+
+                tree.setData(new TreeNode[]{root});
+                createGwtTreeLight(realRoot, root);
+
+                tree.openFolder(root);
+                localTreeGrid.setData(tree);
+                localTreeGrid.draw();
+            }
+        });
+        return localTreeGrid;
+    }
+
     public void loadFileSystem(AbstractItem abstractItem, RootPanel systemFile) {
-        this.abstractItemRoot = abstractItem;
+        this.abstractItemRoot=abstractItem;
         this.localTreeGrid = new TreeGrid();
         this.systemFileRoot = systemFile;
         this.localTreeGrid.setHeight("800px");
@@ -60,9 +90,7 @@ public final class Singleton {
         // add FileSystem's content
         structureService.getArborescence(abstractItem, new AsyncCallback<AbstractItem>() {
             @Override
-            public void onFailure(Throwable caught) {
-                RootPanel.get().add(new HTML("FAIL : message " + caught.getMessage()));
-            }
+            public void onFailure(Throwable caught) { }
             @Override
             public void onSuccess(AbstractItem result) {
                 // result ---> /tmp/root for exemple
@@ -141,6 +169,23 @@ public final class Singleton {
         }
     }
 
+    private void createGwtTreeLight(AbstractItem item, TreeNode root) {
+        for (int i = 0; i < ((FolderItem) item).getChilds().size(); i++) {
+            if (((FolderItem) item).getChilds().get(i).getClass() == FolderItem.class) {
+                FolderItem itemFolder = (FolderItem) ((FolderItem) item).getChilds().get(i);
+                TreeNode folder = new TreeNode(itemFolder.getName());
+
+                folder.setAttribute("abstractItem", itemFolder);
+                folder.setAttribute("isFolder",true);
+                tree.add(folder, root);
+                if (itemFolder.getChilds().size() == 0){
+                    folder.setIsFolder(true);
+                }
+                createGwtTreeLight(itemFolder, folder);
+            }
+        }
+    }
+
     private Menu initContextMenu(){
         Menu mainMenu = new Menu();
         com.smartgwt.client.widgets.menu.MenuItem createFileMenu = new com.smartgwt.client.widgets.menu.MenuItem("Create file");
@@ -149,7 +194,7 @@ public final class Singleton {
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
-                FormAddFile formAddFile = new FormAddFile(item,abstractItemRoot,rightClickOnFolder, systemFileRoot);
+                __FormAddFile formAddFile = new __FormAddFile(item,abstractItemRoot,rightClickOnFolder, systemFileRoot);
                 formAddFile.center();
             }
         });

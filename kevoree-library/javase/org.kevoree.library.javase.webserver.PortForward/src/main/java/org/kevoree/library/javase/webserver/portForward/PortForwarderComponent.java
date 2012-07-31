@@ -5,10 +5,10 @@ import org.kevoree.framework.AbstractComponentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.InputStreamReader;
+import java.net.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -30,8 +30,17 @@ public class PortForwarderComponent extends AbstractComponentType {
 
     @Start
     public void start() throws IOException {
+        URL oracle = new URL("http://localhost:8080");
+        HttpURLConnection yc = (HttpURLConnection) oracle.openConnection();
+        yc.setRequestProperty("HOST", "localzz.org");
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+                yc.getInputStream()));
+        String inputLine;
+        while ((inputLine = in.readLine()) != null)
+            logger.debug(inputLine);
+        in.close();
 
-        String source_host = this.getDictionary().get("source_host").toString();
+      /*  String source_host = this.getDictionary().get("source_host").toString();
         int source_port = Integer.parseInt(this.getDictionary().get("source_port").toString());
         String destination_host = this.getDictionary().get("destination_host").toString();
         int destination_port = Integer.parseInt(this.getDictionary().get("destination_port").toString());
@@ -49,7 +58,7 @@ public class PortForwarderComponent extends AbstractComponentType {
             Socket clientSocket = serverSocket.accept();
             ClientThread clientThread = new ClientThread(clientSocket,source_host,source_port);
             clientThread.start();
-        }
+        }  */
     }
 
     @Stop

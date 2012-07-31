@@ -94,6 +94,7 @@ public class FileSystemGitRepositoryImpl extends GitFileSystem implements GitRep
     public boolean isRepoExist(String login, String password, String nameRepository ){
         RepositoryService service = new RepositoryService();
         service.getClient().setCredentials(login, password);
+
         try {
             service.getRepository(login, nameRepository);
 

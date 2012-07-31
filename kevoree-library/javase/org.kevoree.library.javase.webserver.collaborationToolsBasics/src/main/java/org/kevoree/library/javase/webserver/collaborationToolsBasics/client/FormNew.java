@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 
 
@@ -15,19 +16,19 @@ public class FormNew extends PopupPanel {
     StringBuilder login, password;
     String nomRepository;
     Label labelError;
-    Button btnSave;
-    AbstractItem abstractItemRoot;
+    ToolStripMenu toolStripMenu;
     RootPanel systemFileRoot;
+    IHMcodeMirror IHMcodeMirror;
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
 
 
-    public FormNew(Label lblError, Button buttonSave, AbstractItem absItemRoot, RootPanel systemFile, StringBuilder strLogin, StringBuilder strPassword){
+    public FormNew(Label lblError, ToolStripMenu menu, IHMcodeMirror IHM, RootPanel systemFile, StringBuilder strLogin, StringBuilder strPassword){
         super(false);
         this.labelError = lblError;
-        this.btnSave = buttonSave;
-        this.abstractItemRoot = absItemRoot;
+        this.toolStripMenu = menu;
+        this.IHMcodeMirror = IHM;
         this.systemFileRoot = systemFile;
         this.login = strLogin;
         this.password = strPassword;
@@ -75,7 +76,7 @@ public class FormNew extends PopupPanel {
                                 hide();
                                 labelError.setText("Error : repository already exists Or wrong login/password");
                                 labelError.setVisible(true);
-                                btnSave.setEnabled(false);
+                                toolStripMenu.disableButtons();
                                 systemFileRoot.clear();
                             }
 
@@ -83,11 +84,11 @@ public class FormNew extends PopupPanel {
                             public void onSuccess(AbstractItem absItem) {
                                 CodeMirrorEditorWrapper.setText("");
                                 CodeMirrorEditorWrapper.setFileOpened("");
-                                abstractItemRoot = absItem;
-                                Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
+                                IHMcodeMirror.setAbstractItemRoot(absItem);
+                                Singleton.getInstance().loadFileSystem(IHMcodeMirror.getAbstractItemRoot(),systemFileRoot);
                                 hide();
                                 labelError.setVisible(false);
-                                btnSave.setEnabled(true);
+                                toolStripMenu.enableButtons();
                             }
                         });
                 }

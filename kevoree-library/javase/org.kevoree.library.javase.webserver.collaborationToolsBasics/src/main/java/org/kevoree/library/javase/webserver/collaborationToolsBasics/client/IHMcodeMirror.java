@@ -16,7 +16,9 @@ import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
+import org.kevoree.library.javase.fileSystem.client.FolderItem;
 
 
 /**
@@ -25,12 +27,20 @@ import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     private HTML textAreaCodeShow;
     private StringBuilder login, password;
-    private Button btnSave;
     private NativeEvent ne;
     private FormOpen formOpen;
     private FormNew formNew;
+    private ToolStripMenu toolStripMenu;
 
     private AbstractItem abstractItemRoot;
+
+    public AbstractItem getAbstractItemRoot(){
+        return abstractItemRoot;
+    }
+
+    public void setAbstractItemRoot(AbstractItem absItemRoot ){
+         this.abstractItemRoot = absItemRoot;
+    }
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
@@ -65,45 +75,20 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         Label labelError = new Label();
         labelError.setVisible(false);
         labelError.setStyleName("labelError");
-        buttonBar.add(labelError);
-
-        Button btnNouveau = new Button("New");
-        btnNouveau.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                formNew.center();
-            }
-        });
-
-        grid.setWidget(0, 0, btnNouveau);
-        btnNouveau.setWidth("123px");
-
-        btnSave = new Button("Save");
-        btnSave.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-                pushContentEditorToRepo();
-            }
-        });
 
         login = new StringBuilder();
         password = new StringBuilder();
 
-        formOpen =  new FormOpen(labelError, btnSave, abstractItemRoot,systemFileRoot, login, password);
-        formNew =  new FormNew(labelError, btnSave, abstractItemRoot,systemFileRoot, login, password);
+        toolStripMenu = new ToolStripMenu();
+        formOpen =  new FormOpen(labelError, toolStripMenu, this,systemFileRoot, login, password);
+        formNew =  new FormNew(labelError, toolStripMenu, this,systemFileRoot, login, password);
 
-        Button btnOpen = new Button("Open");
-        grid.setWidget(0, 1, btnOpen);
-        btnOpen.setWidth("125px");
+        toolStripMenu.setIHMCodeMirror(this);
+        toolStripMenu.setFormNew(formNew);
+        toolStripMenu.setFormOpen(formOpen);
 
-        btnOpen.addClickHandler(new ClickHandler() {
-            public void onClick(ClickEvent event) {
-                formOpen.center();
-            }
-        });
-
-        grid.setWidget(1, 0, btnSave);
-        btnSave.setWidth("125px");
-        btnSave.setEnabled(false);
+        grid.setWidget(0,0, toolStripMenu);
+        grid.setWidget(1,0, labelError);
 
         // shortcut keyboard for fun ~~ different behaviour between browser
         HandlerRegistration logHandler = Event.addNativePreviewHandler(new NativePreviewHandler() {
@@ -148,7 +133,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                         @Override
                         public void execute() {
-                            if (btnSave.isEnabled()) {
+                            if (!toolStripMenu.getBtnSave().isDisabled()) {
                                 // fonction to call for saving
                                 pushContentEditorToRepo();
                             }
@@ -163,7 +148,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
         Scheduler.get().scheduleFixedDelay(new RepeatingCommand() {
             @Override
             public boolean execute() {
-                if (btnSave.isEnabled()) {
+                if (!toolStripMenu.getBtnSave().isDisabled()) {
                     // fonction to call for saving
                     pushContentEditorToRepo();
                 }

@@ -5,34 +5,27 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.smartgwt.client.widgets.tree.TreeGrid;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 import org.kevoree.library.javase.fileSystem.client.FileItem;
 
 
-public class FormAddFile extends PopupPanel {
-
-    private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
-            .create(RepositoryToolsServices.class);
+public class FormAddFileFromButton extends PopupPanel {
 
     private TextBox tbNewFile;
-    private AbstractItem item;
-    private boolean onFolder;
+    private TreeGrid treeGrid;
+    Button btnOk;
+    private IHMcodeMirror IHMcodeMirror;
 
-    private RootPanel systemFileRoot;
-    private AbstractItem abstractItemRoot;
-
-    public FormAddFile(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder,RootPanel systemFile){
+    public FormAddFileFromButton(IHMcodeMirror IHM){
         super(false);
-        this.systemFileRoot = systemFile;
-        this.abstractItemRoot = absItemRoot;
-        this.item = absItem;
-        this.onFolder = rightClickOnFolder;
+        this.IHMcodeMirror = IHM;
         setStyleName("popup");
 
-        Grid grid = new Grid(2, 2);
+        Grid grid = new Grid(2, 3);
         Label lblNewFile = new Label("Enter a new file name");
         tbNewFile = new TextBox();
-        Button btnOk = new Button("Ok");
+        btnOk = new Button("Ok");
         Button btnCancel = new Button("Cancel");
 
         grid.setWidget(0, 0, lblNewFile);
@@ -41,11 +34,20 @@ public class FormAddFile extends PopupPanel {
         grid.setWidget(1,1,btnCancel);
 
         add(grid);
+        FlowPanel root = new FlowPanel();
+        this.add(root);
+
+        root.add(Singleton.getInstance().loadFileSystemLight(IHMcodeMirror.getAbstractItemRoot()));
+
+
 
         btnOk.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                AbstractItem fileTocreate = new FileItem(tbNewFile.getText());
+                RootPanel.get().add(new HTML("selected "));
+                Singleton.getInstance().loadFileSystemLight(IHMcodeMirror.getAbstractItemRoot());
+                RootPanel.get().add(new HTML("selected " + treeGrid.getSelectedPaths().toString()));
+                /*AbstractItem fileTocreate = new FileItem(tbNewFile.getText());
                 if(onFolder) {
                     fileTocreate.setPath(item.getPath()+fileTocreate.getName());
                     fileTocreate.setParent(item);
@@ -62,9 +64,9 @@ public class FormAddFile extends PopupPanel {
                     @Override
                     public void onSuccess(Boolean bool) {
                         hide();
-                        Singleton.getInstance().loadFileSystem(abstractItemRoot, systemFileRoot);
+
                     }
-                });
+                });   */
             }
         });
 

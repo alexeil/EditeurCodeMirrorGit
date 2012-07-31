@@ -9,7 +9,7 @@ public interface RepositoryToolsServicesAsync {
 
     void initRepository(String login, String password, String nameRepository,AsyncCallback<AbstractItem> callback) ;
 
-    void importRepository(String login, String password, String url,AsyncCallback<AbstractItem> callback);
+    void importRepository(String login, String password, String url,AsyncCallback<AbstractItem> callback) throws Exception;
 
     void updateContentFileAndCommit(String file, byte [] editorText,  String login, AsyncCallback<Boolean> callback);
 

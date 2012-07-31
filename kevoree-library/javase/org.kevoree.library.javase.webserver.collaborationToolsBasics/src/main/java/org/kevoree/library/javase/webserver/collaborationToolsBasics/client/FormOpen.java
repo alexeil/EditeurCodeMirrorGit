@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 
 
@@ -13,18 +14,17 @@ public class FormOpen extends PopupPanel{
     StringBuilder login, password;
     String urlRepository;
     Label labelError;
-    Button btnSave;
-    AbstractItem abstractItemRoot;
     RootPanel systemFileRoot;
-
+    ToolStripMenu toolStripMenu;
+    IHMcodeMirror IHMcodeMirror;
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
 
-    public FormOpen(Label lblError, Button buttonSave, AbstractItem absItemRoot, RootPanel systemFile,StringBuilder strLogin, StringBuilder strPassword){
+    public FormOpen(Label lblError, ToolStripMenu menu, IHMcodeMirror IHM, RootPanel systemFile,StringBuilder strLogin, StringBuilder strPassword){
         super(false);
+        this.IHMcodeMirror = IHM;
         this.labelError = lblError;
-        this.btnSave = buttonSave;
-        this.abstractItemRoot = absItemRoot;
+        this.toolStripMenu = menu;
         this.systemFileRoot = systemFile;
         this.login = strLogin;
         this.login.setLength(0);
@@ -54,26 +54,31 @@ public class FormOpen extends PopupPanel{
                 urlRepository = textBoxURLRepositoryImport.getText();
 
                 if(!login.toString().isEmpty() && !password.toString().isEmpty() && !urlRepository.isEmpty())
-                    repositoryToolsServices.importRepository(login.toString(), password.toString(), urlRepository, new AsyncCallback<AbstractItem>() {
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            hide();
-                            labelError.setText("Error importing the repository ( Wrong repository URL Or login/password");
-                            labelError.setVisible(true);
-                            btnSave.setEnabled(false);
-                            systemFileRoot.clear();
-                        }
-                        @Override
-                        public void onSuccess(AbstractItem abstractItem) {
-                            labelError.setVisible(false);
-                            btnSave.setEnabled(true);
-                            CodeMirrorEditorWrapper.setText("");
-                            CodeMirrorEditorWrapper.setFileOpened("");
-                            abstractItemRoot = abstractItem;
-                            Singleton.getInstance().loadFileSystem(abstractItemRoot,systemFileRoot);
-                            hide();
-                        }
-                    });
+                    try {
+                        repositoryToolsServices.importRepository(login.toString(), password.toString(), urlRepository, new AsyncCallback<AbstractItem>() {
+                            @Override
+                            public void onFailure(Throwable throwable) {
+                                hide();
+                                labelError.setText("Error importing the repository ( Wrong repository URL Or login/password )");
+                                labelError.setVisible(true);
+                                toolStripMenu.disableButtons();
+                                systemFileRoot.clear();
+                            }
+                            @Override
+                            public void onSuccess(AbstractItem abstractItem) {
+                                labelError.setVisible(false);
+                                toolStripMenu.enableButtons();
+                                CodeMirrorEditorWrapper.setText("");
+                                CodeMirrorEditorWrapper.setFileOpened("");
+
+                                IHMcodeMirror.setAbstractItemRoot(abstractItem);
+                                Singleton.getInstance().loadFileSystem(IHMcodeMirror.getAbstractItemRoot(),systemFileRoot);
+                                hide();
+                            }
+                        });
+                    } catch (Exception e) {
+                        RootPanel.get().add(new HTML(" Exception while import " + e.getMessage() + " " + e.getStackTrace()));
+                    }
             }
         });
 
