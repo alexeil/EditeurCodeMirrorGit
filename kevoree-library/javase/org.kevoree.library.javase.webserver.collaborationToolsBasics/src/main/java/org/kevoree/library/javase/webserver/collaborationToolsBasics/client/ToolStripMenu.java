@@ -1,13 +1,10 @@
 package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
 
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,7 +43,7 @@ public class ToolStripMenu extends ToolStrip {
         btnNouveau.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                formNew.center();
+                formNew.show();
             }
         });
         this.addButton(btnNouveau);
@@ -54,7 +51,7 @@ public class ToolStripMenu extends ToolStrip {
         ToolStripButton btnOpen = new ToolStripButton("Open");
         btnOpen.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                formOpen.center();
+                formOpen.show();
             }
         });
         this.addButton(btnOpen);
@@ -74,12 +71,8 @@ public class ToolStripMenu extends ToolStrip {
         createFile.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                FormTestWindow formTestWindow = new FormTestWindow(null,null,true,null);
-               /* RootPanel.get().add(new HTML(" LOLILOL "));
-                RootPanel.get().add(new HTML(" LOLILOL " +(IHMCodeMirror.getAbstractItemRoot()==null)));
                 FormAddFileFromButton formAddFileFromButton = new FormAddFileFromButton(IHMCodeMirror);
-                formAddFileFromButton.center();
-                RootPanel.get().add(new HTML(" LOLILOL "));   */
+                formAddFileFromButton.show();
             }
         });
         this.addButton(createFile);
@@ -89,17 +82,19 @@ public class ToolStripMenu extends ToolStrip {
         createFolder.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                formNew.center();
+                FormAddFolderFromButton formAddFolderFromButton = new FormAddFolderFromButton(IHMCodeMirror);
+                formAddFolderFromButton.show();
             }
         });
         this.addButton(createFolder);
         createFolder.setDisabled(true);
 
-        importFiles = new ToolStripButton("Import");
+        importFiles = new ToolStripButton("Upload");
         importFiles.addClickHandler(new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {
-                formNew.center();
+                FormUploadFileFromButton formUploadFileFromButton= new FormUploadFileFromButton(IHMCodeMirror);
+                formUploadFileFromButton.show();
             }
         });
         this.addButton(importFiles);

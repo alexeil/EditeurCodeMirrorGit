@@ -7,32 +7,89 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DragEnterEvent;
+import com.google.gwt.event.dom.client.DragLeaveEvent;
+import com.google.gwt.event.dom.client.DragOverEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
 import com.google.gwt.user.client.Event.NativePreviewHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
-import com.smartgwt.client.widgets.toolbar.ToolStripButton;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.RootPanel;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
-import org.kevoree.library.javase.fileSystem.client.FolderItem;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.FormNew;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.FormOpen;
+import org.vectomatic.file.events.LoadEndEvent;
 
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
+
+    /* TODO TEST UPLOAD
+    reader = new FileReader();
+
+    reader.addLoadEndHandler(new LoadEndHandler() {
+        @Override
+        public void onLoadEnd(LoadEndEvent event) {
+            RootPanel.get().add(new HTML("LOLILO ?"));
+        }
+    });
+    RootPanel.get().add(new HTML(" BEFORE "));
+    Document document = Document.get();
+    dropPanel = new DropPanel();
+    dropPanel.setTitle("lolilol !");
+    dropPanel.add(new HTML("drop here"));
+    // dropPanel.getElement().appendChild(document.createDivElement()).appendChild(document.createTextNode("Drop files here"));
+    RootPanel.get().add(dropPanel);
+
+    RootPanel.get().add(new HTML(" After "));
+    dropPanel.addDragOverHandler(new DragOverHandler() {
+        @Override
+        public void onDragOver(DragOverEvent dragOverEvent) {
+            dragOverEvent.stopPropagation();
+            dragOverEvent.preventDefault();
+        }
+    });
+
+    dropPanel.addDragEnterHandler(new DragEnterHandler() {
+        @Override
+        public void onDragEnter(DragEnterEvent dragEnterEvent) {
+            String newWidth = String.valueOf(dropPanel.getOffsetWidth()*2);
+            dropPanel.setWidth(newWidth);
+            dragEnterEvent.stopPropagation();
+            dragEnterEvent.preventDefault();
+        }
+    });
+
+    dropPanel.addDragLeaveHandler(new DragLeaveHandler() {
+        @Override
+        public void onDragLeave(DragLeaveEvent dragLeaveEvent) {
+
+        }
+    });*/
+
+    private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
+            .create(RepositoryToolsServices.class);
+
     private HTML textAreaCodeShow;
     private StringBuilder login, password;
     private NativeEvent ne;
     private FormOpen formOpen;
     private FormNew formNew;
     private ToolStripMenu toolStripMenu;
-
     private AbstractItem abstractItemRoot;
+    private RootPanel systemFileRoot;
+
+    public RootPanel getSystemFileRoot(){
+        return systemFileRoot;
+    }
 
     public AbstractItem getAbstractItemRoot(){
         return abstractItemRoot;
@@ -42,19 +99,16 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
          this.abstractItemRoot = absItemRoot;
     }
 
-    private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
-            .create(RepositoryToolsServices.class);
-
     public void onModuleLoad() {
         // Listener CodeMirror
-        // TODO Erreur JSNI
+        // TODO Erreur JSNI avec FireFox
         CodeMirrorEditorWrapper.addOnChangeHandler(this);
         CodeMirrorEditorWrapper.setFileOpened("");
 
         // get Divs
         RootPanel buttonBar = RootPanel.get("buttonBar");
         RootPanel editor = RootPanel.get("editor");
-        RootPanel systemFileRoot = RootPanel.get("fileSystem");
+        systemFileRoot = RootPanel.get("fileSystem");
 
         // add editor's content
         Grid gridEditor = new Grid(1,1);
@@ -104,10 +158,10 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                     Scheduler.get().scheduleDeferred( new ScheduledCommand() {
                         @Override
                         public void execute() {
-                            if (formNew.isShowing()) {
+                            if (formNew.isVisible()) {
                                 formNew.hide();
                             } else {
-                                formNew.center();
+                                formNew.show();
                             }
                         }
                     });
@@ -118,10 +172,10 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
                     Scheduler.get().scheduleDeferred(new ScheduledCommand() {
                         @Override
                         public void execute() {
-                            if (formOpen.isShowing()) {
+                            if (formOpen.isVisible()) {
                                 formOpen.hide();
                             } else {
-                                formOpen.center();
+                                formOpen.show();
                             }
                         }
                     });

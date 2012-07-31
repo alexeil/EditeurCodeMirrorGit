@@ -218,15 +218,15 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
 
     @Port(name = "files", method = "unlock")
     public void unlock (String relativePath) {
-        final String[] relatvePathClean = {relativePath};
+        final String[] relativePathClean = {relativePath};
         if (relativePath.startsWith("/")) {
-            relatvePathClean[0] = relativePath.substring(relativePath.indexOf("/") + 1);
+            relativePathClean[0] = relativePath.substring(relativePath.indexOf("/") + 1);
         }
         Map<String, Long> locks = new HashMap<String, Long>();
-        locks.put(relatvePathClean[0], lastRevisionCheck);
+        locks.put(relativePathClean[0], lastRevisionCheck);
         try {
             // repository.lock(locks, "AutoLock Kevoree Editor", false, null);
-            lockedFile.add(relatvePathClean[0]);
+            lockedFile.add(relativePathClean[0]);
         } catch (Exception e) {
             logger.error("Error while acquire lock ", e);
         }
@@ -236,6 +236,10 @@ public class GitFileSystem extends AbstractComponentType implements LockFilesSer
     @Port(name = "files", method = "mkdirs")
     public boolean mkdirs (String relativePath) {
         File f = new File(baseClone.getAbsolutePath() + relativePath);
+
+        addFileToRepository(f);
+        commitRepository(" folders " + f.getPath() + " created ", " name " , " email ");
+
         return !f.exists() && f.mkdirs();
     }
 

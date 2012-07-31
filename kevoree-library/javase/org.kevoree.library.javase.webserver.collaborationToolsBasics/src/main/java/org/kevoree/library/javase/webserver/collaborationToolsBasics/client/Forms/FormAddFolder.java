@@ -1,9 +1,8 @@
-package org.kevoree.library.javase.webserver.collaborationToolsBasics.client;
+package org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
@@ -15,46 +14,36 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 import org.kevoree.library.javase.fileSystem.client.FileItem;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.RepositoryToolsServices;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.RepositoryToolsServicesAsync;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Singleton;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.WindowFactory;
 
-/**
- * Created with IntelliJ IDEA.
- * User: tboschat
- * Date: 7/31/12
- * Time: 9:23 AM
- * To change this template use File | Settings | File Templates.
- */
-public class FormTestWindow extends Window {
-    private  FormTestWindow window;
+
+public class FormAddFolder extends Window {
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
 
-    private AbstractItem item;
-    private boolean onFolder;
-    private  TextItem textItem;
-    private RootPanel systemFileRoot;
+    private TextItem textItem;
     private AbstractItem abstractItemRoot;
+    private boolean onFolder;
+    private RootPanel systemFileRoot;
+    private AbstractItem item;
 
-    public FormTestWindow(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder,RootPanel systemFile){
+    public FormAddFolder(AbstractItem absItem,AbstractItem absItemRoot, boolean rightClickOnFolder, RootPanel systemFile){
         super();
         this.systemFileRoot = systemFile;
         this.abstractItemRoot = absItemRoot;
         this.item = absItem;
         this.onFolder = rightClickOnFolder;
 
-        window = this;
-        this.setTitle("Create New File");
-        this.setWidth(350);
-        this.setHeight(150);
-        this.setShowMinimizeButton(false);
-        this.setIsModal(true);
-        this.setShowModalMask(true);
-        this.centerInPage();
+        WindowFactory.setParameters(this, "Create New Folder", 350, 150, false, true, true, true);
 
         this.addCloseClickHandler(new CloseClickHandler() {
             @Override
             public void onCloseClick(CloseClientEvent closeClientEvent) {
-                window.destroy();
+                hide();
             }
         });
 
@@ -75,13 +64,10 @@ public class FormTestWindow extends Window {
                 AbstractItem fileTocreate = new FileItem(textItem.getEnteredValue());
                 if(onFolder) {
                     fileTocreate.setPath(item.getPath()+fileTocreate.getName());
-                    fileTocreate.setParent(item);
                 }else{
                     fileTocreate.setPath(item.getParent().getPath()+fileTocreate.getName());
-                    fileTocreate.setParent(item.getParent());
                 }
-
-                repositoryToolsServices.newFileIntoRepository(fileTocreate, new AsyncCallback<Boolean>() {
+                repositoryToolsServices.createFolderIntoLocalRepository(fileTocreate, new AsyncCallback<Boolean>() {
                     @Override
                     public void onFailure(Throwable throwable) {
                     }
@@ -95,19 +81,7 @@ public class FormTestWindow extends Window {
             }
         });
 
-      /*  IButton cancel = new IButton("Cancel");
-        form.setFields(textItem);
-
-        cancel.addClickHandler(new ClickHandler() {
-            @Override
-            public void onClick(ClickEvent clickEvent) {
-                window.destroy();
-            }
-        });    */
-
         this.addItem(form);
         this.addItem(ok);
-      //  this.addItem(cancel);
-        this.show();
     }
 }

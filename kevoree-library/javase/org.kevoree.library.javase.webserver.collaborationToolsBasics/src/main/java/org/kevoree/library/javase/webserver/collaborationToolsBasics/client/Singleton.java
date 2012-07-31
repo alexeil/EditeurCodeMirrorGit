@@ -14,6 +14,10 @@ import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeNode;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 import org.kevoree.library.javase.fileSystem.client.FolderItem;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.FormAddFile;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.FormAddFolder;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.FormRenameFileOrFolder;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.FormUploadFile;
 
 public final class Singleton {
 
@@ -194,8 +198,8 @@ public final class Singleton {
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
-                __FormAddFile formAddFile = new __FormAddFile(item,abstractItemRoot,rightClickOnFolder, systemFileRoot);
-                formAddFile.center();
+                FormAddFile formAddFile = new FormAddFile(item,abstractItemRoot,rightClickOnFolder, systemFileRoot);
+                formAddFile.show();
             }
         });
 
@@ -207,7 +211,7 @@ public final class Singleton {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
                 FormAddFolder formAddFolder = new FormAddFolder(item,abstractItemRoot,rightClickOnFolder,systemFileRoot);
-                formAddFolder.center();
+                formAddFolder.show();
             }
         });
 
@@ -219,7 +223,7 @@ public final class Singleton {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
                 Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
                 FormRenameFileOrFolder formRenameFileOrFolder = new FormRenameFileOrFolder(item,abstractItemRoot,rightClickOnFolder,systemFileRoot);
-                formRenameFileOrFolder.center();
+                formRenameFileOrFolder.show();
             }
         });
 
@@ -228,9 +232,8 @@ public final class Singleton {
             @Override
             public void onClick(MenuItemClickEvent event) {
                 AbstractItem item = (AbstractItem) currentSelectedNode.getAttributeAsObject("abstractItem");
-                Boolean rightClickOnFolder = currentSelectedNode.getAttributeAsBoolean("isFolder");
-                FormUploadFile formUploadFile = new FormUploadFile(item,abstractItemRoot,rightClickOnFolder,systemFileRoot);
-                formUploadFile.center();
+                FormUploadFile formUploadFile = new FormUploadFile(item,abstractItemRoot,systemFileRoot);
+                formUploadFile.show();
             }
         });
 

@@ -56,16 +56,17 @@ public class RepositoryToolsServicesImpl extends RemoteServiceServlet implements
     }
 
     public boolean newFileIntoRepository(AbstractItem item){
-        logger.debug(" saveFile {}" ,item.getPath());
+        logger.warn(" saveFile {}" ,item.getPath());
         return repositoryToolsComponent.getPortByName("files", LockFilesService.class).saveFile(item.getPath(), new byte[0], true);
     }
 
     public boolean saveFileAfterUpload(AbstractItem item){
-        logger.debug(" saveFile after upload {}", item.getPath());
+        logger.warn(" saveFile after upload {}", item.getPath());
         return repositoryToolsComponent.getPortByName("files", LockFilesService.class).saveFile(item.getPath(), new byte[0], true);
     }
 
     public boolean createFolderIntoLocalRepository(AbstractItem item){
+        logger.warn(" mkdirs {}", item.getPath());
         return  repositoryToolsComponent.getPortByName("files", LockFilesService.class).mkdirs(item.getPath());
     }
 

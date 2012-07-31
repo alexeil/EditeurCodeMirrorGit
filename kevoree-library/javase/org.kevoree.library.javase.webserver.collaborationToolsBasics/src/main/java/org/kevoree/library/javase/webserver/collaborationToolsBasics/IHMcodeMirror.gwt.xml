@@ -8,11 +8,11 @@
     <inherits name="com.smartgwt.SmartGwt"/>
 
     <inherits name="org.kevoree.library.javase.fileSystem.FileSystem" />
+    <inherits name="org.vectomatic.libgwtfile" />
 
-    <!-- Specify the app entry point class.                   -->
     <entry-point class='org.kevoree.library.javase.webserver.collaborationToolsBasics.client.IHMcodeMirror'/>
-
     <source path='client'/>
+
 
 
 </module>

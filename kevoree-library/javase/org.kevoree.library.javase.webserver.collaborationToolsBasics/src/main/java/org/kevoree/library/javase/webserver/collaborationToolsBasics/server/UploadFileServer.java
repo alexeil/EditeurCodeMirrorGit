@@ -44,6 +44,8 @@ public class UploadFileServer extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+
+        logger.warn(" Uplaod lunched");
         // process only multipart requests
         if (ServletFileUpload.isMultipartContent(req)) {
             // Create a factory for disk-based file items
@@ -78,7 +80,7 @@ public class UploadFileServer extends HttpServlet {
                 resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
                         "An error occurred while creating the file : " + e.getMessage());
 
-                logger.debug(" Exeption ",e);
+                logger.warn(" Exeption ",e);
             }
 
         } else {
