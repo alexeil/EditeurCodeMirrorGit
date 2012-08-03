@@ -18,10 +18,10 @@ import java.net.*;
  * To change this template use File | Settings | File Templates.
  */
 @DictionaryType({
-        @DictionaryAttribute(name = "source_host"),
-        @DictionaryAttribute(name = "source_port"),
-        @DictionaryAttribute(name = "destination_host"),
-        @DictionaryAttribute(name = "destination_port")
+        @DictionaryAttribute(name = "ForwardTo_ip"),
+        @DictionaryAttribute(name = "ForwardTo_port"),
+        @DictionaryAttribute(name = "local_ip"),
+        @DictionaryAttribute(name = "local_port")
 })
 @ComponentType
 public class PortForwarderComponent extends AbstractComponentType {
@@ -30,7 +30,7 @@ public class PortForwarderComponent extends AbstractComponentType {
 
     @Start
     public void start() throws IOException {
-        URL oracle = new URL("http://localhost:8080");
+        /*URL oracle = new URL("http://localhost:8080");
         HttpURLConnection yc = (HttpURLConnection) oracle.openConnection();
         yc.setRequestProperty("HOST", "localzz.org");
         BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -39,15 +39,16 @@ public class PortForwarderComponent extends AbstractComponentType {
         while ((inputLine = in.readLine()) != null)
             logger.debug(inputLine);
         in.close();
+                     */
+        String ForwardTo_ip = this.getDictionary().get("ForwardTo_ip").toString();
+        int ForwardTo_port = Integer.parseInt(this.getDictionary().get("ForwardTo_port").toString());
 
-      /*  String source_host = this.getDictionary().get("source_host").toString();
-        int source_port = Integer.parseInt(this.getDictionary().get("source_port").toString());
-        String destination_host = this.getDictionary().get("destination_host").toString();
-        int destination_port = Integer.parseInt(this.getDictionary().get("destination_port").toString());
+        String local_ip = this.getDictionary().get("local_ip").toString();
+        int local_port = Integer.parseInt(this.getDictionary().get("local_port").toString());
 
         ServerSocket serverSocket=null;
         try{
-            serverSocket = new ServerSocket(destination_port, 50, InetAddress.getByName(destination_host));
+            serverSocket = new ServerSocket(local_port, 50, InetAddress.getByName(local_ip));
 
         } catch (IOException e) {
             logger.debug(" Error with the socket server ", e);
@@ -56,9 +57,9 @@ public class PortForwarderComponent extends AbstractComponentType {
 
         while (true) {
             Socket clientSocket = serverSocket.accept();
-            ClientThread clientThread = new ClientThread(clientSocket,source_host,source_port);
+            ClientThread clientThread = new ClientThread(clientSocket,ForwardTo_ip,ForwardTo_port);
             clientThread.start();
-        }  */
+        }
     }
 
     @Stop

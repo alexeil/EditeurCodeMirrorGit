@@ -33,14 +33,14 @@ class ClientThread extends Thread {
     private Socket mServerSocket;
     private boolean mForwardingActive = false;
 
-    private String destination_host;
-    private int destination_port;
+    private String local_ip;
+    private int local_port;
 
 
-    public ClientThread(Socket aClientSocket, String destination_host,int destination_port ) {
+    public ClientThread(Socket aClientSocket, String local_ip,int local_port ) {
         mClientSocket = aClientSocket;
-        this.destination_host = destination_host;
-        this.destination_port = destination_port;
+        this.local_ip = local_ip;
+        this.local_port = local_port;
     }
 
     /**
@@ -57,7 +57,7 @@ class ClientThread extends Thread {
 
         try {
             // Connect to the destination server
-            mServerSocket = new Socket(destination_host,destination_port);
+            mServerSocket = new Socket(local_ip,local_port);
 
             // Turn on keep-alive for both the sockets
             mServerSocket.setKeepAlive(true);
@@ -70,7 +70,7 @@ class ClientThread extends Thread {
             serverOut = mServerSocket.getOutputStream();
 
         } catch (IOException ioe) {
-            logger.debug("Can not connect to {} : {} " ,destination_host,destination_port);
+            logger.debug("Can not connect to {} : {} " ,local_ip,local_port);
             connectionBroken();
             return;
         }
