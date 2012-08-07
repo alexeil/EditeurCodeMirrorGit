@@ -19,10 +19,8 @@ public class  WindowFactory {
         window = windowParam;
 
         window.setTitle(title);
-        if(!setAutoSize){
-            window.setWidth(width);
-            window.setHeight(height);
-        }
+        window.setWidth(width);
+        window.setHeight(height);
         window.setShowMinimizeButton(ShowMinimizeButton);
         window.setIsModal(IsModal);
         window.setShowModalMask(setShowModalMask);

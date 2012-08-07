@@ -9,7 +9,9 @@
   
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>IHMcodeMirror.html</welcome-file>
-  </welcome-file-list>
+      <!--<welcome-file>IHMcodeMirror.html</welcome-file> -->
+      <welcome-file>Upload4gwt.html</welcome-file>
 
-</web-app>
+        </welcome-file-list>
+
+      </web-app>

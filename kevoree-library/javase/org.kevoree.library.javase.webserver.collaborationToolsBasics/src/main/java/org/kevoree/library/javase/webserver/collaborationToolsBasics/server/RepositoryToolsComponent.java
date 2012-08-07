@@ -52,7 +52,8 @@ public class RepositoryToolsComponent extends ParentAbstractPage {
 		String pattern = this.getDictionary().get("urlpattern").toString();
 		pattern = pattern.replace("**", "");
 		if (request.getUrl().equals(pattern)) {
-			if (FileServiceHelper.checkStaticFile("IHMcodeMirror.html", this, request, response)) {
+			//if (FileServiceHelper.checkStaticFile("IHMcodeMirror.html", this, request, response)) {
+            if (FileServiceHelper.checkStaticFile("IHMcodeMirror.html", this, request, response)) {
 				logger.debug("The IHMcodeMirror.html has been returned to respond to the request: {}", request.getUrl());
 				return response;
 			}

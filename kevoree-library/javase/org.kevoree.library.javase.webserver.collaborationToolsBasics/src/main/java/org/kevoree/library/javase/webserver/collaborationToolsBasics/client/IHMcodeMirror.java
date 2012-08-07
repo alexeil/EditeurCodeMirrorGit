@@ -7,11 +7,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.dom.client.DragEnterEvent;
-import com.google.gwt.event.dom.client.DragLeaveEvent;
-import com.google.gwt.event.dom.client.DragOverEvent;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.Event.NativePreviewEvent;
@@ -24,56 +20,13 @@ import com.google.gwt.user.client.ui.RootPanel;
 import org.kevoree.library.javase.fileSystem.client.AbstractItem;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.FormNew;
 import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.FormOpen;
-import org.vectomatic.file.events.LoadEndEvent;
+import org.kevoree.library.javase.webserver.collaborationToolsBasics.client.Forms.UploadDragAndDrop;
 
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
-
-    /* TODO TEST UPLOAD
-    reader = new FileReader();
-
-    reader.addLoadEndHandler(new LoadEndHandler() {
-        @Override
-        public void onLoadEnd(LoadEndEvent event) {
-            RootPanel.get().add(new HTML("LOLILO ?"));
-        }
-    });
-    RootPanel.get().add(new HTML(" BEFORE "));
-    Document document = Document.get();
-    dropPanel = new DropPanel();
-    dropPanel.setTitle("lolilol !");
-    dropPanel.add(new HTML("drop here"));
-    // dropPanel.getElement().appendChild(document.createDivElement()).appendChild(document.createTextNode("Drop files here"));
-    RootPanel.get().add(dropPanel);
-
-    RootPanel.get().add(new HTML(" After "));
-    dropPanel.addDragOverHandler(new DragOverHandler() {
-        @Override
-        public void onDragOver(DragOverEvent dragOverEvent) {
-            dragOverEvent.stopPropagation();
-            dragOverEvent.preventDefault();
-        }
-    });
-
-    dropPanel.addDragEnterHandler(new DragEnterHandler() {
-        @Override
-        public void onDragEnter(DragEnterEvent dragEnterEvent) {
-            String newWidth = String.valueOf(dropPanel.getOffsetWidth()*2);
-            dropPanel.setWidth(newWidth);
-            dragEnterEvent.stopPropagation();
-            dragEnterEvent.preventDefault();
-        }
-    });
-
-    dropPanel.addDragLeaveHandler(new DragLeaveHandler() {
-        @Override
-        public void onDragLeave(DragLeaveEvent dragLeaveEvent) {
-
-        }
-    });*/
 
     private final RepositoryToolsServicesAsync repositoryToolsServices = GWT
             .create(RepositoryToolsServices.class);
@@ -100,6 +53,7 @@ public class IHMcodeMirror implements EntryPoint,MirrorEditorCallback {
     }
 
     public void onModuleLoad() {
+
         // Listener CodeMirror
         // TODO Erreur JSNI avec FireFox
         CodeMirrorEditorWrapper.addOnChangeHandler(this);

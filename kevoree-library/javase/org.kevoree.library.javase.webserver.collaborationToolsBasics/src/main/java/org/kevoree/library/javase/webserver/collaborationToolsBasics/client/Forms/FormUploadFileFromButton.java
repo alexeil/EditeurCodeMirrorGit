@@ -71,13 +71,14 @@ public class FormUploadFileFromButton extends Window {
             }
         });
 
-        this.addItem(form);
-        this.addItem(upload);
-        this.addItem(new IButton("Submit", new ClickHandler() {
+        this.addItem(new UploadDragAndDrop());
+        //this.addItem(form);
+       // this.addItem(upload);
+       /* this.addItem(new IButton("Submit", new ClickHandler() {
             public void onClick(ClickEvent event) {
                 form.submit();
             }
-        }));
+        }));    */
         this.addItem(new IButton("Cancel", new ClickHandler() {
             @Override
             public void onClick(ClickEvent clickEvent) {

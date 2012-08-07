@@ -29,7 +29,7 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-user</artifactId>
-            <version>${gwtVersion}</version>
+            <version>2.4.0</version>
         </dependency>
         <dependency>
             <groupId>org.kevoree.library.javase</groupId>
@@ -76,17 +76,6 @@
             <groupId>com.smartgwt</groupId>
             <artifactId>smartgwt</artifactId>
             <version>2.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.vectomatic</groupId>
-            <artifactId>lib-gwt-file</artifactId>
-            <version>0.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-dev</artifactId>
-            <version>${gwtVersion}</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
